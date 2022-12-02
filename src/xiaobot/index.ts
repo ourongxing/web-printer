@@ -5,7 +5,11 @@ import { BrowserContext } from "playwright"
 import { PrintOption } from "~/types"
 import { delay, mergePDF } from "~/utils"
 
-async function fetchXiaoBotPages(context: BrowserContext, home: string) {
+async function fetchXiaoBotPages(
+  context: BrowserContext,
+  home: string,
+  titleFilter: (title: string) => boolean
+) {
   const data: any[] = []
   const page = await context.newPage()
   await page.goto(home)
@@ -22,7 +26,7 @@ async function fetchXiaoBotPages(context: BrowserContext, home: string) {
   }
   await page.close()
   return data
-    .filter(k => k.title && k.title.startsWith("Vol"))
+    .filter(k => k.title && titleFilter(k.title))
     .map(k => ({ uuid: k.uuid, title: k.title, date: k.created_at }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 }
@@ -31,10 +35,11 @@ export default async function (
   context: BrowserContext,
   home: string,
   name: string,
+  titleFilter: (title: string) => boolean,
   options?: PrintOption
 ) {
   const pdfs: { buffer: ArrayBuffer; title: string }[] = []
-  const pagesInfo = await fetchXiaoBotPages(context, home)
+  const pagesInfo = await fetchXiaoBotPages(context, home, titleFilter)
   const page = await context.newPage()
   for (const info of pagesInfo) {
     await page.goto(`https://xiaobot.net/post/${info.uuid}`)
