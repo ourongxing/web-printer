@@ -1,0 +1,21 @@
+{
+  "name": "print-website-as-book",
+  "version": "0.0.1",
+  "author": "ourongxing",
+  "license": "MIT",
+  "scripts": {
+    "print": "tsx src/main.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.10",
+    "@types/fs-extra": "^9.0.13",
+    "tsx": "^3.12.1"
+  },
+  "dependencies": {
+    "@lillallol/outline-pdf": "^4.0.0",
+    "buffer-to-arraybuffer": "^0.0.6",
+    "fs-extra": "^11.1.0",
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.28.1"
+  }
+}

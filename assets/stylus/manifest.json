@@ -1,0 +1,103 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+  "name": "Stylus",
+  "version": "1.5.26",
+  "minimum_chrome_version": "55",
+  "description": "__MSG_description__",
+  "homepage_url": "https://add0n.com/stylus.html",
+  "manifest_version": 2,
+  "icons": {
+    "16": "images/icon/16.png",
+    "32": "images/icon/32.png",
+    "48": "images/icon/48.png",
+    "128": "images/icon/128.png"
+  },
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking",
+    "contextMenus",
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "js/polyfill.js",
+      "js/toolbox.js",
+      "js/msg.js",
+      "js/prefs.js",
+      "js/storage-util.js",
+      "js/sections-util.js",
+      "js/worker-util.js",
+      "js/cmpver.js",
+
+      "background/common.js",
+
+      "background/db.js",
+      "background/color-scheme.js",
+      "background/icon-manager.js",
+      "background/navigation-manager.js",
+      "background/style-search-db.js",
+      "background/style-via-webrequest.js",
+      "background/sync-manager.js",
+      "background/tab-manager.js",
+      "background/token-manager.js",
+      "background/update-manager.js",
+      "background/usercss-install-helper.js",
+      "background/usercss-manager.js",
+      "background/uso-api.js",
+      "background/usw-api.js",
+
+      "background/style-manager.js",
+      "background/background.js"
+    ]
+  },
+  "commands": {
+    "_execute_browser_action": {},
+    "openManage": {
+    "description": "__MSG_openManage__"
+    },
+    "reload": {
+      "description": "__MSG_reload__"
+    },
+    "styleDisableAll": {
+    "description": "__MSG_disableAllStyles__"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "js": [
+        "js/polyfill.js",
+        "js/msg.js",
+        "js/prefs.js",
+        "content/style-injector.js",
+        "content/apply.js"
+      ]
+    },
+    {
+      "matches": ["http://userstyles.org/*", "https://userstyles.org/*"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "js": ["content/install-hook-userstyles.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": {
+      "16": "images/icon/16w.png",
+      "32": "images/icon/32w.png",
+      "19": "images/icon/19w.png",
+      "38": "images/icon/38w.png"
+    },
+    "default_title": "Stylus",
+    "default_popup": "popup.html"
+  },
+  "default_locale": "en"
+}

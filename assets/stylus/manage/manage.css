@@ -1,0 +1,1188 @@
+:root {
+  --name-padding-left: 20px;
+  --name-padding-right: 40px;
+  --actions-width: 75px;
+}
+body {
+  /* Fill the entire viewport to enable json import via drag'n'drop */
+  display: flex;
+  height: 100vh;
+}
+
+#header:lang(ja) h1 {
+  font-weight: normal;
+}
+
+body.all-styles-hidden-by-filters::before,
+body.all-styles-hidden-by-filters::after {
+  position: absolute;
+  left: calc(3rem + var(--header-width));
+  color: hsla(180, 40%, 45%, .3);
+  animation: fadein 3s;
+}
+
+body.all-styles-hidden-by-filters:before {
+  content: "\2190"; /* left arrow */
+  font-size: 3rem;
+  top: 3.5rem;
+}
+
+body.all-styles-hidden-by-filters::after {
+  content: var(--filteredStylesAllHidden);
+  font-size: 1.5rem;
+  position: absolute;
+  top: 3rem;
+}
+
+a, .disabled a:hover {
+  color: var(--fg);
+  transition: color .5s;
+}
+
+a:hover {
+  color: var(--c40);
+}
+
+#header {
+  width: var(--header-width);
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  padding: 1rem;
+  box-shadow: 0 0 50px -18px black;
+  overflow: auto;
+  box-sizing: border-box;
+  z-index: 9;
+}
+
+#update-check,
+#update-all {
+  margin-bottom: .5rem;
+}
+
+#check-all-updates {
+  max-width: calc(100% - 30px);
+}
+
+#check-all-updates-force {
+  white-space: normal;
+  text-align: left;
+}
+
+#header h1 {
+  margin-top: 0;
+  margin-bottom: .3em;
+}
+
+#header a[href^="edit"] {
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+#add-style-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#add-style-wrapper > * {
+  /* in case the children are wrapped */
+  margin-bottom: .5rem;
+}
+
+#add-style-as-usercss-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+#add-style-as-usercss-wrapper:not(:hover) input:not(:checked) ~ a svg {
+  fill: var(--c65);
+}
+
+#add-style-as-usercss-wrapper input {
+  bottom: 0;
+  margin: auto;
+}
+
+#add-style-as-usercss-wrapper input + svg {
+  bottom: 0;
+  margin: auto;
+  left: 2px;
+}
+
+#injection-order-button {
+  --w: 16px;
+  width: var(--w);
+  box-sizing: content-box;
+  display: inline-flex;
+  align-items: center;
+}
+#injection-order-button > svg {
+  position: absolute;
+  width: var(--w);
+  height: var(--w);
+}
+
+#installed {
+  position: relative;
+  padding-left: var(--header-width);
+  box-sizing: border-box;
+  width: 100%;
+  align-self: start;
+}
+
+.entry {
+  margin: 0;
+  padding: 1.25em 2em;
+  border-top: 1px solid var(--c85);
+}
+
+.entry:first-child {
+  border-top: none;
+}
+
+.homepage {
+  margin-left: 0.25em;
+  margin-right: 0.1em;
+}
+
+.homepage[href=""] {
+  display: none;
+}
+
+.homepage .svg-icon {
+  margin-top: 0;
+}
+
+.style-name {
+  margin-top: .25em;
+  overflow-wrap: break-word;
+}
+
+.style-name a, .style-edit-link {
+  text-decoration: none;
+}
+
+.applies-to {
+  overflow-wrap: break-word;
+}
+
+.applies-to,
+.actions {
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.actions > * {
+  margin-bottom: .25rem;
+  display: inline-block;
+}
+
+.actions > *:not(:last-child) {
+  margin-right: .25rem;
+}
+
+.applies-to label {
+  margin-right: .5ex;
+}
+
+.applies-to .target:hover {
+  background-color: rgba(128, 128, 128, .15);
+}
+
+.applies-to-extra:not([open]) {
+  display: inline;
+  margin-left: 1ex;
+}
+
+.applies-to-extra-expander {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.applies-to-extra-expander {
+  list-style-type: none; /* for FF, allegedly */
+}
+
+.applies-to-extra-expander::-webkit-details-marker {
+  display: none;
+}
+
+.oldUI .disabled h2::after,
+.entry.usercss .style-name-link::after {
+  font-size: 11px;
+  border-radius: 4px;
+  margin-left: 1ex;
+  white-space: nowrap;
+  content: "UC";
+  background-color: hsla(180, 35%, 50%, .35);
+  padding: 2px 3px;
+  color: var(--fg);
+}
+.oldUI .disabled h2::after {
+  content: var(--genericDisabledLabel);
+  text-transform: lowercase;
+  font-weight: normal;
+  background: rgba(128, 128, 128, .2);
+  padding: 2px 5px 3px;
+  vertical-align: middle;
+}
+.oldUI .entry.usercss .style-name-link::after {
+  content: "usercss";
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+.disabled h2 .style-name-link,
+.disabled .applies-to,
+.newUI .disabled.entry .svg-icon {
+  color: var(--c50);
+  fill: var(--c80);
+  font-weight: normal;
+  transition: color .5s .1s, fill .5s .1s;
+}
+.disabled.usercss .style-name-link::after {
+  background-color: hsla(180, 35%, 50%, .2);
+}
+
+.disabled:hover .actions {
+  opacity: 1;
+}
+
+.disabled .disable {
+  display: none;
+}
+
+.enabled .enable {
+  display: none;
+}
+
+/* collapsibles */
+#add-style-wrapper {
+  margin-bottom: 0;
+}
+
+#backup-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#backup-buttons > * {
+  margin: 0 .2rem .5rem 0;
+}
+
+#header details:not([open]),
+#header details:not([open]) h2 {
+  padding-bottom: 0;
+}
+
+#header details[open] summary {
+  padding-bottom: .5rem;
+}
+
+#header summary {
+  margin-top: .25rem;
+  align-items: center;
+  margin-left: -13px;
+  cursor: pointer;
+}
+#header #filters summary {
+  margin-bottom: -2px;
+}
+
+#header #filters summary h2 {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#header summary h2 {
+  display: inline;
+  border-bottom: 1px dotted transparent;
+  margin-top: .1em;
+  margin-bottom: .1em;
+}
+#header summary:hover h2 {
+  border-color: var(--c75);
+}
+#header summary h2 [data-cmd="note"] {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+/* compact layout */
+
+.newUI #installed {
+  display: table;
+  margin-top: .75rem;
+  margin-bottom: .75rem;
+}
+
+.newUI .entry {
+  display: table-row;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.newUI .entry.odd {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+.newUI .entry > * {
+  padding: .5rem 0;
+  margin: 0;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.newUI .entry .actions {
+  position: relative;
+}
+
+.style-info[data-type=version] {
+  color: var(--c40);
+  padding-left: .5em;
+  font-weight: normal;
+}
+.newUI .style-info[data-type=version][data-is-date],
+.newUI .style-info[data-type=version][data-value=""],
+.newUI .style-info[data-type=version][data-value="1.0.0"] {
+  display: none;
+}
+.newUI .entry .style-info[data-type=age] {
+  color: var(--c60);
+  text-align: right;
+  padding-right: 1em;
+}
+
+/************ checkbox & select************/
+
+#newUIoptions > div, #newUIoptions > label {
+  margin: 4px 0;
+}
+
+.filter-selection {
+  position: relative;
+  left: -9px;
+}
+
+#header label {
+  padding-left: 16px;
+  position: relative;
+  white-space: nowrap;
+}
+
+#header .filter-selection label {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  height: 18px;
+  padding: 0 0 0 8px;
+}
+
+#header .filter-selection label .checkmate {
+  vertical-align: middle;
+  margin-top: -2px;
+}
+
+.newUI #newUIoptions > label {
+  padding-left: 0;
+}
+
+.filter-selection select {
+  height: 18px;
+  border: none;
+  max-width: 100%;
+  padding-left: 4px;
+  padding-right: 14px;
+}
+
+.filter-selection .select-arrow {
+  margin-top: 2px;
+  top: 0;
+  right: 0;
+}
+
+.select-resizer {
+  cursor: default;
+  border: none;
+  max-width: calc(100% - 2em);
+  position: absolute;
+  top: 0;
+  left: 20px;
+}
+
+#filters label,
+#filters .filter-selection {
+  transition: background-color .25s;
+}
+
+#filters label:hover,
+#filters .filter-selection:hover {
+  background-color: hsla(0, 0%, 50%, .2);
+}
+
+.checkmate {
+  position: relative;
+  height: 12px;
+  width: 12px;
+  display: inline-flex;
+}
+
+.entry .checkmate {
+  vertical-align: middle;
+  margin: -2px 1ex 0 0;
+}
+
+#manage-text {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: .35rem;
+}
+#manage-text > * {
+  display: flex;
+  align-items: center;
+}
+#manage-text > :not(:last-child):after {
+  content: "|";
+  margin: 0 .5em;
+}
+
+.newUI .entry input[type="checkbox"]:not(.slider) {
+  pointer-events: all;
+}
+
+.newUI .style-name {
+  font-size: 14px;
+  padding-left: var(--name-padding-left);
+  padding-right: var(--name-padding-right);
+  position: relative;
+  cursor: pointer;
+}
+
+.newUI .entry .style-name:hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, hsla(180, 50%, 30%, 0.2), hsla(180, 20%, 10%, 0.05) 50%, transparent);
+  pointer-events: none;
+}
+
+.newUI .entry.enabled .style-name:hover .style-name-link {
+  color: var(--accent-1);
+}
+
+.newUI .style-name:after {
+  text-indent: 1.2rem;
+}
+
+.newUI .actions:after {
+  text-indent: -25px;
+}
+
+.newUI .actions .homepage[href=""] {
+  display: inline-block;
+  visibility: hidden;
+  height: 0;
+}
+
+.newUI .actions {
+  width: var(--actions-width);
+  height: 20px;
+  white-space: nowrap;
+}
+
+.newUI .actions > * {
+  margin: 0 6px 0 0;
+  width: 20px;
+  height: 20px;
+}
+
+.newUI .updater-icons > * {
+  transition: opacity 1s;
+  display: none;
+}
+
+.newUI .entry .svg-icon {
+  fill: var(--c60);
+}
+
+.newUI .entry:hover .svg-icon {
+  fill: var(--c40);
+}
+
+button .svg-icon,
+.newUI .entry .svg-icon.checked,
+.newUI .entry:hover .svg-icon.checked,
+.newUI .entry:hover .svg-icon:hover {
+  fill: var(--fg);
+}
+
+.newUI .checking-update .check-update {
+  opacity: 0;
+  display: inline-block;
+  pointer-events: none;
+}
+
+.newUI .can-update .update,
+.newUI .no-update:not(.update-problem):not(.update-done) .up-to-date,
+.newUI .no-update.update-problem .check-update,
+.newUI .update-done .updated {
+  display: inline-block;
+}
+
+.newUI .up-to-date svg,
+.newUI .updated svg {
+  cursor: auto;
+}
+
+.newUI .update-done .updated svg {
+  top: -4px;
+  position: relative;
+  filter: drop-shadow(0 5px 0 currentColor);
+}
+
+.newUI .can-update .update,
+.newUI .no-update.update-problem .check-update {
+  cursor: pointer;
+}
+
+.newUI .can-update[data-details$="locally edited"] .update svg,
+.newUI .update-problem .check-update svg {
+  fill: #ef6969;
+}
+
+.newUI .can-update[data-details$="locally edited"]:hover .update svg,
+.newUI .entry.update-problem:hover .check-update svg {
+  fill: #fd4040;
+}
+
+.newUI .can-update[data-details$="locally edited"]:hover .update svg:hover,
+.newUI .entry.update-problem:hover .check-update svg:hover {
+  fill: red;
+}
+
+.newUI .actions {
+  z-index: 100;
+}
+
+.newUI .updater-icons > :not(.check-update):after {
+  content: attr(title);
+  position: absolute;
+  margin-top: 18px;
+  margin-left: -36px;
+  padding: 1ex 1.5ex;
+  border: 1px solid #ded597;
+  background-color: #fffbd6;
+  border-radius: 4px;
+  box-shadow: 2px 3px 10px rgba(0,0,0,.25);
+  font-size: 90%;
+  animation: fadeout 10s;
+  animation-fill-mode: both;
+}
+
+.newUI .update-problem .check-update:after {
+  background-color: red;
+  border: 1px solid #d40000;
+  color: white;
+  animation: none;
+}
+
+.newUI .can-update .update:after {
+  animation: none;
+}
+
+.newUI .can-update:not([data-details$="locally edited"]) .update:after {
+  background-color: #c0fff0;
+  border: 1px solid #89cac9;
+}
+
+.newUI .applies-to {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+}
+.newUI .targets {
+  overflow: hidden;
+  max-height: calc(var(--num-targets) * 18px);
+}
+.newUI .applies-to.expanded .targets {
+  max-height: none;
+}
+.newUI .target {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(75vw - var(--header-width) - var(--actions-width) - var(--name-padding-left) - var(--name-padding-right) - 6rem);
+  box-sizing: border-box;
+  padding-right: 1rem;
+  line-height: 18px;
+}
+.expander {
+  cursor: pointer;
+  position: absolute;
+  right: 4px;
+}
+.expander svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--c50);
+}
+.expanded .expander {
+  transform: rotate(180deg);
+  transform-origin: 8px 8px;
+}
+.newUI .applies-to:not(.has-more) .expander {
+  display: none;
+}
+.newUI .target:hover {
+  background-color: inherit;
+}
+
+.newUI .target img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin: -1px 4px 0 -20px;
+  transition: opacity .5s, filter .5s;
+  /* workaround for the buggy CSS filter: images in the hidden overflow are shown on Mac */
+  backface-visibility: hidden;
+  visibility: hidden;
+}
+
+.newUI .favicons-grayed .target img {
+  filter: grayscale(1);
+  opacity: .25;
+}
+
+.newUI .has-favicons .target {
+  padding-left: 20px;
+}
+
+.newUI .has-favicons .target img[src] {
+  visibility: visible;
+}
+
+.newUI .entry:hover .target img {
+  opacity: 1;
+  filter: none;
+}
+
+.newUI .target b::after {
+  content: '?';
+  margin: -2px 4px 0 -20px;
+  display: inline-block;
+  vertical-align: baseline;
+  background: var(--c85);
+  width: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  color: var(--bg);
+}
+
+/* Default, no update buttons */
+.updater-icons .update,
+.updater-icons .check-update {
+  display: none;
+}
+
+/* Check update button for things that can */
+.updatable .check-update {
+  display: inline-block;
+}
+
+/* Update check in progress */
+.checking-update .check-update {
+  display: none;
+}
+
+/* Updates available */
+.can-update .update {
+  display: inline-block;
+}
+
+.can-update[data-details$="locally edited"] button.update:after {
+  content: "*";
+}
+
+.can-update .check-update {
+  display: none;
+}
+
+/* Updates not available */
+.no-update:not(.update-problem) .check-update {
+  display: none;
+}
+
+/* Updates done */
+.update-done .check-update {
+  display: none;
+}
+
+#apply-all-updates:after {
+  content: " (" attr(data-value) ")";
+}
+
+.update-in-progress #check-all-updates {
+  position: relative;
+}
+
+.update-in-progress #update-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: currentColor;
+  content: "";
+  opacity: .35;
+}
+
+#check-all-updates-force {
+  margin-top: 1ex;
+}
+
+#update-all-no-updates[data-skipped-edited="true"] {
+  font-weight: bold;
+}
+
+#update-all-no-updates[data-skipped-edited="true"]::after {
+  content: " " var(--updateAllCheckSucceededSomeEdited);
+  font-weight: normal;
+  display: block;
+  margin: .75em 0 .5em;
+}
+
+/* highlight updated/added styles */
+.highlight {
+  animation: highlight 10s cubic-bezier(0,.82,.47,.98);
+}
+.highlight-quick {
+  animation: highlight .5s;
+}
+
+@keyframes highlight {
+  from {
+    background-color: rgba(128, 128, 128, .5);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+#filters > label {
+  display: flex;
+  align-items: center;
+  left: -9px;
+  padding: 2px 0 2px 24px;
+}
+
+#filters > label input[type="checkbox"]:not(.slider),
+#filters > label input[type="checkbox"]:not(.slider):checked + .svg-icon.checked {
+  top: 2px;
+  left: 8px;
+}
+
+#filters > label:hover {
+  background-color: hsla(0, 0%, 50%, .4);
+}
+
+.active #filters-stats {
+  background-color: darkcyan;
+  border-color: darkcyan;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: normal;
+  padding: 2px 5px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.filter-stats-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: .2rem;
+}
+
+#header #filters summary {
+  white-space: nowrap;
+}
+
+#header #filters summary ::-webkit-details-marker {
+  margin-top: 4px
+}
+
+#reset-filters svg {
+  fill: var(--accent-2);
+  width: 24px; /* widen the click area a bit */
+  height: 20px;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+#reset-filters:hover svg {
+  filter: brightness(1.2);
+}
+
+#filters summary:not(.active) #reset-filters,
+#filters summary:not(.active) #filters-stats {
+  display: none;
+}
+
+#search-wrapper, #sort-wrapper {
+  display: flex;
+  align-items: center;
+}
+#search-wrapper {
+  margin-bottom: .5rem;
+}
+#searchMode {
+  margin-left: -1px;
+}
+#search-wrapper {
+  margin-top: .35rem;
+}
+
+#sort-wrapper .sorter-selection {
+  display: inline-flex;
+  flex-grow: 1;
+  position: relative;
+}
+
+#manage\.newUI\.sort {
+  max-width: 100%;
+}
+
+#search, #manage\.newUI\.sort {
+  min-width: 4em; /* reduces the big default width */
+  flex-grow: 1;
+  background: var(--bg);
+  height: 20px;
+  box-sizing: border-box;
+  padding: 3px 3px 3px 4px;
+  color: var(--fg);
+  border: 1px solid var(--c65);
+}
+
+#manage\.newUI\.sort {
+  padding: 0 18px 0 4px;
+  width: 100%;
+}
+
+.firefox #manage\.newUI\.sort {
+  padding: 0;
+}
+
+#search-help, #sorter-help {
+  margin: 0 -5px 0 2px;
+}
+
+#sort-wrapper .select-arrow {
+  top: 3px;
+  right: 4px;
+}
+
+#message-box.help-text > div {
+  max-width: 26rem;
+}
+.help-text li:not(:last-child) {
+  margin-bottom: 1em;
+}
+
+.help-text mark {
+  background-color: rgba(128, 128, 128, .15);
+  color: currentColor;
+  padding: 2px 6px;
+  font-weight: bold;
+  font-family: Consolas, monospace;
+  border: 1px solid rgba(128, 128, 128, .25);
+  display: inline-block;
+  margin: 2px;
+}
+
+.help-text mark.last {
+  display: block;
+  width: -moz-min-content;
+  width: min-content;
+  white-space: nowrap;
+}
+
+/* drag-n-drop on import button */
+.dropzone:after {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  position: fixed;
+  padding: calc(50vh - 3em) calc(50vw - 5em);
+  content: attr(dragndrop-hint);
+  text-shadow: 1px 1px 10px black;
+  font-size: xx-large;
+  text-align: center;
+  animation: fadein 1s cubic-bezier(.03, .67, .08, .94);
+  animation-fill-mode: both;
+}
+
+.fadeout.dropzone:after {
+  animation: fadeout .25s ease-in-out;
+  animation-fill-mode: both;
+}
+
+/* post-import report */
+#import details:not([data-id="invalid"]) div:hover {
+  background-color: rgba(128, 128, 128, .3);
+}
+
+#import details:not(:last-child) {
+  margin-bottom: 1em;
+}
+
+#import details small > * {
+  margin-left: 1.5em;
+}
+
+#import details > button {
+  margin: .5em 1.25em 0;
+}
+
+.update-history {
+  font-size: 11px;
+  white-space: pre;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+/* sort font */
+@font-face {
+  font-family: 'sorticon';
+  src: url('data:application/x-font-ttf;base64,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') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  unicode-range: U+21E9;
+}
+
+#manage\.newUI\.sort {
+  font-family: 'sorticon', var(--family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.stylus-options {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  border: 0;
+  z-index: 2147483647;
+  background-color: hsla(0, 0%, 0%, .45);
+  animation: fadein .25s ease-in-out;
+}
+
+.stylus-options.fadeout {
+  animation: fadeout .25s ease-in-out;
+}
+
+.settings-column {
+  margin-top: 1rem;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadein-25pct {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: .25;
+  }
+}
+
+@media (max-width: 1000px) {
+  .newUI .entry > .style-info {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
+  :root {
+    --name-padding-left: 34px;
+  }
+
+  body {
+    display: table;
+  }
+
+  body.all-styles-hidden-by-filters:before {
+    content: "\2191"; /* up arrow */
+    top: calc(50% + 2.75rem);
+    left: 2rem;
+  }
+
+  body.all-styles-hidden-by-filters:after {
+    top: calc(50% + 4rem);
+    left: 3.75rem;
+  }
+
+  html:not(.newUI) .applies-to {
+    word-break: break-all;
+  }
+
+  #installed {
+    table-layout: fixed;
+  }
+
+  .newUI .entry .actions {
+    padding-right: 30px
+  }
+
+  #search-wrapper,
+  #sort-wrapper,
+  #header summary {
+    min-width: 10em;
+    max-width: 50vw;
+  }
+
+  #message-box > div {
+    left: 0;
+    right: 0!important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #header {
+    display: table-header-group;
+    height: auto;
+    padding: 0;
+    width: 100%;
+    position: static;
+    border-right: none;
+    border-bottom: 1px dashed var(--c65);
+  }
+
+  #manage-settings {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0 0 1rem;
+  }
+
+  #manage-settings > .settings-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  #installed {
+    margin-top: 0;
+    padding-left: 0;
+  }
+
+  #header h1,
+  #backup-message {
+    display: none;
+  }
+
+  #backup-buttons {
+    margin-top: 0;
+  }
+
+  #header summary {
+    margin-top: 0;
+    padding-bottom: .25rem;
+  }
+
+  .newUI .entry {
+    padding: 0;
+  }
+
+  .newUI .entry .checkmate {
+    position: absolute;
+    left: 14px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+  }
+
+  .newUI .entry .style-name {
+    text-indent: unset;
+  }
+
+  .newUI .entry .actions {
+    width: 104px;
+    padding: .5rem 0 .5rem 6px;
+  }
+
+  .newUI .entry .applies-to {
+    padding: .25rem .5rem .25rem 0;
+  }
+
+  .newUI .entry .target {
+    max-width: 100%;
+    padding-right: 0;
+  }
+
+  .newUI .style-name-link::after {
+    text-indent: 0;
+    display: inline-block;
+  }
+}
+
+@supports (-moz-appearance: none) {
+  .chromium-only {
+    display: none;
+  }
+
+  #header .filter-selection label .checkmate {
+    margin: 0;
+  }
+
+  .filter-selection select {
+    padding-left: 0;
+  }
+
+  #filters summary h2 {
+    margin-left: -2px;
+  }
+}
+
+@media screen and (prefers-color-scheme: dark), dark {
+  .filter-selection select:not(:focus) {
+    background-color: transparent;
+  }
+}

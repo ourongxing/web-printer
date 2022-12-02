@@ -1,0 +1,148 @@
+/* Built-in CodeMirror and addon customization */
+
+.CodeMirror-hints {
+  z-index: 999;
+}
+.CodeMirror-hint:hover {
+  color: var(--bg);
+  background: #08f;
+}
+.CodeMirror {
+  border: solid var(--c80) 1px;
+  transition: box-shadow .1s;
+}
+.CodeMirror {
+  color: inherit;
+  background-color: inherit;
+  border: solid var(--c80) 1px;
+  transition: box-shadow .1s;
+}
+.CodeMirror-gutters {
+  background-color: var(--c95);
+  border-color: var(--c85);
+}
+#stylus#stylus .CodeMirror {
+  /* Using a specificity hack to override userstyles */
+  /* Not using the ring-color hack as it became ugly in new Chrome */
+  outline: none !important;
+}
+.CodeMirror-dialog {
+  animation: highlight 3s cubic-bezier(.18, .02, 0, .94);
+}
+.CodeMirror-search-field {
+  width: 10em;
+}
+.CodeMirror-jump-field {
+  width: 5em;
+}
+.CodeMirror-search-hint {
+  color: var(--c50);
+}
+.CodeMirror-activeline .applies-to:before {
+  background-color: hsla(214, 100%, 90%, 0.15);
+  content: "";
+  top: 1em;
+  left: 0;
+  right: 0;
+  bottom: 1em;
+  position: absolute;
+  pointer-events: none;
+}
+.CodeMirror-activeline .applies-to ul {
+  z-index: 2;
+}
+.CodeMirror-foldgutter-open::after,
+.CodeMirror-foldgutter-folded::after {
+  top: 5px;
+  width: 0;
+  height: 0;
+  content: "";
+  position: absolute;
+  border-style: solid;
+  opacity: .5;
+  left: 1px;
+}
+.CodeMirror-foldgutter-open::after {
+  border-width: 5px 3px 0 3px;
+  border-color: currentColor transparent transparent transparent;
+}
+.CodeMirror-foldgutter-folded::after {
+  margin-top: -2px;
+  margin-left: 1px;
+  border-width: 4px 0 4px 5px;
+  border-color: transparent transparent transparent currentColor;
+}
+.CodeMirror-linenumber {
+  cursor: pointer; /* for bookmarking */
+}
+.cm-matchhighlight,
+.CodeMirror-selection-highlight-scrollbar {
+  background: hsla(200, 100%, 50%, var(--match-hl-opacity, .1));
+}
+
+/* Custom stuff we add to CodeMirror */
+
+.cm-uso-variable {
+  font-weight: bold;
+}
+.gutter-bookmark {
+  background: linear-gradient(0deg, hsla(180, 100%, 30%, .75) 2px, hsla(180, 100%, 30%, .2) 2px);
+}
+
+@media screen and (prefers-color-scheme: dark), dark {
+  .CodeMirror {
+    --match-hl-opacity: .18;
+  }
+  .CodeMirror-dialog {
+    background-color: #333;
+  }
+  .CodeMirror-dialog-top {
+    border-color: #555;
+  }
+  .CodeMirror-activeline-background {
+    background: hsl(180, 21%, 18%);
+  }
+  .CodeMirror-selected,
+  .CodeMirror-focused .CodeMirror-selected,
+  .CodeMirror-line::selection,
+  .CodeMirror-line > span::selection,
+  .CodeMirror-line > span > span::selection {
+    background: #444;
+  }
+  .CodeMirror-line::-moz-selection,
+  .CodeMirror-line > span::-moz-selection,
+  .CodeMirror-line > span > span::-moz-selection {
+    /* TODO: remove this when strict_min_version >= 62 */
+    background: #444;
+  }
+  .cm-s-default div.CodeMirror-cursor {
+    border-left: 1px solid #fff;
+  }
+  /* Using Chromium's dark devtools colors */
+  .cm-s-default .cm-atom,
+  .cm-s-default .cm-number { color: #a1f7b5 }
+  .cm-s-default .cm-attribute { color: #6194c6 }
+  .cm-s-default .cm-bracket { color: #997 }
+  .cm-s-default .cm-builtin,
+  .cm-s-default .cm-link { color: #9fb4d6 }
+  .cm-s-default .cm-comment { color: #747474 }
+  .cm-s-default .cm-qualifier { color: #ffa34f }
+  .cm-s-default .cm-def,
+  .cm-s-default .cm-header,
+  .cm-s-default .cm-tag,
+  .cm-s-default .cm-type { color: #5db0d7 }
+  .cm-s-default .cm-hr { color: #999 }
+  .cm-s-default .cm-keyword { color: #9a7fd5 }
+  .cm-s-default .cm-meta { color: #ddfb55 }
+  .cm-s-default .cm-operator { color: #d2c057 }
+  .cm-s-default .cm-string { color: #f28b54 }
+  .cm-s-default .cm-variable { color: #d9d9d9 }
+  .cm-s-default .cm-variable-2 { color: #72b9ff }
+  .cm-s-default .cm-variable-3 { color: #9bbbdc }
+
+  @keyframes highlight {
+    from {
+      background-color: #888;
+    }
+  }
+}

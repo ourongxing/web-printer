@@ -1,0 +1,21 @@
+@-moz-document url-prefix("https://xiaobot.net/post") {
+    .pc-header,
+    .header,
+    .paper-info,
+    .share-paper,
+    .light_feedback,
+    .paper_card,
+    .actions,
+    .comment,
+    .footer_write_comment,
+    .footer {
+        display: none !important;
+    }
+    .left {
+        margin-right: 0 !important;
+        max-width: 100% !important;
+    }
+    .post_page {
+        padding: 0 !important;
+    }
+}
