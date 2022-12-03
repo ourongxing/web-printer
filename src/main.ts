@@ -4,14 +4,14 @@ import ruanyfWeekly from "./ruanyfWeekly"
 import xiaobot from "./xiaobot"
 import zhubai from "./zhubai"
 
-async function launchPersistentContext() {
+async function launchPersistentContext(headless = true) {
   return await chromium.launchPersistentContext(await projectRoot("userData"), {
-    headless: true
+    headless
   })
 }
 
 async function login() {
-  const context = await launchPersistentContext()
+  const context = await launchPersistentContext(false)
   const page = await context.newPage()
   await page.goto(
     "https://xiaobot.net/post/614f09ab-31a9-4caa-b55c-2d7683af1c85"
@@ -34,9 +34,15 @@ async function main() {
   //     quality: 144
   //   }
   // )
-  await ruanyfWeekly("科技爱好者周刊", title => true, context, {
-    margin: { top: 0, left: 50, right: 50, bottom: 0 }
-  })
+  await ruanyfWeekly(
+    "科技爱好者周刊 最新",
+    (title, index, length) => length - index <= 4,
+    context,
+    {
+      margin: { top: 0, left: 50, right: 50, bottom: 0 },
+      quality: 144
+    }
+  )
   await context.close()
 }
 

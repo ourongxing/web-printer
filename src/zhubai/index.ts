@@ -19,7 +19,7 @@ async function fetchPagesInfo(home: string, filter: Filter, page: Page) {
     await page.evaluate("window.scrollBy(0, 5000)")
   }
   return data
-    .filter(k => k.title && filter(k.title))
+    .filter((k, i) => k.title && filter(k.title, i, data.length))
     .sort(
       (m, n) =>
         new Date(m.created_at).getTime() - new Date(n.created_at).getTime()

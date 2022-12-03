@@ -69,7 +69,7 @@ async function fetchPagesInfo(filter: Filter) {
         k.month
       ).padStart(2, "0")}/weekly-issue-${k.num}.html`
     }))
-    .filter(k => filter(k.title))
+    .filter((k, i) => filter(k.title, i, data.pages.length))
 }
 
 export default async function (
