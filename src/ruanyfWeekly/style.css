@@ -1,0 +1,13 @@
+@-moz-document url-prefix("https://www.ruanyifeng.com/blog/") {
+    #header,
+    .asset-header,
+    #related_entries,
+    #comments-open,
+    #footer {
+        display: none !important;
+    }
+
+    #comments {
+        display: block !important;
+    }
+}
