@@ -1,1 +1,1 @@
-Print multiple website pages as a pdf book.
+Print multiple website pages as one book.

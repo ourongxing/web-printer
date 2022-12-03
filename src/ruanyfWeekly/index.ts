@@ -1,7 +1,7 @@
 import buffer2arraybuffer from "buffer-to-arraybuffer"
 import fs from "fs-extra"
 import { BrowserContext } from "playwright"
-import { PrintOption } from "~/types"
+import { PrintOption, TitleFilter } from "~/types"
 import { delay, mergePDF, projectRoot } from "~/utils"
 
 interface Page {
@@ -11,12 +11,9 @@ interface Page {
   month: number
 }
 
-async function fetchWeeklyPages() {
+async function fetchPagesInfo(titleFilter: TitleFilter) {
   const content = (
-    await fs.readFile(
-      await projectRoot("assets/ruanyf-weekly-outline.md"),
-      "utf-8"
-    )
+    await fs.readFile(await projectRoot("src/ruanyfWeekly/outline.md"), "utf-8")
   ).toString()
   const data = content.split("\n").reduce(
     (acc, cur) => {
@@ -70,16 +67,23 @@ async function fetchWeeklyPages() {
       title: `第 ${k.num} 期：${k.title}`,
       id: `${k.year}/${String(k.month).padStart(2, "0")}/weekly-issue-${k.num}`
     }))
+    .filter(k => titleFilter(k.title))
 }
 
-export default async function (context: BrowserContext, options?: PrintOption) {
-  const home = "https://www.ruanyifeng.com/blog"
-  const name = "科技爱好者周刊"
+export default async function (
+  name: string,
+  titleFilter: TitleFilter,
+  context: BrowserContext,
+  options?: PrintOption
+) {
   const pdfs: { buffer: ArrayBuffer; title: string }[] = []
   const page = await context.newPage()
-  const pagesInfo = await fetchWeeklyPages()
+  const pagesInfo = await fetchPagesInfo(titleFilter)
   for (const info of pagesInfo) {
     await page.goto(`https://www.ruanyifeng.com/blog/${info.id}.html`)
+    await page.addStyleTag({
+      path: await projectRoot("src/ruanyfWeekly/style.css")
+    })
     await delay(700)
     pdfs.push({
       buffer: buffer2arraybuffer(await page.pdf(options)),
@@ -88,5 +92,5 @@ export default async function (context: BrowserContext, options?: PrintOption) {
   }
   await page.close()
   const outPath = await projectRoot(`./pdf/${name}.pdf`)
-  await fs.writeFile(outPath, await mergePDF(pdfs))
+  if (pdfs.length) await fs.writeFile(outPath, await mergePDF(pdfs))
 }

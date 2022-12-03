@@ -1,13 +1,13 @@
 import buffer2arraybuffer from "buffer-to-arraybuffer"
 import fs from "fs-extra"
 import { BrowserContext } from "playwright"
-import { PrintOption } from "~/types"
+import { PrintOption, TitleFilter } from "~/types"
 import { delay, mergePDF, projectRoot } from "~/utils"
 
-async function fetchXiaoBotPages(
+async function fetchPagesInfo(
   context: BrowserContext,
   home: string,
-  titleFilter: (title: string) => boolean
+  titleFilter: TitleFilter
 ) {
   const data: any[] = []
   const page = await context.newPage()
@@ -31,17 +31,20 @@ async function fetchXiaoBotPages(
 }
 
 export default async function (
-  context: BrowserContext,
-  home: string,
   name: string,
-  titleFilter: (title: string) => boolean,
+  home: string,
+  titleFilter: TitleFilter,
+  context: BrowserContext,
   options?: PrintOption
 ) {
   const pdfs: { buffer: ArrayBuffer; title: string }[] = []
-  const pagesInfo = await fetchXiaoBotPages(context, home, titleFilter)
+  const pagesInfo = await fetchPagesInfo(context, home, titleFilter)
   const page = await context.newPage()
   for (const info of pagesInfo) {
     await page.goto(`https://xiaobot.net/post/${info.uuid}`)
+    await page.addStyleTag({
+      path: await projectRoot("src/xiaobot/style.css")
+    })
     await delay(700)
     pdfs.push({
       buffer: buffer2arraybuffer(await page.pdf(options)),
@@ -50,5 +53,5 @@ export default async function (
   }
   await page.close()
   const outPath = await projectRoot(`pdf/${name}.pdf`)
-  await fs.writeFile(outPath, await mergePDF(pdfs))
+  if (pdfs.length) await fs.writeFile(outPath, await mergePDF(pdfs))
 }
