@@ -1,9 +1,9 @@
-import path from "path"
 import { chromium } from "playwright"
-const extensionPath = path.join(__dirname, "../../assets/stylus")
+import { projectRoot } from "."
 export async function launchPersistentContext() {
+  const extensionPath = await projectRoot("assets/stylus")
   return await chromium.launchPersistentContext(
-    path.join(__dirname, "../../assets/userData"),
+    await projectRoot("assets/userData"),
     {
       headless: false,
       args: [`--disable-extensions-except=${extensionPath}`]

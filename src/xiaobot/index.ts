@@ -1,9 +1,8 @@
 import buffer2arraybuffer from "buffer-to-arraybuffer"
 import fs from "fs-extra"
-import path from "path"
 import { BrowserContext } from "playwright"
 import { PrintOption } from "~/types"
-import { delay, mergePDF } from "~/utils"
+import { delay, mergePDF, projectRoot } from "~/utils"
 
 async function fetchXiaoBotPages(
   context: BrowserContext,
@@ -50,6 +49,6 @@ export default async function (
     })
   }
   await page.close()
-  const outPath = path.join(__dirname, `../../pdf/${name}.pdf`)
+  const outPath = await projectRoot(`pdf/${name}.pdf`)
   await fs.writeFile(outPath, await mergePDF(pdfs))
 }
