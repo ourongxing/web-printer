@@ -1,5 +1,9 @@
 export interface PrintOption {
   /**
+   * 144 dpi better
+   */
+  quality?: number
+  /**
    * Display header and footer. Defaults to `false`.
    */
   displayHeaderFooter?: boolean

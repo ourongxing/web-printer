@@ -1,7 +1,7 @@
 import path from "path"
 import rootPath from "@grimen/rootpath"
 
-export * from "./pdf"
+export * from "./bar"
 
 export function delay(t: number) {
   return new Promise(resolve => setTimeout(resolve, t))

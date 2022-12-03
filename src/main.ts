@@ -6,7 +6,7 @@ import zhubai from "./zhubai"
 
 async function launchPersistentContext() {
   return await chromium.launchPersistentContext(await projectRoot("userData"), {
-    headless: false
+    headless: true
   })
 }
 
@@ -21,32 +21,22 @@ async function login() {
 
 async function main() {
   const context = await launchPersistentContext()
-  // await zhubai(
-  //   "海上星光",
-  //   "https://hsxg.zhubai.love",
-  //   title => title.includes("11") || title.includes("22"),
+  // await zhubai("海上星光", "https://hsxg.zhubai.love", title => true, context, {
+  //   margin: { top: 0, left: 0, right: 0, bottom: 0 }
+  // })
+  // await xiaobot(
+  //   "产品沉思录 2022",
+  //   "https://xiaobot.net/p/pmthinking2022",
+  //   title => title.includes("Vol"),
   //   context,
   //   {
-  //     margin: { top: 0, left: 0, right: 0, bottom: 0 }
+  //     margin: { top: 0, left: 70, right: 70, bottom: 0 },
+  //     quality: 144
   //   }
   // )
-  await xiaobot(
-    "产品沉思录 2022",
-    "https://xiaobot.net/p/pmthinking2022",
-    title => title.includes("033") || title.includes("040"),
-    context,
-    {
-      margin: { top: 0, left: 70, right: 70, bottom: 0 }
-    }
-  )
-  // await ruanyfWeekly(
-  //   "科技爱好者周刊",
-  //   title => title.includes("130") || title.includes("260"),
-  //   context,
-  //   {
-  //     margin: { top: 0, left: 50, right: 50, bottom: 0 }
-  //   }
-  // )
+  await ruanyfWeekly("科技爱好者周刊", title => true, context, {
+    margin: { top: 0, left: 50, right: 50, bottom: 0 }
+  })
   await context.close()
 }
 

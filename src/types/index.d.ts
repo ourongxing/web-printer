@@ -1,3 +1,3 @@
 export * from "./print"
 
-export type TitleFilter = (title: string) => boolean
+export type Filter = (title: string) => boolean

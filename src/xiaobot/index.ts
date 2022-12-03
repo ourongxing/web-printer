@@ -1,16 +1,11 @@
-import buffer2arraybuffer from "buffer-to-arraybuffer"
-import fs from "fs-extra"
-import { BrowserContext } from "playwright"
-import { PrintOption, TitleFilter } from "~/types"
-import { delay, mergePDF, projectRoot } from "~/utils"
+import type { BrowserContext, Page } from "playwright"
+import { print } from "~/core"
+import type { PrintOption, Filter } from "~/types"
+import { delay } from "~/utils"
+import { stdout as slog } from "single-line-log"
 
-async function fetchPagesInfo(
-  context: BrowserContext,
-  home: string,
-  titleFilter: TitleFilter
-) {
+async function fetchPagesInfo(home: string, filter: Filter, page: Page) {
   const data: any[] = []
-  const page = await context.newPage()
   await page.goto(home)
   page.on("response", res => {
     if (res.url().includes("limit=")) {
@@ -23,35 +18,33 @@ async function fetchPagesInfo(
     await delay(200)
     await page.evaluate("window.scrollBy(0, 5000)")
   }
-  await page.close()
   return data
-    .filter(k => k.title && titleFilter(k.title))
-    .map(k => ({ uuid: k.uuid, title: k.title, date: k.created_at }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .filter(k => k.title && filter(k.title))
+    .sort(
+      (m, n) =>
+        new Date(m.created_at).getTime() - new Date(n.created_at).getTime()
+    )
+    .map(k => ({ url: `https://xiaobot.net/post/${k.uuid}`, title: k.title }))
 }
 
 export default async function (
   name: string,
   home: string,
-  titleFilter: TitleFilter,
+  filter: Filter,
   context: BrowserContext,
-  options?: PrintOption
+  printOption?: PrintOption
 ) {
-  const pdfs: { buffer: ArrayBuffer; title: string }[] = []
-  const pagesInfo = await fetchPagesInfo(context, home, titleFilter)
   const page = await context.newPage()
-  for (const info of pagesInfo) {
-    await page.goto(`https://xiaobot.net/post/${info.uuid}`)
-    await page.addStyleTag({
-      path: await projectRoot("src/xiaobot/style.css")
-    })
-    await delay(700)
-    pdfs.push({
-      buffer: buffer2arraybuffer(await page.pdf(options)),
-      title: info.title
-    })
-  }
+  slog(`Fetching ${name} Pages...`)
+  const pagesInfo = await fetchPagesInfo(home, filter, page)
+  slog(`Printing ${name}...`)
+  console.log("\n")
+  await print(name, pagesInfo, page, {
+    async injectFunc() {
+      await delay(700)
+    },
+    stylePath: "src/xiaobot/style.css",
+    printOption
+  })
   await page.close()
-  const outPath = await projectRoot(`pdf/${name}.pdf`)
-  if (pdfs.length) await fs.writeFile(outPath, await mergePDF(pdfs))
 }

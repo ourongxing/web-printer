@@ -1,5 +1,7 @@
 import { outlinePdfFactory } from "@lillallol/outline-pdf"
 import * as pdfLib from "pdf-lib"
+import { exec, execSync } from "child_process"
+import { projectRoot } from "~/utils"
 
 export async function mergePDF(pdfs: { buffer: ArrayBuffer; title: string }[]) {
   const mergedPdf = await pdfLib.PDFDocument.create()
@@ -21,4 +23,13 @@ export async function mergePDF(pdfs: { buffer: ArrayBuffer; title: string }[]) {
   })
 
   return await outlinedPDF.save()
+}
+
+export async function shrinkPDF(path: string, quality: number) {
+  execSync(
+    `bash ${await projectRoot(
+      "scripts/shrinkpdf.sh"
+    )} -r ${quality} -o "${path}.tmp" "${path}" >/dev/null 2>&1`
+  )
+  execSync(`mv "${path}.tmp" "${path}"`)
 }
