@@ -4,14 +4,16 @@
   "author": "ourongxing",
   "license": "MIT",
   "scripts": {
-    "print": "tsx src/main.ts"
+    "print": "tsx src/main.ts",
+    "shrink": "bash scripts/shrinkpdf.sh -r 144 -o"
   },
   "devDependencies": {
-    "@types/node": "^18.11.10",
     "@types/fs-extra": "^9.0.13",
+    "@types/node": "^18.11.10",
     "tsx": "^3.12.1"
   },
   "dependencies": {
+    "@grimen/rootpath": "^0.1.2",
     "@lillallol/outline-pdf": "^4.0.0",
     "buffer-to-arraybuffer": "^0.0.6",
     "fs-extra": "^11.1.0",
