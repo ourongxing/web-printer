@@ -1,8 +1,23 @@
-export interface PrintOption {
+interface CustomOption {
+  /**
+   * @default 5
+   */
+  thread?: number
+  /**
+   * collapse outline default
+   * @default false
+   */
+  collapse?: boolean
   /**
    * 144 dpi better
+   *
+   * not shrink if undefined, will faster
+   * @default undefined
    */
   quality?: number
+}
+
+export interface PrintOption extends CustomOption {
   /**
    * Display header and footer. Defaults to `false`.
    */

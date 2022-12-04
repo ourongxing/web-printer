@@ -1,15 +1,16 @@
 import { outlinePdfFactory } from "@lillallol/outline-pdf"
 import * as pdfLib from "pdf-lib"
-import { exec, execSync } from "child_process"
+import { execSync } from "child_process"
 import { projectRoot } from "~/utils"
+import type { Outline, PDF } from "~/types"
 
-export async function mergePDF(pdfs: { buffer: ArrayBuffer; title: string }[]) {
+export async function mergePDF(pdfs: PDF[]) {
   const mergedPdf = await pdfLib.PDFDocument.create()
-  const outline: { num: number; title: string }[] = []
+  const outlineItems: Outline[] = []
   for (let pdf of pdfs) {
-    outline.push({
-      num: mergedPdf.getPageCount() + 1,
-      title: pdf.title
+    outlineItems.push({
+      ...pdf,
+      num: mergedPdf.getPageCount() + 1
     })
     const doc = await pdfLib.PDFDocument.load(pdf.buffer)
     const copiedPages = await mergedPdf.copyPages(doc, doc.getPageIndices())
@@ -17,14 +18,39 @@ export async function mergePDF(pdfs: { buffer: ArrayBuffer; title: string }[]) {
   }
 
   // 7||Title
+  const outline = outlineItems
+    .reduce(
+      (acc, k) => {
+        if (k.folders?.length) {
+          k.folders.forEach(({ name, collapse }, index) => {
+            if (acc.forders[index] !== name) {
+              acc.items.push(
+                `${collapse ? "-" : ""}${k.num}|${"----------".slice(
+                  0,
+                  index
+                )}|${name}`
+              )
+            }
+          })
+        }
+        acc.forders = k.folders?.map(k => k.name) ?? []
+        acc.items.push(
+          `${k.num}|${"----------".slice(0, k.folders?.length ?? 0)}|${k.title}`
+        )
+        return acc
+      },
+      { items: [] as string[], forders: [] as string[] }
+    )
+    .items.join("\n")
   const outlinedPDF = await outlinePdfFactory(pdfLib)({
-    outline: outline.map(({ num, title }) => `${num}||${title}`).join("\n"),
+    outline,
     pdf: mergedPdf
   })
 
   return await outlinedPDF.save()
 }
 
+/** need ghostscript */
 export async function shrinkPDF(path: string, quality: number) {
   execSync(
     `bash ${await projectRoot(
