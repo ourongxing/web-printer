@@ -1,0 +1,10 @@
+.VPLocalNav ,
+.VPDocFooter,
+.VPNav,
+.edit-link,
+.VPContentDocFooter,
+.vueschool,
+.vue-mastery-link,
+.vuejobs-wrapper {
+    display: none !important;
+}

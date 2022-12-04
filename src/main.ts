@@ -1,6 +1,7 @@
 import { chromium } from "playwright"
 import { projectRoot } from "~/utils"
 import ruanyfWeekly from "./ruanyfWeekly"
+import vitepress from "./vitepress"
 import xiaobot from "./xiaobot"
 import zhubai from "./zhubai"
 
@@ -23,10 +24,10 @@ async function login() {
 
 async function main() {
   const context = await launchPersistentContext()
-  await zhubai("海上星光1", "https://hsxg.zhubai.love", () => true, context, {
-    margin: { top: 0, left: 0, right: 0, bottom: 0 },
-    thread: 3
-  })
+  // await zhubai("海上星光1", "https://hsxg.zhubai.love", () => true, context, {
+  //   margin: { top: 0, left: 0, right: 0, bottom: 0 },
+  //   thread: 3
+  // })
   // await xiaobot(
   //   "产品沉思录(2022)",
   //   "https://xiaobot.net/p/pmthinking2022",
@@ -46,9 +47,33 @@ async function main() {
   //     margin: { top: 0, left: 50, right: 50, bottom: 0 },
   //     quality: 144,
   //     printBackground: true,
-  //     collapse: true
   //   }
   // )
+  // await vitepress(
+  //   "OhMyMN V4.1.1 文档",
+  //   "https://ohmymn.marginnote.cn",
+  //   () => true,
+  //   context,
+  //   {
+  //     margin: { top: 0, left: 0, right: 0, bottom: 0 },
+  //     quality: 144,
+  //     thread: 5,
+  //     coverPath: "/Users/ourongxing/Downloads/OhMyMN 封面.pdf",
+  //     printBackground: true
+  //   }
+  // )
+  await vitepress(
+    "Vue v3.2 中文文档",
+    "https://cn.vuejs.org",
+    () => true,
+    context,
+    {
+      margin: { top: 0, left: 30, right: 30, bottom: 0 },
+      quality: 144,
+      thread: 5,
+      printBackground: true
+    }
+  )
 }
 
 main()
