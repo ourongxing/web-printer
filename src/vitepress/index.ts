@@ -2,7 +2,7 @@ import type { BrowserContext } from "playwright"
 import { print } from "~/core"
 import type { PrintOption, PageFilter, WebPage } from "~/types"
 import { delay } from "~/utils"
-import { outline } from "./vue-outline"
+import { vueOutline as outline } from "./outline"
 
 function fetchPagesInfo(home: string, pageFilter: PageFilter): WebPage[] {
   let ret: WebPage[]
@@ -12,7 +12,7 @@ function fetchPagesInfo(home: string, pageFilter: PageFilter): WebPage[] {
         if (item.link) {
           acc.push({
             title: item.text,
-            url: `${home}${item.link}.html`,
+            url: `${home}${item.link}${item.link.endsWith("/") ? "" : ".html"}`,
             folders: section.text
               ? [{ name: section.text, collapse: section.collapsed }]
               : undefined
@@ -28,7 +28,9 @@ function fetchPagesInfo(home: string, pageFilter: PageFilter): WebPage[] {
           if (item.link) {
             acc.push({
               title: item.text,
-              url: `${home}${item.link}.html`,
+              url: `${home}${item.link}${
+                item.link.endsWith("/") ? "" : ".html"
+              }`,
               folders: [
                 { name },
                 { name: section.text ?? "", collapse: section.collapsed }
@@ -58,7 +60,7 @@ export default async function (
     async injectFunc() {
       await delay(700)
     },
-    stylePath: "src/vitepress/vue.css",
+    stylePath: "src/vitepress/normal.css",
     printOption
   })
 }

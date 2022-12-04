@@ -74,6 +74,18 @@ async function main() {
       printBackground: true
     }
   )
+  // await vitepress(
+  //   "Vitest v0.25 中文文档",
+  //   "https://cn.vitest.dev/",
+  //   () => true,
+  //   context,
+  //   {
+  //     margin: { top: 0, left: 0, right: 0, bottom: 0 },
+  //     quality: 144,
+  //     thread: 5,
+  //     printBackground: true
+  //   }
+  // )
 }
 
 main()
