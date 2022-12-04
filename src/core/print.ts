@@ -1,6 +1,12 @@
 import { BrowserContext, Page } from "playwright"
 import fs from "fs-extra"
-import { CustomOption, PDF, PrintOption, WebPage } from "~/types"
+import {
+  CustomOption,
+  PDF,
+  PrintOption,
+  WebPage,
+  WebPageWithIndex
+} from "~/types"
 import { ProgressBar, projectRoot } from "~/utils"
 import { mergePDF, shrinkPDF } from "./pdf"
 import buffer2arraybuffer from "buffer-to-arraybuffer"
@@ -18,27 +24,34 @@ export async function print(
 ) {
   const { injectFunc, stylePath, printOption } = options || {}
   const thread = printOption?.thread ?? 1
+  const pagesInfoWithIndex = pagesInfo.map((pageInfo, index) => ({
+    ...pageInfo,
+    index
+  }))
+  const length = pagesInfoWithIndex.length
   const progressBar = new ProgressBar(30)
   let completed = 0
   const timer = setInterval(() => {
-    if (completed === pagesInfo.length) clearInterval(timer)
+    if (completed === length) clearInterval(timer)
     else {
       progressBar.render("", {
         completed,
-        total: pagesInfo.length
+        total: length
       })
     }
   }, 500)
   const pdfs = (
     await Promise.all(
       Array.from({ length: thread }).map((_, i) => {
-        const slice = Math.ceil(pagesInfo.length / thread)
-        return printThread(pagesInfo.slice(slice * i, slice * (i + 1)))
+        const slice = Math.ceil(length / thread)
+        return printThread(pagesInfoWithIndex.slice(slice * i, slice * (i + 1)))
       })
     )
-  ).flat()
+  )
+    .flat()
+    .sort((a, b) => a.index - b.index)
 
-  async function printThread(slice: WebPage[]) {
+  async function printThread(slice: WebPageWithIndex[]) {
     const pdfs: PDF[] = []
     const page = await context.newPage()
     for (const [index, { url }] of slice.entries()) {
@@ -73,7 +86,7 @@ export async function print(
   console.clear()
   if (pdfs.length) {
     slog("Generating PDF...")
-    await fs.writeFile(outPath, await mergePDF(pdfs))
+    await fs.writeFile(outPath, await mergePDF(pdfs, printOption?.coverPath))
     if (printOption?.quality) {
       slog("Shrinking PDF...")
       await shrinkPDF(outPath, printOption.quality)

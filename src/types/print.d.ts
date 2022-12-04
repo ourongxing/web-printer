@@ -1,4 +1,5 @@
 interface CustomOption {
+  coverPath?: string
   /**
    * @default 5
    */

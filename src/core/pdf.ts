@@ -3,9 +3,20 @@ import * as pdfLib from "pdf-lib"
 import { execSync } from "child_process"
 import { projectRoot } from "~/utils"
 import type { Outline, PDF } from "~/types"
+import fs from "fs-extra"
 
-export async function mergePDF(pdfs: PDF[]) {
-  const mergedPdf = await pdfLib.PDFDocument.create()
+export async function mergePDF(pdfs: PDF[], coverPath?: string) {
+  let cover: Uint8Array | undefined = undefined
+  if (coverPath) {
+    try {
+      cover = await fs.readFile(coverPath)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  const mergedPdf = cover
+    ? await pdfLib.PDFDocument.load(cover)
+    : await pdfLib.PDFDocument.create()
   const outlineItems: Outline[] = []
   for (let pdf of pdfs) {
     outlineItems.push({
