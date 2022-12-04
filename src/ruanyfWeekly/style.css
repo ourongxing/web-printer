@@ -1,11 +1,25 @@
-#header,
-.asset-header,
-#related_entries,
-#comments-open,
-#footer {
-    display: none !important;
-}
+    #header,
+    .asset-header,
+    #related_entries,
+    #comments-open,
+    #footer {
+        display: none !important;
+    }
+    #comments {
+        display: block !important;
+    }
+    img {
+        border: 0px !important;
+        width: 80%;
+        border-radius: 8px !important;
+        text-align: center !important;
+        margin: 0 auto !important;
+    }
+    p {
+        line-height: 1.5 !important;
+    }
 
-#comments {
-    display: block !important;
-}
+    body,
+    #container {
+        background-color: white;
+    }

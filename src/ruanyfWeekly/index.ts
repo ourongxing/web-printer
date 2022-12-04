@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import type { BrowserContext } from "playwright"
 import { print } from "~/core"
-import type { PrintOption, Filter } from "~/types"
+import type { PrintOption, PageFilter, WebPage } from "~/types"
 import { delay, projectRoot } from "~/utils"
 
 interface WeeklyPage {
@@ -11,7 +11,7 @@ interface WeeklyPage {
   month: number
 }
 
-async function fetchPagesInfo(filter: Filter) {
+async function fetchPagesInfo(pageFilter: PageFilter): Promise<WebPage[]> {
   const content = (
     await fs.readFile(await projectRoot("src/ruanyfWeekly/outline.md"), "utf-8")
   ).toString()
@@ -67,26 +67,46 @@ async function fetchPagesInfo(filter: Filter) {
       title: `第 ${k.num} 期：${k.title}`,
       url: `https://www.ruanyifeng.com/blog/${k.year}/${String(
         k.month
-      ).padStart(2, "0")}/weekly-issue-${k.num}.html`
+      ).padStart(2, "0")}/weekly-issue-${k.num}.html`,
+      folders: [{ name: k.year.toString(), collapse: false }]
     }))
-    .filter((k, i) => filter(k.title, i, data.pages.length))
+    .filter((k, i) =>
+      pageFilter({
+        ...k,
+        index: i,
+        length: data.pages.length
+      })
+    )
 }
 
 export default async function (
   name: string,
-  filter: Filter,
+  pageFilter: PageFilter,
   context: BrowserContext,
   printOption?: PrintOption
 ) {
-  const page = await context.newPage()
-  const pagesInfo = await fetchPagesInfo(filter)
+  // const page = await context.newPage()
+  const pagesInfo = await fetchPagesInfo(pageFilter)
   console.log(`Printing ${name}...\n`)
-  await print(name, pagesInfo, page, {
-    async injectFunc() {
-      await delay(700)
+  await print(name, pagesInfo, context, {
+    async injectFunc(page) {
+      await delay(500)
+      await page.addScriptTag({
+        content: `
+        ([...document.querySelectorAll("h2,p,blockquote")].reduce((acc,k)=> {
+          if(k.nodeName === "H2") acc.unshift([k])
+          else if(acc[0]) acc[0].push(k)
+        return acc
+        }, [])).forEach(k => {
+         if(!["科技动态", "文章", "本周", "工具", "图片", "文摘", "留言", "教程", "新闻", "新奇"].find(h=>k[0].innerText.includes(h)) && k.find(m => ["试用", "课程", "礼品", "抽奖", "不要错过", "鸣谢", "非常感谢", "提供支持" ,"名额", "赞助", "原价", "免费", "注册", "课程", "实战"].find(n=>m.innerText.includes(n))))
+          k.forEach(m => m.remove())
+        });
+        document.querySelector(".wwads-hide").click()
+        `
+      })
+      await delay(300)
     },
     stylePath: "src/ruanyfWeekly/style.css",
     printOption
   })
-  await page.close()
 }
