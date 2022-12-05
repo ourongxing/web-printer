@@ -1,5 +1,6 @@
 import { chromium } from "playwright"
 import { projectRoot } from "~/utils"
+import mdbook from "./mdbook"
 import ruanyfWeekly from "./ruanyfWeekly"
 import vitepress from "./vitepress"
 import xiaobot from "./xiaobot"
@@ -14,16 +15,11 @@ async function launchPersistentContext(headless = true) {
 async function login() {
   const context = await launchPersistentContext(false)
   const page = await context.newPage()
-  await page.goto(
-    "https://www.ruanyifeng.com/blog/2022/11/weekly-issue-232.html"
-  )
-  await page.addStyleTag({
-    path: await projectRoot("src/ruanyfWeekly/style.css")
-  })
+  // await page.goto("https://course.rs/community.html")
 }
 
 async function main() {
-  const context = await launchPersistentContext()
+  const context = await launchPersistentContext(false)
   // await zhubai("海上星光1", "https://hsxg.zhubai.love", () => true, context, {
   //   margin: { top: 0, left: 0, right: 0, bottom: 0 },
   //   thread: 3
@@ -62,27 +58,39 @@ async function main() {
   //     printBackground: true
   //   }
   // )
-  await vitepress(
-    "Vue v3.2 中文文档",
-    "https://cn.vuejs.org",
-    () => true,
+  // await vitepress(
+  //   "Vue v3.2 中文文档",
+  //   "https://cn.vuejs.org",
+  //   () => true,
+  //   context,
+  //   {
+  //     margin: { top: 0, left: 30, right: 30, bottom: 0 },
+  //     quality: 144,
+  //     thread: 5,
+  //     printBackground: true
+  //   }
+  // )
+  await mdbook(
+    "Rust 语言圣经(Rust Course)",
+    "https://course.rs",
+    ({ index }) => true,
     context,
     {
       margin: { top: 0, left: 30, right: 30, bottom: 0 },
       quality: 144,
-      thread: 5,
+      thread: 10,
       printBackground: true
     }
   )
   // await vitepress(
   //   "Vitest v0.25 中文文档",
-  //   "https://cn.vitest.dev/",
+  //   "https://cn.vitest.dev",
   //   () => true,
   //   context,
   //   {
   //     margin: { top: 0, left: 0, right: 0, bottom: 0 },
   //     quality: 144,
-  //     thread: 5,
+  //     thread: 1,
   //     printBackground: true
   //   }
   // )

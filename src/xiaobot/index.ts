@@ -9,6 +9,7 @@ async function fetchPagesInfo(
   pageFilter: PageFilter,
   content: BrowserContext
 ): Promise<WebPage[]> {
+  slog(`Fetching Pages Info...`)
   const data: any[] = []
   const page = await content.newPage()
   await page.goto(home)
@@ -48,15 +49,16 @@ export default async function (
   context: BrowserContext,
   printOption?: PrintOption
 ) {
-  slog(`Fetching ${name} Pages...`)
   const pagesInfo = await fetchPagesInfo(home, pageFilter, context)
-  slog(`Printing ${name}...`)
-  console.log("\n")
-  await print(name, pagesInfo, context, {
-    async injectFunc() {
-      await delay(700)
-    },
-    stylePath: "src/xiaobot/style.css",
-    printOption
-  })
+  if (pagesInfo.length) {
+    slog(`Printing ${name}...`)
+    console.log("\n")
+    await print(name, pagesInfo, context, {
+      async injectFunc() {
+        await delay(700)
+      },
+      stylePath: "src/xiaobot/style.css",
+      printOption
+    })
+  }
 }
