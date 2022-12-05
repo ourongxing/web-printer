@@ -1,0 +1,10 @@
+#menu-bar,
+#giscus-container,
+.nav-wrapper,
+.sidetoc {
+    display: none !important;
+}
+
+main {
+    margin-top: 50px !important;
+}
