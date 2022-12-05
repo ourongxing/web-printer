@@ -18,7 +18,7 @@ export async function print(
   context: BrowserContext,
   options?: {
     injectFunc?: (page: Page) => Promise<void>
-    stylePath?: string
+    stylePath?: string | string[]
     printOption?: PrintOption
   }
 ) {
@@ -63,10 +63,14 @@ export async function print(
             timeout: 60000
           })
         }
-        stylePath &&
-          (await page.addStyleTag({
-            path: await projectRoot(stylePath)
-          }))
+        if (stylePath?.length) {
+          const tmp = Array.isArray(stylePath) ? stylePath : [stylePath]
+          for (const path of tmp) {
+            await page.addStyleTag({
+              path: await projectRoot(path)
+            })
+          }
+        }
         injectFunc && (await injectFunc(page))
         pdfs.push({
           ...slice[index],

@@ -45,9 +45,21 @@ export async function mergePDF(pdfs: PDF[], coverPath?: string) {
           })
         }
         acc.forders = k.folders?.map(k => k.name) ?? []
-        acc.items.push(
-          `${k.num}|${"----------".slice(0, k.folders?.length ?? 0)}|${k.title}`
-        )
+        if (k.isFolder) {
+          acc.forders.push(k.title)
+          acc.items.push(
+            `${k.collapse ? "-" : ""}${k.num}|${"----------".slice(
+              0,
+              k.folders?.length ?? 0
+            )}|${k.title}`
+          )
+        } else {
+          acc.items.push(
+            `${k.num}|${"----------".slice(0, k.folders?.length ?? 0)}|${
+              k.title
+            }`
+          )
+        }
         return acc
       },
       { items: [] as string[], forders: [] as string[] }

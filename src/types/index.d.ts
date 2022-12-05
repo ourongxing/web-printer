@@ -1,12 +1,22 @@
 export * from "./print"
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
+type XOR<T, U> = T | U extends object
+  ? (Without<T, U> & U) | (Without<U, T> & T)
+  : T | U
 
-interface OutlineInfo {
+type OutlineInfo = {
   title: string
   folders?: {
     name: string
     collapse?: boolean
   }[]
-}
+} & XOR<
+  {
+    isFolder: boolean
+    collapse?: boolean
+  },
+  {}
+>
 
 export type PageFilter = (
   parms: {
@@ -16,19 +26,19 @@ export type PageFilter = (
   } & OutlineInfo
 ) => boolean
 
-export interface WebPage extends OutlineInfo {
+export type WebPage = {
   url: string
-}
+} & OutlineInfo
 
-export interface WebPageWithIndex extends WebPage {
+export type WebPageWithIndex = {
   index: number
-}
+} & WebPage
 
-export interface PDF extends OutlineInfo {
+export type PDF = {
   index: number
   buffer: ArrayBuffer
-}
+} & OutlineInfo
 
-export interface Outline extends OutlineInfo {
+export type Outline = {
   num: number
-}
+} & OutlineInfo
