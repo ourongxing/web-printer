@@ -1,6 +1,6 @@
 {
-  "name": "print-website-as-book",
-  "version": "0.0.1",
+  "name": "web-printer",
+  "version": "0.9.0",
   "author": "ourongxing",
   "license": "MIT",
   "scripts": {
