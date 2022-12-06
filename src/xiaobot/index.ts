@@ -50,15 +50,11 @@ export default async function (
   printOption?: PrintOption
 ) {
   const pagesInfo = await fetchPagesInfo(home, pageFilter, context)
-  if (pagesInfo.length) {
-    slog(`Printing ${name}...`)
-    console.log("\n")
-    await print(name, pagesInfo, context, {
-      async injectFunc() {
-        await delay(700)
-      },
-      stylePath: "src/xiaobot/style.css",
-      printOption
-    })
-  }
+  await print(name, pagesInfo, context, {
+    async injectFunc() {
+      await delay(700)
+    },
+    stylePath: "src/xiaobot/style.css",
+    printOption
+  })
 }

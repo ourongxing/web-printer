@@ -1,6 +1,7 @@
 import { chromium } from "playwright"
 import { projectRoot } from "~/utils"
 import javascriptInfo from "./javascriptInfo"
+import juejinWeekly from "./juejinWeekly"
 import mdbook from "./mdbook"
 import ruanyfWeekly from "./ruanyfWeekly"
 import { ContextOption } from "./types"
@@ -26,6 +27,17 @@ async function main() {
   const context = await launchPersistentContext({
     headless: true
   })
+  // await juejinWeekly(
+  //   `掘金周刊(${new Date().toLocaleDateString().replace(/\//g, "-")})`,
+  //   ({ index }) => index < 30,
+  //   context,
+  //   {
+  //     margin: { top: 0, left: 30, right: 30, bottom: 0 },
+  //     thread: 10,
+  //     quality: 144,
+  //     printBackground: true
+  //   }
+  // )
   // await zhubai("海上星光1", "https://hsxg.zhubai.love", () => true, context, {
   //   margin: { top: 0, left: 0, right: 0, bottom: 0 },
   //   thread: 3
@@ -76,18 +88,18 @@ async function main() {
   //     printBackground: true
   //   }
   // )
-  await mdbook(
-    "Rust 语言圣经(Rust Course)",
-    "https://course.rs",
-    ({ index }) => true,
-    context,
-    {
-      margin: { top: 0, left: 30, right: 30, bottom: 0 },
-      quality: 144,
-      thread: 10,
-      printBackground: true
-    }
-  )
+  // await mdbook(
+  //   "Rust 语言圣经(Rust Course)",
+  //   "https://course.rs",
+  //   ({ index }) => true,
+  //   context,
+  //   {
+  //     margin: { top: 0, left: 30, right: 30, bottom: 0 },
+  //     quality: 144,
+  //     thread: 10,
+  //     printBackground: true
+  //   }
+  // )
   // await vitepress(
   //   "Vitest v0.25 中文文档",
   //   "https://cn.vitest.dev",
@@ -108,5 +120,5 @@ async function main() {
   // })
 }
 
-// main()
-test()
+main()
+// test()

@@ -55,7 +55,6 @@ export default async function (
   printOption?: PrintOption
 ) {
   const pagesInfo = fetchPagesInfo(home, pageFilter)
-  console.log(`Printing ${name}...\n`)
   await print(name, pagesInfo, context, {
     async injectFunc() {
       await delay(700)

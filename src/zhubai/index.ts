@@ -50,18 +50,14 @@ export default async function (
   printOption?: PrintOption
 ) {
   const pagesInfo = await fetchPagesInfo(home, pageFilter, context)
-  if (pagesInfo.length) {
-    slog(`Printing ${name}...`)
-    console.log("\n")
-    await print(name, pagesInfo, context, {
-      async injectFunc(page) {
-        for (let i = 0; i < 10; i++) {
-          await delay(200)
-          await page.evaluate("window.scrollBy(0, 3000)")
-        }
-      },
-      stylePath: "src/zhubai/style.css",
-      printOption
-    })
-  }
+  await print(name, pagesInfo, context, {
+    async injectFunc(page) {
+      for (let i = 0; i < 10; i++) {
+        await delay(200)
+        await page.evaluate("window.scrollBy(0, 3000)")
+      }
+    },
+    stylePath: "src/zhubai/style.css",
+    printOption
+  })
 }

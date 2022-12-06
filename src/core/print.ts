@@ -22,6 +22,13 @@ export async function print(
     printOption?: PrintOption
   }
 ) {
+  if (!pagesInfo.length) {
+    slog(`No Pages to Print`)
+    context.close()
+    return
+  }
+  slog(`Printing ${name}...`)
+  console.log("\n")
   const { injectFunc, stylePath, printOption } = options || {}
   const thread = printOption?.thread ?? 1
   const pagesInfoWithIndex = pagesInfo.map((pageInfo, index) => ({
@@ -30,14 +37,19 @@ export async function print(
   }))
   const length = pagesInfoWithIndex.length
   const progressBar = new ProgressBar(30)
-  let completed = 0
+  let completed: { title: string; status: boolean }[] = []
   const timer = setInterval(() => {
-    if (completed === length) clearInterval(timer)
+    if (completed.length === length) clearInterval(timer)
     else {
-      progressBar.render("", {
-        completed,
-        total: length
-      })
+      progressBar.render(
+        completed.length
+          ? `${completed[0].status ? "✅" : "❌"} ${completed[0].title}`
+          : "...",
+        {
+          completed: completed.length,
+          total: length
+        }
+      )
     }
   }, 500)
   const pdfs = (
@@ -54,7 +66,7 @@ export async function print(
   async function printThread(slice: WebPageWithIndex[]) {
     const pdfs: PDF[] = []
     const page = await context.newPage()
-    for (const [index, { url }] of slice.entries()) {
+    for (const [index, { url, title }] of slice.entries()) {
       try {
         try {
           await page.goto(url)
@@ -76,10 +88,17 @@ export async function print(
           ...slice[index],
           buffer: buffer2arraybuffer(await page.pdf(printOption))
         })
+        completed.unshift({
+          title,
+          status: true
+        })
       } catch (e) {
+        completed.unshift({
+          title,
+          status: false
+        })
         console.log(e)
       }
-      completed++
     }
     await page.close()
     return pdfs
