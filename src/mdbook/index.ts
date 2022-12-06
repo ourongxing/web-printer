@@ -16,17 +16,14 @@ async function fetchPagesInfo(
     const data = JSON.parse(
       await page.evaluate(`
 (() => {
-  function genPageItem(node) {
-    if (node.className.includes("part-title")) return { title: node.innerText }
-    else {
+  function deepTransform(nodes, folders) {
+    function genPageItem(node) {
       const a = node.childNodes[0]
       return {
         title: a?.innerText,
         url: a?.href
       }
     }
-  }
-  function deepTransform(nodes, folders) {
     if (Array.isArray(nodes)) {
       const f = nodes.shift()
       const { title, url } = genPageItem(f)
@@ -47,41 +44,26 @@ async function fetchPagesInfo(
       })
     }
   }
-  const nodeItems = [...document.querySelectorAll(".chapter > li")]
-    .reduce((acc, cur) => {
-      if (!cur.className.includes("spacer")) {
-        if (cur.className.includes("part-title")) acc.unshift([cur])
-        else if (acc[0]) {
-          if (!cur.className && acc[0].length) {
-            const chapter = acc[0].pop()
-            acc[0].push(
-              [chapter, ...cur.childNodes[0].childNodes].reduce((a, c) => {
-                if (!c.className && a.length) {
-                  const chapter = a.pop()
-                  a.push(
-                    [chapter, ...c.childNodes[0].childNodes].reduce((a, c) => {
-                      if (!c.className && a.length) {
-                        const chapter = a.pop()
-                        a.push([chapter, ...c.childNodes[0].childNodes])
-                      } else c.innerText && a.push(c)
-                      return a
-                    }, [])
-                  )
-                } else c.innerText && a.push(c)
-                return a
-              }, [])
-            )
-          } else {
-            cur.innerText && acc[0].push(cur)
-          }
-        }
+
+  function deepFetch(nodes) {
+    return nodes.reduce((acc, cur) => {
+      if (!cur.className && acc.length) {
+        const chapter = acc.pop()
+        acc.push(deepFetch([chapter, ...cur.childNodes[0].childNodes]))
+      } else {
+        cur.innerText && acc.push(cur)
       }
       return acc
     }, [])
-    .reverse()
+  }
+
+  const nodes = [...document.querySelectorAll(".chapter > li")].filter(
+    k => !["spacer", "affix", "part-title"].some(h => k.className.includes(h))
+  )
+
   const ret = []
-  nodeItems.forEach(nodes => {
-    deepTransform(nodes, [])
+  deepFetch(nodes).forEach(items => {
+    deepTransform(items, [])
   })
   return JSON.stringify(ret, null, 2)
 })()
