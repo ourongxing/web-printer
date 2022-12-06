@@ -1,0 +1,21 @@
+.main-header-box,
+.action-bar,
+.recommended-area,
+.recommended-links,
+.extension-banner,
+.category-course-recommend,
+.comment-form,
+.follow-button,
+.comment-list-wrapper,
+.wechat-banner,
+.column-container {
+  display: none !important;
+}
+
+#juejin>div.view-container>main>div {
+  padding-bottom: 0 !important;
+}
+
+html {
+  background-color: #fff !important;
+}
