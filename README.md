@@ -1,7 +1,7 @@
 <br>
 
 <p align="center">
-  <img src="assets/printer@256.png" style="width:200px;" />
+  <img src="./assets/printer@256.png" style="width:200px;" />
 </p>
 
 <h1 align="center">Web Printer</h1>
