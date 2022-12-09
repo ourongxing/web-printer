@@ -1,4 +1,3 @@
-import path from "path"
 import { stdout } from "single-line-log"
 
 export * from "./bar"

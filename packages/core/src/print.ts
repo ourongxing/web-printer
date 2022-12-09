@@ -1,6 +1,6 @@
-import { BrowserContext, Page } from "playwright"
+import type { BrowserContext } from "playwright"
 import fs from "fs-extra"
-import { PDFBuffer, PrintOption, PageInfo, MaybeArray, Plugin } from "./typings"
+import type { PDFBuffer, PrintOption, PageInfo, Plugin } from "./typings"
 import { ProgressBar, slog } from "./utils"
 import { mergePDF } from "./pdf"
 import path from "path"
@@ -39,7 +39,7 @@ export async function print(
   }
 
   const progressBar = new ProgressBar(30)
-  let completed: { title: string; status: boolean }[] = []
+  const completed: { title: string; status: boolean }[] = []
   const timer = setInterval(() => {
     if (completed.length === length) clearInterval(timer)
     else {

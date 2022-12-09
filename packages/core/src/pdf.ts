@@ -17,7 +17,7 @@ export async function mergePDF(pdfList: PDFBuffer[], coverPath?: string) {
     ? await PDFDocument.load(cover)
     : await PDFDocument.create()
   const outlineItems: OutlineItem[] = []
-  for (let pdf of pdfList) {
+  for (const pdf of pdfList) {
     outlineItems.push({
       ...pdf,
       num: mergedPdf.getPageCount() + 1

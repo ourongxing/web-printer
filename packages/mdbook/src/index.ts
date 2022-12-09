@@ -1,4 +1,5 @@
-import { delay, Plugin } from "@web-printer/core"
+import type { Plugin } from "@web-printer/core"
+import { delay } from "@web-printer/core"
 
 export default function (options: { url: string }): Plugin {
   const { url } = options

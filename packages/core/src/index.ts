@@ -1,6 +1,6 @@
 import { chromium } from "playwright"
 import { print } from "./print"
-import {
+import type {
   PrintOption,
   BrowserContextOptions,
   Plugin,

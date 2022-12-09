@@ -1,6 +1,5 @@
-import { MaybeArray, XOR } from "packages/core/dist"
-import { BrowserContextOptions as _option } from "playwright"
-import { PageFilter } from "."
+import type { BrowserContextOptions as _option } from "playwright"
+import type { PageFilter } from "."
 
 interface WebPrinterPrintOption {
   filter?: PageFilter
