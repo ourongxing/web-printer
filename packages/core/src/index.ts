@@ -28,7 +28,7 @@ export class Printer {
   use(plugin: Plugin) {
     const { beforePrint, fetchPagesInfo, injectStyle } = plugin
     const { contextOptions } = this
-    const { outputDir, userDataDir, thread } = contextOptions
+    const { outputDir, userDataDir, threads } = contextOptions
     return {
       async print(name: string, printOption: PrintOption = {}) {
         slog(`Fetching Pages Info...`)
@@ -88,7 +88,7 @@ export class Printer {
         }
 
         print(name, pagesInfo, context, {
-          thread: thread ?? 1,
+          threads: threads ?? 1,
           beforePrint,
           printOption,
           outputDir: outputDir ?? "output"

@@ -12,14 +12,14 @@ export async function print(
   options: {
     beforePrint?: Plugin["beforePrint"]
     outputDir: string
-    thread: number
+    threads: number
     printOption: PrintOption
   }
 ) {
   const length = pagesInfo.length
   slog(`Printing ${name}...`)
   console.log("\n")
-  const { beforePrint, printOption, thread, outputDir } = options
+  const { beforePrint, printOption, threads, outputDir } = options
   const { margin, continuous, injectedStyle } = printOption
   const css = ([injectedStyle].flat().filter(k => k) as string[]).join("\n")
 
@@ -56,15 +56,15 @@ export async function print(
   }, 500)
   const pdfs = (
     await Promise.all(
-      Array.from({ length: thread }).map((_, i) => {
-        return printThread(pagesInfo.filter(k => k.index % thread === i))
+      Array.from({ length: threads }).map((_, i) => {
+        return printthreads(pagesInfo.filter(k => k.index % threads === i))
       })
     )
   )
     .flat()
     .sort((a, b) => a.index - b.index)
 
-  async function printThread(slice: PageInfo[]) {
+  async function printthreads(slice: PageInfo[]) {
     const pdfs: PDFBuffer[] = []
     const page = await context.newPage()
     for (const pageInfo of slice) {

@@ -107,7 +107,7 @@ export interface PrintOption extends WebPrinterPrintOption {
 export interface WebPrinterBrowserContextOptions {
   userDataDir?: string
   outputDir?: string
-  thread?: number
+  threads?: number
 }
 
 export interface BrowserContextOptions extends WebPrinterBrowserContextOptions {
