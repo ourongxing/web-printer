@@ -1,13 +1,14 @@
 {
   "name": "@web-printer/monorepo",
   "type": "module",
-  "version": "0.9.0",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "pnpm --filter=@web-printer/* run build",
     "test": "pnpm --filter=test run dev"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.25.2",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.11.11",
     "fs-extra": "^11.1.0",
