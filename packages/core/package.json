@@ -1,0 +1,22 @@
+{
+  "name": "@web-printer/core",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean",
+    "dev": "pnpm build --watch"
+  },
+  "devDependencies": {
+    "@types/single-line-log": "^1.1.0"
+  },
+  "dependencies": {
+    "@lillallol/outline-pdf": "^4.0.0",
+    "pdf-lib": "^1.17.1",
+    "single-line-log": "^1.1.2"
+  }
+}

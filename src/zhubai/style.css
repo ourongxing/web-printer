@@ -1,5 +1,0 @@
-div[class*="PostPage_navRoot"],
-button[class*="Button_button"],
-div[class*="PostPage_footer"] {
-  display: none !important;
-}

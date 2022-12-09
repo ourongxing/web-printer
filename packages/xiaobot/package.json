@@ -1,0 +1,17 @@
+{
+  "name": "@web-printer/xiaobot",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean",
+    "dev": "pnpm build --watch"
+  },
+  "dependencies": {
+    "@web-printer/core": "workspace:*"
+  }
+}

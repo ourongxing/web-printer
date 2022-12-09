@@ -1,25 +1,17 @@
 {
-  "name": "web-printer",
+  "name": "@web-printer/monorepo",
+  "type": "module",
   "version": "0.9.0",
-  "author": "ourongxing",
-  "license": "MIT",
+  "private": true,
   "scripts": {
-    "print": "tsx src/main.ts",
-    "shrink": "bash scripts/shrinkpdf.sh -r 144 -o"
+    "build": "pnpm --filter=@web-printer/* run build",
+    "test": "pnpm --filter=test run dev"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "@types/node": "^18.11.10",
-    "@types/single-line-log": "^1.1.0",
-    "tsx": "^3.12.1"
-  },
-  "dependencies": {
-    "@grimen/rootpath": "^0.1.2",
-    "@lillallol/outline-pdf": "^4.0.0",
-    "buffer-to-arraybuffer": "^0.0.6",
+    "@types/node": "^18.11.11",
     "fs-extra": "^11.1.0",
-    "pdf-lib": "^1.17.1",
     "playwright": "^1.28.1",
-    "single-line-log": "^1.1.2"
+    "tsup": "^6.5.0"
   }
 }

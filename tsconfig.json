@@ -14,16 +14,14 @@
     "resolveJsonModule": true,
     "importHelpers": true,
     "baseUrl": ".",
-    "paths": {
-      "~/*": [
-        "src/*"
-      ]
-    },
     "lib": [
-      "ES2020"
+      "ESNext"
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "**/src/*.ts",
+  ],
+  "exclude": [
+    "**/dist/*"
   ]
 }
