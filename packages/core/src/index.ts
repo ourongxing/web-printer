@@ -35,6 +35,7 @@ export class Printer {
         const context = await chromium.launchPersistentContext(
           userDataDir ?? "userData",
           {
+            colorScheme: "light",
             ...contextOptions
           }
         )
@@ -87,7 +88,7 @@ export class Printer {
             .filter(k => k)
         }
 
-        print(name, pagesInfo, context, {
+        await print(name, pagesInfo, context, {
           threads: threads ?? 1,
           beforePrint,
           printOption,
@@ -95,7 +96,6 @@ export class Printer {
         })
       },
       async test(printOption: PrintOption = {}) {
-        slog(`Fetching Pages Info...`)
         const context = await chromium.launchPersistentContext(
           userDataDir ?? "userData",
           {
@@ -105,10 +105,8 @@ export class Printer {
         const { filter, margin, injectedStyle, continuous } = printOption
         let _pagesInfo: PageInfoWithoutIndex[] = []
         try {
-          slog(`Fetching Pages Info...`)
           _pagesInfo = await fetchPagesInfo({ context })
         } catch (e) {
-          slog("Fetch Filed")
           console.log(e)
           context.close()
           return
