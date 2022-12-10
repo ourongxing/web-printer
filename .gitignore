@@ -1,7 +1,6 @@
 userData
 node_modules
-test*
-test/*
 *.pdf
 *.tmp
 dist
+output
