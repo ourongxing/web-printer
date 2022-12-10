@@ -20,7 +20,11 @@ export async function print(
   slog(`Printing ${name}...`)
   console.log("\n")
   const { beforePrint, printOption, threads, outputDir } = options
-  const { margin, continuous, injectedStyle } = printOption
+  const { margin, continuous, injectedStyle, test } = printOption
+  if (test) {
+    name = "test: " + name
+    pagesInfo = pagesInfo.slice(0, 2)
+  }
   const css = ([injectedStyle].flat().filter(k => k) as string[]).join("\n")
 
   printOption.margin = {

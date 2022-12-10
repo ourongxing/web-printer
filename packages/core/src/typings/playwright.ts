@@ -4,6 +4,7 @@ import type { PageFilter } from "."
 interface WebPrinterPrintOption {
   filter?: PageFilter
   coverPath?: string
+  test?: boolean
   collapse?: boolean
   injectedStyle?: string | (false | undefined | string)[]
   continuous?: boolean

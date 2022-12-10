@@ -93,6 +93,52 @@ export class Printer {
           printOption,
           outputDir: outputDir ?? "output"
         })
+      },
+      async test(printOption: PrintOption = {}) {
+        slog(`Fetching Pages Info...`)
+        const context = await chromium.launchPersistentContext(
+          userDataDir ?? "userData",
+          {
+            ...contextOptions
+          }
+        )
+        const { filter, margin, injectedStyle, continuous } = printOption
+        let _pagesInfo: PageInfoWithoutIndex[] = []
+        try {
+          slog(`Fetching Pages Info...`)
+          _pagesInfo = await fetchPagesInfo({ context })
+        } catch (e) {
+          slog("Fetch Filed")
+          console.log(e)
+          context.close()
+          return
+        }
+
+        if (filter) {
+          _pagesInfo = _pagesInfo.filter(
+            (k, i) =>
+              k.title &&
+              filter({
+                ...k,
+                index: i,
+                length: _pagesInfo.length
+              })
+          )
+        }
+
+        if (_pagesInfo.length === 0) {
+          slog(`No Pages to Print`)
+          context.close()
+          return
+        }
+
+        const pagesInfo = _pagesInfo.map((k, index) => ({
+          ...k,
+          index
+        }))
+
+        context.close()
+        return pagesInfo
       }
     }
   }

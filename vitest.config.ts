@@ -8,7 +8,5 @@ export default defineConfig({
   resolve: {
     alias
   },
-  test: {
-    setupFiles: ["./test/setup.ts"]
-  }
+  test: {}
 })

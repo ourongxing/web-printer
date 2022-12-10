@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "build": "pnpm --filter=@web-printer/* run build",
-    "test": "pnpm --filter=test run dev",
     "changeset": "changeset",
+    "test": "vitest",
     "lint:fix": "eslint . --fix --ext .ts",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --write .",

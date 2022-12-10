@@ -13,15 +13,36 @@
     "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "baseUrl": ".",
     "lib": [
       "ESNext"
-    ]
+    ],
+    "paths": {
+      "@web-printer/core": [
+        "./packages/core/src"
+      ],
+      "@web-printer/juejin": [
+        "./packages/juejin/src"
+      ],
+      "@web-printer/ruanyifeng": [
+        "./packages/ruanyifeng/src"
+      ],
+      "@web-printer/xiaobot": [
+        "./packages/xiaobot/src"
+      ],
+      "@web-printer/zhubai": [
+        "./packages/zhubai/src"
+      ],
+      "@web-printer/mdbook": [
+        "./packages/mdbook/src"
+      ]
+    }
   },
   "include": [
     "**/src/**/*.ts",
+    "./test/**/*.ts"
   ],
   "exclude": [
-    "**/dist/*"
+    "**/dist/**",
+    "**/node_modules/**"
   ]
 }
