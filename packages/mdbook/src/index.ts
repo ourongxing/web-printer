@@ -10,14 +10,14 @@ export default function (options: { url: string }): Plugin {
       const data = JSON.parse(
         await page.evaluate(`
 (() => {
-  function deepTransform(nodes, groups) {
-    function genPageItem(node) {
-      const a = node.childNodes[0]
-      return {
-        title: a?.innerText,
-        url: a?.href
-      }
+  function genPageItem(node) {
+    const a = node.childNodes[0]
+    return {
+      title: a?.innerText,
+      url: a?.href
     }
+  }
+  function deepTransform(nodes, groups) {
     if (Array.isArray(nodes)) {
       const f = nodes.shift()
       const { title, url } = genPageItem(f)
@@ -51,13 +51,28 @@ export default function (options: { url: string }): Plugin {
     }, [])
   }
 
-  const nodes = [...document.querySelectorAll(".chapter > li")].filter(
-    k => !["spacer", "affix", "part-title"].some(h => k.className.includes(h))
-  )
+  const nodes = [...document.querySelectorAll(".chapter > li:not(.affix, .spacer, .part-title)")]
 
   const ret = []
   deepFetch(nodes).forEach(items => {
     deepTransform(items, [])
+  })
+  ;[...document.querySelectorAll(".chapter > li:not(.affix, .spacer)")].reduce((acc, cur) => {
+    if(cur.className.includes("part-title")) acc.partTitle = cur.innerText
+    else if(acc.partTitle && cur.childNodes[0]?.href) {
+      const title = cur.childNodes[0].innerText
+      if(acc.items.length) acc.items[acc.items.length-1].push(title)
+      acc.items.push([acc.partTitle, title])
+      acc.partTitle = ""
+    }
+    return acc
+  },{ items: [], partTitle: "" }).items.forEach(item => {
+    let flag = false
+    ret.forEach(k=>{
+      if(k.title === item[1]) flag = true
+      else if(k.title === item[2]) flag = false
+      flag && k.groups.unshift({ name: item[0] })
+    })
   })
   return JSON.stringify(ret, null, 2)
 })()
@@ -67,10 +82,7 @@ export default function (options: { url: string }): Plugin {
       return data
     },
     async beforePrint({ page }) {
-      for (let i = 0; i < 10; i++) {
-        await delay(200)
-        await page.evaluate("window.scrollBy(0, 3000)")
-      }
+      await delay(700)
     },
     injectStyle() {
       const style = `
@@ -93,10 +105,15 @@ main > * {
 #content {
     padding: 0;
 }
+
+code:not(.hljs) {
+    background-color: #f6f7f6 !important;
+}
+
 `
       return {
         style,
-        titleSelector: `main > *`
+        titleSelector: `main`
       }
     }
   }
