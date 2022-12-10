@@ -5,7 +5,7 @@ interface WebPrinterPrintOption {
   filter?: PageFilter
   coverPath?: string
   test?: boolean
-  collapse?: boolean
+  collapsed?: boolean
   injectedStyle?: string | (false | undefined | string)[]
   continuous?: boolean
 }

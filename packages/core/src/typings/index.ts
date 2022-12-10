@@ -6,14 +6,14 @@ type BaseInfo = {
   groups?: (
     | {
         name: string
-        collapse?: boolean
+        collapsed?: boolean
       }
     | string
   )[]
 } & XOR<
   {
     selfGroup: boolean
-    collapse?: boolean
+    collapsed?: boolean
   },
   {}
 >
@@ -22,7 +22,7 @@ const a: BaseInfo = {
   title: "a",
   groups: ["a", "b", "c"],
   selfGroup: true,
-  collapse: true
+  collapsed: true
 }
 
 export type PageInfoWithoutIndex = {

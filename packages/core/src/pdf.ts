@@ -27,21 +27,26 @@ export async function mergePDF(pdfList: PDFBuffer[], coverPath?: string) {
     copiedPages.forEach(page => mergedPdf.addPage(page))
   }
 
-  const outlinedPDF = await addOutline(mergedPdf, outlineItems)
+  const outlinedPDF = await outlinePdfFactory(pdfLib)({
+    outline: await generateOutline(outlineItems),
+    pdf: mergedPdf
+  })
+
   return await outlinedPDF.save()
 }
 
-async function addOutline(pdf: PDFDocument, outlineItems: OutlineItem[]) {
-  const outline = outlineItems
+export async function generateOutline(outlineItems: OutlineItem[]) {
+  return outlineItems
     .reduce(
       (acc, k) => {
         if (k.groups?.length) {
           k.groups.forEach((group, index) => {
             const name = typeof group === "string" ? group : group.name
-            const collapse = typeof group === "string" ? false : group.collapse
+            const collapsed =
+              typeof group === "string" ? false : group.collapsed
             if (acc.groups[index] !== name) {
               acc.items.push(
-                `${collapse ? "-" : ""}${k.num}|${"----------".slice(
+                `${collapsed ? "-" : ""}${k.num}|${"----------".slice(
                   0,
                   index
                 )}|${name}`
@@ -54,7 +59,7 @@ async function addOutline(pdf: PDFDocument, outlineItems: OutlineItem[]) {
         if (k.selfGroup) {
           acc.groups.push(k.title)
           acc.items.push(
-            `${k.collapse ? "-" : ""}${k.num}|${"----------".slice(
+            `${k.collapsed ? "-" : ""}${k.num}|${"----------".slice(
               0,
               k.groups?.length ?? 0
             )}|${k.title}`
@@ -71,10 +76,6 @@ async function addOutline(pdf: PDFDocument, outlineItems: OutlineItem[]) {
       { items: [] as string[], groups: [] as string[] }
     )
     .items.join("\n")
-  return await outlinePdfFactory(pdfLib)({
-    outline,
-    pdf
-  })
 }
 
 /** need ghostscript */
