@@ -16,15 +16,15 @@ export async function print(
     printOption: PrintOption
   }
 ) {
-  const length = pagesInfo.length
-  slog(`Printing ${name}...`)
-  console.log("\n")
   const { beforePrint, printOption, threads, outputDir } = options
   const { margin, continuous, injectedStyle, test } = printOption
   if (test) {
     name = "test: " + name
     pagesInfo = pagesInfo.slice(0, 2)
   }
+  const length = pagesInfo.length
+  slog(`Printing ${name}...`)
+  console.log("\n")
   const css = ([injectedStyle].flat().filter(k => k) as string[]).join("\n")
 
   printOption.margin = {

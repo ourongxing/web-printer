@@ -102,7 +102,7 @@ export class Printer {
             ...contextOptions
           }
         )
-        const { filter, margin, injectedStyle, continuous } = printOption
+        const { filter } = printOption
         let _pagesInfo: PageInfoWithoutIndex[] = []
         try {
           _pagesInfo = await fetchPagesInfo({ context })
@@ -136,7 +136,7 @@ export class Printer {
         }))
 
         context.close()
-        return pagesInfo
+        return { pagesInfo }
       }
     }
   }

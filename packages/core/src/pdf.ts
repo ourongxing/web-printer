@@ -28,14 +28,14 @@ export async function mergePDF(pdfList: PDFBuffer[], coverPath?: string) {
   }
 
   const outlinedPDF = await outlinePdfFactory(pdfLib)({
-    outline: await generateOutline(outlineItems),
+    outline: generateOutline(outlineItems),
     pdf: mergedPdf
   })
 
   return await outlinedPDF.save()
 }
 
-export async function generateOutline(outlineItems: OutlineItem[]) {
+export function generateOutline(outlineItems: OutlineItem[]) {
   return outlineItems
     .reduce(
       (acc, k) => {
