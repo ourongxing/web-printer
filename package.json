@@ -1,7 +1,7 @@
 {
   "name": "@web-printer/monorepo",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "private": true,
   "scripts": {
     "build": "pnpm --filter=@web-printer/* run build",
@@ -11,7 +11,7 @@
     "prettier": "prettier --write ."
   },
   "simple-git-hooks": {
-    "pre-commit": "lint-staged"
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
     "**/src/**/*.{js,jsx,ts,tsx,json}": [

@@ -17,7 +17,7 @@ A printer that can print multiple web pages as one pretty pdf
 
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript-blue" alt="language">
-  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.1.0-EE2C50" alt="version"></a>
+  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.1.3-EE2C50" alt="version"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/MIT-yellow" alt="license"></a>
 </p>
 
