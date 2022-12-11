@@ -57,6 +57,12 @@ importers:
     devDependencies:
       '@types/single-line-log': 1.1.0
 
+  packages/javascript-info:
+    specifiers:
+      '@web-printer/core': workspace:*
+    dependencies:
+      '@web-printer/core': link:../core
+
   packages/juejin:
     specifiers:
       '@web-printer/core': workspace:*
@@ -70,6 +76,12 @@ importers:
       '@web-printer/core': link:../core
 
   packages/ruanyifeng:
+    specifiers:
+      '@web-printer/core': workspace:*
+    dependencies:
+      '@web-printer/core': link:../core
+
+  packages/vitepress:
     specifiers:
       '@web-printer/core': workspace:*
     dependencies:

@@ -62,7 +62,7 @@ describe(
       const ret = await new Printer()
         .use(
           mdbook({
-            url: "https://doc.rust-lang.org/stable/book/"
+            url: "https://hellowac.github.io/mdbook_doc/index.html"
           })
         )
         .test()
@@ -74,22 +74,21 @@ describe(
         expect(pageInfo).toHaveProperty("url")
       })
     })
-    test.skip("javascript info", async () => {
-      const ret = await new Printer()
-        .use(
-          javascriptInfo({
-            lang: "EN"
-          })
-        )
-        .test()
-      expect(ret).toBeDefined()
-      const { pagesInfo } = ret!
-      expect(pagesInfo.length).greaterThanOrEqual(1)
-      pagesInfo.forEach(pageInfo => {
-        expect(pageInfo).toHaveProperty("title")
-        expect(pageInfo).toHaveProperty("url")
-      })
-    })
+    // test.skip("javascript info", async () => {
+    //   const ret = await new Printer()
+    //     .use(
+    //       javascriptInfo({
+    //       })
+    //     )
+    //     .test()
+    //   expect(ret).toBeDefined()
+    //   const { pagesInfo } = ret!
+    //   expect(pagesInfo.length).greaterThanOrEqual(1)
+    //   pagesInfo.forEach(pageInfo => {
+    //     expect(pageInfo).toHaveProperty("title")
+    //     expect(pageInfo).toHaveProperty("url")
+    //   })
+    // })
   },
   { timeout: 1000 * 60 * 5 }
 )
