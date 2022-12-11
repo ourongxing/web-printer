@@ -1,4 +1,4 @@
-import { BrowserContext, Page, selectors } from "playwright"
+import type { BrowserContext, Page } from "playwright"
 import fs from "fs-extra"
 import type { PDFBuffer, PrintOption, PageInfo, Plugin } from "./typings"
 import { delay, ProgressBar, slog } from "./utils"
