@@ -11,19 +11,14 @@ export async function print(
   context: BrowserContext,
   options: {
     beforePrint?: Plugin["beforePrint"]
-    showOnlySelector?: string
+    contentSelector?: string
     outputDir: string
     threads: number
     printOption: PrintOption
   }
 ) {
-  const {
-    beforePrint,
-    printOption,
-    threads,
-    outputDir,
-    showOnlySelector: showOnlySelector
-  } = options
+  const { beforePrint, printOption, threads, outputDir, contentSelector } =
+    options
   const { margin, continuous, injectedStyle, test } = printOption
   if (test) {
     name = "test: " + name
@@ -89,7 +84,7 @@ export async function print(
           })
         }
         beforePrint && (await beforePrint({ page, pageInfo }))
-        showOnlySelector && (await evaluateShowOnly(showOnlySelector, page))
+        contentSelector && (await evaluateShowOnly(contentSelector, page))
         css &&
           (await page.addStyleTag({
             content: css

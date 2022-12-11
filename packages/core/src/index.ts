@@ -75,23 +75,21 @@ export class Printer {
         }))
 
         if (injectStyle) {
-          const { style, contentSelector, showOnly } = await injectStyle()
+          const { style, contentSelector, titleSelector } = await injectStyle()
           const top = typeof margin?.top === "number" ? margin.top : 60
           await print(name, pagesInfo, context, {
             threads: threads ?? 1,
             beforePrint,
-            showOnlySelector:
-              (showOnly ?? true) && contentSelector
-                ? contentSelector
-                : undefined,
+            contentSelector,
             printOption: {
               ...printOption,
               injectedStyle: [
                 style,
                 injectedStyle,
                 continuous &&
-                  contentSelector &&
-                  `${contentSelector} { margin-top: ${top}px !important; }`
+                  `${
+                    titleSelector || "body"
+                  } { margin-top: ${top}px !important; }`
               ]
                 .flat()
                 .filter(k => k)

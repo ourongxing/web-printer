@@ -83,12 +83,18 @@ export default function (options: {
       const style = `
     .vueschool,
     .vue-mastery-link,
+    .edit-link,
     .vuejobs-wrapper {
         display: none !important;
-    }`
+    }
+
+    [class*=language-] code {
+        padding: 0 48px!important;
+    }
+    `
       return {
         style,
-        contentSelector: ".vt-doc"
+        contentSelector: "main"
       }
     }
   }

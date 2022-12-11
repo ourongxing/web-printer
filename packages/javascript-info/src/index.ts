@@ -2,24 +2,17 @@ import type { PageInfo, Plugin } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
-  lang:
-    | "AR"
-    | "EN"
-    | "ES"
-    | "FA"
-    | "FR"
-    | "ID"
-    | "IT"
-    | "JA"
-    | "KO"
-    | "RU"
-    | "TR"
-    | "UK"
-    | "ZH"
+  /**
+   * javascript.info outline url, support all languages
+   * @example
+   * - "https://javascript.info/"
+   * - "https://zh.javascript.info/"
+   * - "https://ja.javascript.info/"
+   */
+  url: string
 }): Plugin {
-  const url = `https://${
-    options.lang === "EN" ? "" : options.lang.toLowerCase() + "."
-  }javascript.info/`
+  const { url } = options
+  if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
       const page = await context.newPage()
@@ -70,7 +63,8 @@ export default function (options: {
 .page__nav-wrap,
 .article-tablet-foot,
 .codebox__toolbar,
-.sitetoolbar {
+.sitetoolbar,
+.page-wrapper:after {
     display: none !important;
 }
 
@@ -81,11 +75,10 @@ export default function (options: {
 
 .main__header {
     margin-top: 0
-}
-`
+} `
       return {
         style,
-        titleSelector: ".main__header"
+        titleSelector: ".main__header-title"
       }
     }
   }

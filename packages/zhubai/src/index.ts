@@ -1,8 +1,28 @@
 import type { Plugin } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
-export default function (options: { url: string }): Plugin {
+export default function (options: {
+  /**
+   * url of the newsletter home page that you want to print
+   * @example https://hsxg.zhubai.love/
+   */
+  url: string
+  /**
+   * scroll to the bottom of the page to load more articles
+   */
+  scroll?: {
+    /**
+     * @default 3
+     */
+    times?: number
+    /**
+     * @default 500
+     */
+    interval?: number
+  }
+}): Plugin {
   const { url } = options
+  if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
       const data: any[] = []
@@ -54,8 +74,7 @@ div[class*=PostPage_post]{
 }
 `
       return {
-        style,
-        titleSelector: `h1[class*=PostPage_title]`
+        style
       }
     }
   }

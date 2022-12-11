@@ -10,21 +10,12 @@ type BaseInfo = {
       }
     | string
   )[]
-} & XOR<
-  {
-    selfGroup: boolean
-    collapsed?: boolean
-  },
-  {}
->
-
-const a: BaseInfo = {
-  title: "a",
-  groups: ["a", "b", "c"],
-  selfGroup: true,
-  collapsed: true
+  /**
+   * when the item is a group and is a link
+   */
+  selfGroup?: boolean
+  collapsed?: boolean
 }
-
 export type PageInfoWithoutIndex = {
   url: string
 } & BaseInfo
@@ -53,16 +44,30 @@ export interface Plugin {
     context
   }: {
     context: BrowserContext
-  }): Promise<PageInfoWithoutIndex[]>
-  injectStyle?(): {
+  }): MaybePromise<PageInfoWithoutIndex[]>
+  injectStyle?(): MaybePromise<{
     style?: string
+    /**
+     * if given, printer will only print the content node
+     */
+    contentSelector?: string
+    /**
+     * when option.continuous is true, will set margin top for this title.
+     * @default "body" but sometimes setting margin top for the body may cause problems.
+     */
     titleSelector?: string
-  }
+  }>
   beforePrint?({
     page,
     pageInfo
   }: {
     page: Page
     pageInfo: PageInfo
-  }): Promise<void>
+  }): MaybePromise<void>
 }
+
+export type MaybeMultiURL =
+  | {
+      [k: string]: string
+    }
+  | string

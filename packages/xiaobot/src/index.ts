@@ -1,8 +1,28 @@
 import type { Plugin } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
-export default function (options: { url: string }): Plugin {
-  const { url } = options
+export default function (options: {
+  /**
+   * url of the newsletter home page that you want to print
+   * @example https://xiaobot.net/p/pmthinking2022
+   */
+  url: string
+  /**
+   * scroll to the bottom of the page to load more articles
+   */
+  scroll?: {
+    /**
+     * @default 3
+     */
+    times?: number
+    /**
+     * @default 500
+     */
+    interval?: number
+  }
+}): Plugin {
+  const { url, scroll } = options
+  if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
       const data: any[] = []
@@ -15,8 +35,10 @@ export default function (options: { url: string }): Plugin {
           })
         }
       })
-      for (let i = 0; i < 5; i++) {
-        await delay(500)
+      const times = scroll?.times ?? 3
+      const interval = scroll?.interval ?? 500
+      for (let i = 0; i < times; i++) {
+        await delay(interval)
         await page.evaluate("window.scrollBy(0, 5000)")
       }
       await page.close()
@@ -66,10 +88,10 @@ body {
 
 .title {
     margin-top: 0;
-}`
+}
+`
       return {
-        style,
-        titleSelector: `.title`
+        style
       }
     }
   }

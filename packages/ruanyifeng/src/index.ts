@@ -2,12 +2,32 @@ import type { PageInfo, Plugin } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
+  /**
+   * url of category
+   * @example
+   * - "https://www.ruanyifeng.com/blog/weekly/"
+   * - "https://www.ruanyifeng.com/blog/developer/"
+   */
   url: string
+  /**
+   * remove weekly ads
+   * @when url is https://www.ruanyifeng.com/blog/weekly/
+   * @default false
+   */
   removeWeeklyAds?: boolean
+  /**
+   * keep comments
+   * @default false
+   */
   keepComments?: boolean
+  /**
+   * outlines group by year
+   * @default true
+   */
   groupByYear?: boolean
 }): Plugin {
   const { url } = options
+  if (!url) throw new Error("url is required")
   const removeWeeklyAds = url.includes("blog/weekly")
     ? options.removeWeeklyAds ?? false
     : false
@@ -15,10 +35,6 @@ export default function (options: {
   const groupByYear = options.groupByYear ?? true
   return {
     async fetchPagesInfo({ context }) {
-      if (!/(?:https:\/\/)?www.ruanyifeng.com\/blog\/\w+\/?/.test(url))
-        throw new Error(
-          "url is not valid, should be like https://www.ruanyifeng.com/blog/weekly or www.ruanyifeng.com/blog/weekly"
-        )
       const page = await context.newPage()
       await page.goto(url)
       const data = JSON.parse(
@@ -101,8 +117,7 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
 }
 `
       return {
-        style,
-        titleSelector: "#page-title"
+        style
       }
     }
   }

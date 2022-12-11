@@ -2,20 +2,38 @@ import type { PageInfo, Plugin } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
+  /**
+   * url of a article list page that you want to print all
+   * @example
+   * - "https://juejin.cn/frontend"
+   * - "https://juejin.cn/tag/JavaScript"
+   * - "https://juejin.cn/column/6960944886115729422"
+   */
   url: string
+  /**
+   * scroll to the bottom of the page to load more articles
+   */
   scroll?: {
-    times: number
-    interval: number
+    /**
+     * @default 3
+     */
+    times?: number
+    /**
+     * @default 500
+     */
+    interval?: number
   }
 }): Plugin {
-  const { url } = options
-  const scroll = options.scroll ?? { times: 3, interval: 500 }
+  const { url, scroll } = options
+  if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
       const page = await context.newPage()
       await page.goto(url)
-      for (let i = 0; i < scroll.times; i++) {
-        await delay(scroll.interval)
+      const times = scroll?.times ?? 3
+      const interval = scroll?.interval ?? 500
+      for (let i = 0; i < times; i++) {
+        await delay(interval)
         await page.evaluate("window.scrollBy(0, 5000)")
       }
       const data = JSON.parse(
@@ -29,43 +47,22 @@ export default function (options: {
       await page.close()
       return data.filter(k => !k.title.includes("掘金"))
     },
-    async beforePrint({ page }) {
-      await delay(700)
+    async beforePrint() {
+      await delay(500)
     },
     injectStyle() {
       const style = `
-.main-header-box,
-.action-bar,
-.recommended-area,
-.recommended-links,
-.extension-banner,
-.category-course-recommend,
-.comment-form,
-.follow-button,
-.comment-list-wrapper,
-.wechat-banner,
-.column-container,
 .copy-code-btn {
     display: none !important;
-}
-
-#juejin > div.view-container > main > div {
-    padding: 0 !important;
-    margin: 0
 }
 
 html {
     background-color: #fff !important;
 }
-
-article {
-    padding: 0 !important;
-}
-
 `
       return {
         style,
-        titleSelector: `#juejin > div.view-container > main > div`
+        contentSelector: "article"
       }
     }
   }
