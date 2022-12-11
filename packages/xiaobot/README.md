@@ -1,6 +1,6 @@
 # @web-printer/xiaobot
 
-> **Warn**
+> **Warning**
 >
 > some pages may be need to login and pay to read, so you may need to login and pay to read before print.
 
