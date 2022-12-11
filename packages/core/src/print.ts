@@ -1,7 +1,7 @@
-import type { BrowserContext } from "playwright"
+import { BrowserContext, Page, selectors } from "playwright"
 import fs from "fs-extra"
 import type { PDFBuffer, PrintOption, PageInfo, Plugin } from "./typings"
-import { ProgressBar, slog } from "./utils"
+import { delay, ProgressBar, slog } from "./utils"
 import { mergePDF } from "./pdf"
 import path from "path"
 
@@ -11,12 +11,19 @@ export async function print(
   context: BrowserContext,
   options: {
     beforePrint?: Plugin["beforePrint"]
+    showOnlySelector?: string
     outputDir: string
     threads: number
     printOption: PrintOption
   }
 ) {
-  const { beforePrint, printOption, threads, outputDir } = options
+  const {
+    beforePrint,
+    printOption,
+    threads,
+    outputDir,
+    showOnlySelector: showOnlySelector
+  } = options
   const { margin, continuous, injectedStyle, test } = printOption
   if (test) {
     name = "test: " + name
@@ -30,8 +37,8 @@ export async function print(
   printOption.margin = {
     top: margin?.top ?? 60,
     bottom: margin?.bottom ?? 60,
-    left: margin?.left ?? 60,
-    right: margin?.right ?? 60
+    left: margin?.left ?? 55,
+    right: margin?.right ?? 55
   }
 
   if (continuous) {
@@ -82,10 +89,13 @@ export async function print(
           })
         }
         beforePrint && (await beforePrint({ page, pageInfo }))
-        if (css)
-          await page.addStyleTag({
+        showOnlySelector && (await evaluateShowOnly(showOnlySelector, page))
+        css &&
+          (await page.addStyleTag({
             content: css
-          })
+          }))
+
+        await delay(500)
         pdfs.push({
           ...pageInfo,
           buffer: await page.pdf(printOption)
@@ -117,4 +127,42 @@ export async function print(
   } else {
     slog("No pdf generated")
   }
+}
+
+export async function evaluateShowOnly(selector: string, page: Page) {
+  await page.evaluate(`
+  (()=>{
+    function showOnly(selector) {
+      function getAncestorNodes(node, ancestor = []) {
+        if (node.parentNode) {
+          if (node.parentNode.nodeName !== "BODY") {
+            ancestor.push(node.parentNode)
+            getAncestorNodes(node.parentNode, ancestor)
+          }
+        }
+        return ancestor
+      }
+
+      const node = document.querySelector(selector)
+      if (!node) return
+      const descendantNodes = [...node.querySelectorAll("*")]
+      const ancestorNodes = getAncestorNodes(node)
+
+      ;[...ancestorNodes, node].forEach(k => {
+        k.style.setProperty("margin", "0", "important")
+        k.style.setProperty("padding", "0", "important")
+      })
+
+      const constantNodes = [...ancestorNodes, node, ...descendantNodes]
+
+      document.body.querySelectorAll("*:not(style,script)").forEach(k => {
+        if (!constantNodes.some(m => m === k)) {
+          k.style.setProperty("display", "none", "important")
+        }
+      })
+    }
+    showOnly("${selector}")
+    return "success"
+  })()
+  `)
 }

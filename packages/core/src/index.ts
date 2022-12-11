@@ -75,25 +75,37 @@ export class Printer {
         }))
 
         if (injectStyle) {
-          const { style, titleSelector } = injectStyle()
+          const { style, contentSelector, showOnly } = await injectStyle()
           const top = typeof margin?.top === "number" ? margin.top : 60
-          printOption.injectedStyle = [
-            style,
-            injectedStyle,
-            continuous &&
-              titleSelector &&
-              `${titleSelector} { margin-top: ${top}px !important; }`
-          ]
-            .flat()
-            .filter(k => k)
+          await print(name, pagesInfo, context, {
+            threads: threads ?? 1,
+            beforePrint,
+            showOnlySelector:
+              (showOnly ?? true) && contentSelector
+                ? contentSelector
+                : undefined,
+            printOption: {
+              ...printOption,
+              injectedStyle: [
+                style,
+                injectedStyle,
+                continuous &&
+                  contentSelector &&
+                  `${contentSelector} { margin-top: ${top}px !important; }`
+              ]
+                .flat()
+                .filter(k => k)
+            },
+            outputDir: outputDir ?? "output"
+          })
+        } else {
+          await print(name, pagesInfo, context, {
+            threads: threads ?? 1,
+            beforePrint,
+            printOption,
+            outputDir: outputDir ?? "output"
+          })
         }
-
-        await print(name, pagesInfo, context, {
-          threads: threads ?? 1,
-          beforePrint,
-          printOption,
-          outputDir: outputDir ?? "output"
-        })
       },
       async test(printOption: PrintOption = {}) {
         const context = await chromium.launchPersistentContext(
