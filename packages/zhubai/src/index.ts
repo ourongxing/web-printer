@@ -46,7 +46,7 @@ export default function (options: {
             new Date(m.created_at).getTime() - new Date(n.created_at).getTime()
         )
         .map(k => ({
-          url: `${url}/posts/${k.id}`,
+          url: `${url.replace(/\/$/, "")}/posts/${k.id}`,
           title: k.title
         }))
     },

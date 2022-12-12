@@ -57,41 +57,16 @@ export default function (options: {
     },
     injectStyle() {
       const style = `
-.pc-header,
-.header,
-.paper-info,
-.share-paper,
-.light_feedback,
-.paper_card,
-.actions,
-.comment,
-.footer_write_comment,
-.footer,
-#nav_sep {
-    display: none !important;
-}
 .left {
-    margin-right: 0 !important;
     max-width: 100% !important;
 }
-.post_page {
-    padding: 0 !important;
-}
-
 body {
     background: #fff !important;
 }
-
-#app > div > div {
-    padding: 0 !important;
-}
-
-.title {
-    margin-top: 0;
-}
 `
       return {
-        style
+        style,
+        contentSelector: ".content, .title"
       }
     }
   }

@@ -95,24 +95,12 @@ export default function (options: {
     },
     injectStyle() {
       const style = `
-#menu-bar,
-#giscus-container,
-.nav-wrapper,
-.sidetoc {
+#giscus-container {
     display: none !important;
 }
 
-main {
-    margin: 0 !important;
-}
-
-main > * {
+main > *:first-child {
     margin-top: 0
-}
-
-#page-wrapper > div,
-#content {
-    padding: 0;
 }
 
 code:not(.hljs) {
@@ -121,7 +109,8 @@ code:not(.hljs) {
 
 `
       return {
-        style
+        style,
+        contentSelector: "main"
       }
     }
   }

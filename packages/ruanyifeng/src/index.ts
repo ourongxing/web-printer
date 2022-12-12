@@ -16,11 +16,6 @@ export default function (options: {
    */
   removeWeeklyAds?: boolean
   /**
-   * keep comments
-   * @default false
-   */
-  keepComments?: boolean
-  /**
    * outlines group by year
    * @default true
    */
@@ -31,7 +26,6 @@ export default function (options: {
   const removeWeeklyAds = url.includes("blog/weekly")
     ? options.removeWeeklyAds ?? false
     : false
-  const keepComments = options.keepComments ?? false
   const groupByYear = options.groupByYear ?? true
   return {
     async fetchPagesInfo({ context }) {
@@ -80,16 +74,6 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
     },
     injectStyle() {
       const style = `
- #header,
- .asset-header,
- #related_entries,
- #comments-open,
- #footer {
-     display: none !important;
- }
-
- ${keepComments ? "#comments { display: block !important; }" : ""}
-
  img {
      border: 0px !important;
      width: 80%;
@@ -97,6 +81,7 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
      text-align: center !important;
      margin: 0 auto !important;
  }
+
  p {
      line-height: 1.5 !important;
  }
@@ -106,18 +91,13 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
      background-color: white !important;
  }
 
-#container,
-#content {
-    padding: 0!important;
-    margin: 0!important;
-}
-
 #page-title {
     margin-top: -20px !important;
 }
 `
       return {
-        style
+        style,
+        contentSelector: "article"
       }
     }
   }

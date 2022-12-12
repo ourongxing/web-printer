@@ -59,6 +59,10 @@ export default function (options: {
 html {
     background-color: #fff !important;
 }
+
+.markdown-body {
+    background-image: "unset"
+}
 `
       return {
         style,
