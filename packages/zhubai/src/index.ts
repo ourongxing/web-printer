@@ -1,5 +1,5 @@
 import type { Plugin } from "@web-printer/core"
-import { delay } from "@web-printer/core"
+import { evaluateWaitForImgLoad, scrollLoading } from "@web-printer/core"
 
 export default function (options: {
   /**
@@ -8,20 +8,18 @@ export default function (options: {
    */
   url: string
   /**
-   * scroll to the bottom of the page to load more articles
+   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * @default Infinity
    */
-  scroll?: {
-    /**
-     * @default 3
-     */
-    times?: number
-    /**
-     * @default 500
-     */
-    interval?: number
-  }
+  maxPages?: number
+  /**
+   * interval of each scroll
+   * @default 500
+   * @unit ms
+   */
+  interval?: number
 }): Plugin {
-  const { url } = options
+  const { url, maxPages = Infinity, interval = 500 } = options
   if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
@@ -35,10 +33,10 @@ export default function (options: {
           })
         }
       })
-      for (let i = 0; i < 5; i++) {
-        await delay(500)
-        await page.evaluate("window.scrollBy(0, 5000)")
-      }
+      await scrollLoading(page, () => data.length, {
+        interval,
+        maxPages
+      })
       await page.close()
       return data
         .sort(
@@ -50,11 +48,8 @@ export default function (options: {
           title: k.title
         }))
     },
-    async beforePrint({ page }) {
-      for (let i = 0; i < 10; i++) {
-        await delay(300)
-        await page.evaluate("window.scrollBy(0, 3000)")
-      }
+    async onPageLoaded({ page }) {
+      await evaluateWaitForImgLoad(page, "img")
     },
     injectStyle() {
       const style = `

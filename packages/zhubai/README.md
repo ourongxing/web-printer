@@ -5,7 +5,7 @@
 > some pages may be need to login and pay to read, so you may need to login and pay to read before print.
 
 
-[zhubai.love](https://zhubai.love)
+[竹白 zhubai.love](https://zhubai.love)
 
 ## Installation
 ```bash
@@ -35,18 +35,16 @@ new Printer()
    */
   url: string
   /**
-   * scroll to the bottom of the page to load more articles
+   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * @default Infinity
    */
-  scroll?: {
-    /**
-     * @default 3
-     */
-    times?: number
-    /**
-     * @default 500
-     */
-    interval?: number
-  }
+  maxPages?: number
+  /**
+   * interval of each scroll
+   * @default 500
+   * @unit ms
+   */
+  interval?: number
 }
 ```
 
