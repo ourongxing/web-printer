@@ -9,13 +9,14 @@ import { Printer, type Plugin } from "@web-printer/core"
 
 new Printer()
   .use({
-    fetchPagesInfo() {
-      return []
-    },
-    injectStyle() {
-      return {}
-    },
-    beforePrint() {}
+    // used to fetch page title and url
+    fetchPagesInfo() {},
+    // used to inject style to beautify the page
+    injectStyle() {},
+    // run before page printing
+    onPageWillPrint() {}
+    // run after page loaded
+    onPageLoaded() {}
   } as Plugin)
   .print("a new pdf")
 ```
