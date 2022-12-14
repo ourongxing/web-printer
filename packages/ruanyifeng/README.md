@@ -1,6 +1,6 @@
 # @web-printer/ruanyifeng
 
-[www.ruanyifeng.com/blog](https://www.ruanyifeng.com/blog/archives.html)
+[阮一峰的网络日志 www.ruanyifeng.com/blog](https://www.ruanyifeng.com/blog/archives.html)
 
 ## Installation
 ```bash
@@ -37,11 +37,6 @@ new Printer()
    * @default false
    */
   removeWeeklyAds?: boolean
-  /**
-   * keep comments
-   * @default false
-   */
-  keepComments?: boolean
   /**
    * outlines group by year
    * @default true

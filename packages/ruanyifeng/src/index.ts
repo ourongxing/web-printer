@@ -1,4 +1,5 @@
 import type { PageInfo, Plugin } from "@web-printer/core"
+import { evaluateWaitForImgLoad } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
@@ -53,8 +54,10 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
       if (groupByYear) return data
       else return data.map(k => ({ ...k, groups: undefined }))
     },
-    async beforePrint({ page }) {
-      await delay(500)
+    async onPageLoaded({ page }) {
+      await evaluateWaitForImgLoad(page, "article img")
+    },
+    async onPageWillPrint({ page }) {
       await page.evaluate(` document.querySelector(".wwads-hide")?.click() `)
       if (removeWeeklyAds) {
         await page.evaluate(
@@ -70,10 +73,17 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
         `
         )
       }
-      await delay(300)
+      await delay(500)
     },
     injectStyle() {
       const style = `
+ #header,
+ .asset-header,
+ #related_entries,
+ #comments-open,
+ #footer {
+     display: none !important;
+ }
  img {
      border: 0px !important;
      width: 80%;
@@ -81,23 +91,26 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
      text-align: center !important;
      margin: 0 auto !important;
  }
-
  p {
      line-height: 1.5 !important;
  }
-
  body,
  #container {
      background-color: white !important;
  }
-
+#container,
+#content {
+    padding: 0!important;
+    margin: 0!important;
+}
 #page-title {
     margin-top: -20px !important;
 }
 `
       return {
-        style,
-        contentSelector: "article"
+        style
+        // may cause ad block warning
+        // contentSelector: "article,.wwads-cn"
       }
     }
   }

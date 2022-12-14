@@ -1,6 +1,6 @@
 # @web-printer/juejin
 
-[juejin.cn](https://juejin.cn/)
+[掘金 juejin.cn](https://juejin.cn/)
 
 ## Installation
 ```bash
@@ -25,7 +25,7 @@ new Printer()
 ```ts
 {
   /**
-   * url of a article list page that you want to print all
+   * url of a article list page
    * @example
    * - "https://juejin.cn/frontend"
    * - "https://juejin.cn/tag/JavaScript"
@@ -33,18 +33,16 @@ new Printer()
    */
   url: string
   /**
-   * scroll to the bottom of the page to load more articles
+   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * @default Infinity
    */
-  scroll?: {
-    /**
-     * @default 3
-     */
-    times?: number
-    /**
-     * @default 500
-     */
-    interval?: number
-  }
+  maxPages?: number
+  /**
+   * interval of each scroll
+   * @default 500
+   * @unit ms
+   */
+  interval?: number
 }
 ```
 

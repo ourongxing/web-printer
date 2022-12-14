@@ -1,9 +1,10 @@
-import { evaluateWaitForImgLoad, PageInfo, Plugin } from "@web-printer/core"
+import type { PageInfo, Plugin } from "@web-printer/core"
+import { evaluateWaitForImgLoad } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
   /**
-   * javascript.info outline url, support all languages
+   * javascript.info main page url, support all languages
    * @example
    * - "https://javascript.info/"
    * - "https://zh.javascript.info/"

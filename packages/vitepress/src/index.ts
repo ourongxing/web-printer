@@ -1,4 +1,5 @@
 import type { MaybeMultiURL, PageInfo, Plugin } from "@web-printer/core"
+import { evaluateWaitForImgLoad } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
@@ -76,8 +77,8 @@ export default function (options: {
       await page.close()
       return pagesInfo
     },
-    async beforePrint() {
-      await delay(500)
+    async onPageLoaded({ page }) {
+      await evaluateWaitForImgLoad(page, "main img")
     },
     injectStyle() {
       const style = `

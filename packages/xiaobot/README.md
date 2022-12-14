@@ -4,7 +4,7 @@
 >
 > some pages may be need to login and pay to read, so you may need to login and pay to read before print.
 
-[xiaobot.net](https://xiaobot.net)
+[小报童 xiaobot.net](https://xiaobot.net)
 
 ## Installation
 ```bash
@@ -30,22 +30,21 @@ new Printer()
 {
   /**
    * url of the newsletter home page that you want to print
-   * @example https://xiaobot.net/p/pmthinking2022
+   * @example
+   * - "https://xiaobot.net/p/pmthinking2022"
    */
   url: string
   /**
-   * scroll to the bottom of the page to load more articles
+   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * @default Infinity
    */
-  scroll?: {
-    /**
-     * @default 3
-     */
-    times?: number
-    /**
-     * @default 500
-     */
-    interval?: number
-  }
+  maxPages?: number
+  /**
+   * interval of each scroll
+   * @default 500
+   * @unit ms
+   */
+  interval?: number
 }
 ```
 

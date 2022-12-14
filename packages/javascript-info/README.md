@@ -25,7 +25,7 @@ new Printer()
 ```ts
 {
   /**
-   * url of javascript.info outline, support all languages
+   * javascript.info main page url, support all languages
    * @example
    * - "https://javascript.info/"
    * - "https://zh.javascript.info/"

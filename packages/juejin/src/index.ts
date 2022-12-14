@@ -1,9 +1,12 @@
-import type { PageInfo, Plugin } from "@web-printer/core"
+import type { Plugin } from "@web-printer/core"
+import { evaluateWaitForImgLoad } from "@web-printer/core"
+import type { PageInfo } from "@web-printer/core"
+import { scrollLoading } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
   /**
-   * url of a article list page that you want to print all
+   * url of a article list page
    * @example
    * - "https://juejin.cn/frontend"
    * - "https://juejin.cn/tag/JavaScript"
@@ -11,48 +14,51 @@ export default function (options: {
    */
   url: string
   /**
-   * scroll to the bottom of the page to load more articles
+   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * @default Infinity
    */
-  scroll?: {
-    /**
-     * @default 3
-     */
-    times?: number
-    /**
-     * @default 500
-     */
-    interval?: number
-  }
+  maxPages?: number
+  /**
+   * interval of each scroll
+   * @default 500
+   * @unit ms
+   */
+  interval?: number
 }): Plugin {
-  const { url, scroll } = options
+  const { url, interval = 500, maxPages = Infinity } = options
   if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
       const page = await context.newPage()
       await page.goto(url)
-      const times = scroll?.times ?? 3
-      const interval = scroll?.interval ?? 500
-      for (let i = 0; i < times; i++) {
-        await delay(interval)
-        await page.evaluate("window.scrollBy(0, 5000)")
-      }
-      const data = JSON.parse(
+      const fetchItemsNum = async () =>
+        Number(
+          await page.evaluate(
+            `document.querySelectorAll(".entry .title-row a").length`
+          )
+        )
+      await scrollLoading(page, fetchItemsNum, {
+        interval,
+        maxPages
+      })
+      const pagesInfo: PageInfo[] = JSON.parse(
         await page.evaluate(`
-(() => {
-  const ret = [...document.querySelectorAll(".entry .title-row a")].map(k=>({title: k.innerText, url:k.href}))
-  return JSON.stringify(ret)
-})()
-  `)
-      ) as PageInfo[]
+      (() => {
+        const ret = [...document.querySelectorAll(".entry .title-row a")].map(k=>({title: k.innerText, url:k.href}))
+        return JSON.stringify(ret)
+      })()
+        `)
+      )
       await page.close()
-      return data.filter(k => !k.title.includes("掘金"))
+      return pagesInfo.filter(k => !k.title.includes("掘金")).slice(0, maxPages)
     },
-    async beforePrint() {
-      await delay(500)
+    async onPageLoaded({ page }) {
+      await evaluateWaitForImgLoad(page, "article img")
     },
     injectStyle() {
       const style = `
-.copy-code-btn {
+.copy-code-btn,
+.ategory-course-recommend {
     display: none !important;
 }
 

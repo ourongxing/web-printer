@@ -1,0 +1,24 @@
+{
+  "name": "@web-printer/zhihu",
+  "version": "0.1.3",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "author": "Ou RongXing<orongxing@gmail.com>",
+  "homepage": "https://github.com/busiyiworld/web-printer/tree/main/packages/zhihu#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/busiyiworld/web-printer.git",
+    "directory": "packages/zhihu"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean",
+    "dev": "pnpm build --watch"
+  },
+  "dependencies": {
+    "@web-printer/core": "workspace:*"
+  }
+}

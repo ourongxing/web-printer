@@ -1,27 +1,26 @@
 import type { Plugin } from "@web-printer/core"
-import { delay } from "@web-printer/core"
+import { evaluateWaitForImgLoad, scrollLoading } from "@web-printer/core"
 
 export default function (options: {
   /**
    * url of the newsletter home page that you want to print
-   * @example https://xiaobot.net/p/pmthinking2022
+   * @example
+   * - "https://xiaobot.net/p/pmthinking2022"
    */
   url: string
   /**
-   * scroll to the bottom of the page to load more articles
+   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * @default Infinity
    */
-  scroll?: {
-    /**
-     * @default 3
-     */
-    times?: number
-    /**
-     * @default 500
-     */
-    interval?: number
-  }
+  maxPages?: number
+  /**
+   * interval of each scroll
+   * @default 500
+   * @unit ms
+   */
+  interval?: number
 }): Plugin {
-  const { url, scroll } = options
+  const { url, maxPages = Infinity, interval = 500 } = options
   if (!url) throw new Error("url is required")
   return {
     async fetchPagesInfo({ context }) {
@@ -35,12 +34,10 @@ export default function (options: {
           })
         }
       })
-      const times = scroll?.times ?? 3
-      const interval = scroll?.interval ?? 500
-      for (let i = 0; i < times; i++) {
-        await delay(interval)
-        await page.evaluate("window.scrollBy(0, 5000)")
-      }
+      await scrollLoading(page, () => data.length, {
+        interval,
+        maxPages
+      })
       await page.close()
       return data
         .sort(
@@ -52,8 +49,8 @@ export default function (options: {
           title: k.title
         }))
     },
-    async beforePrint() {
-      await delay(700)
+    async onPageLoaded({ page }) {
+      await evaluateWaitForImgLoad(page, ".content img")
     },
     injectStyle() {
       const style = `
