@@ -3,6 +3,7 @@ import type { PageFilter } from "."
 
 interface WebPrinterPrintOption {
   filter?: PageFilter
+  reverse?: boolean
   coverPath?: string
   test?: boolean
   collapsed?: boolean

@@ -1,4 +1,4 @@
-import type { PageInfo, Plugin } from "@web-printer/core"
+import { evaluateWaitForImgLoad, PageInfo, Plugin } from "@web-printer/core"
 import { delay } from "@web-printer/core"
 
 export default function (options: {
@@ -50,8 +50,8 @@ export default function (options: {
       await page.close()
       return data
     },
-    async beforePrint() {
-      await delay(700)
+    async onPageLoaded({ page }) {
+      await evaluateWaitForImgLoad(page)
     },
     injectStyle() {
       const style = `

@@ -45,7 +45,7 @@ export interface Plugin {
   }: {
     context: BrowserContext
   }): MaybePromise<PageInfoWithoutIndex[]>
-  injectStyle?(): MaybePromise<{
+  injectStyle?({ url }: { url: string }): MaybePromise<{
     style?: string
     /**
      * if given, printer will only print the content node
@@ -57,7 +57,14 @@ export interface Plugin {
      */
     titleSelector?: string
   }>
-  beforePrint?({
+  onPageLoaded?({
+    page,
+    pageInfo
+  }: {
+    page: Page
+    pageInfo: PageInfo
+  }): MaybePromise<void>
+  onPageWillPrint?({
     page,
     pageInfo
   }: {
