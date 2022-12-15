@@ -25,20 +25,20 @@ new Printer()
 ```ts
 {
   /**
-   * url of category
+   * Url of category
    * @example
    * - "https://www.ruanyifeng.com/blog/weekly/"
    * - "https://www.ruanyifeng.com/blog/developer/"
    */
   url: string
   /**
-   * remove weekly ads
+   * Remove weekly ads
    * @when url is https://www.ruanyifeng.com/blog/weekly/
    * @default false
    */
   removeWeeklyAds?: boolean
   /**
-   * outlines group by year
+   * Outlines group by year
    * @default true
    */
   groupByYear?: boolean

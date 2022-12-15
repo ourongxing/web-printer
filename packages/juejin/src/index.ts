@@ -1,12 +1,9 @@
-import type { Plugin } from "@web-printer/core"
-import { evaluateWaitForImgLoad } from "@web-printer/core"
-import type { PageInfo } from "@web-printer/core"
-import { scrollLoading } from "@web-printer/core"
-import { delay } from "@web-printer/core"
+import type { PageInfo, Plugin } from "@web-printer/core"
+import { evaluateWaitForImgLoad, scrollLoading } from "@web-printer/core"
 
 export default function (options: {
   /**
-   * url of a article list page
+   * Url of a article list page
    * @example
    * - "https://juejin.cn/frontend"
    * - "https://juejin.cn/tag/JavaScript"
@@ -14,12 +11,12 @@ export default function (options: {
    */
   url: string
   /**
-   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * When the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
    * @default Infinity
    */
   maxPages?: number
   /**
-   * interval of each scroll
+   * Interval of each scroll
    * @default 500
    * @unit ms
    */

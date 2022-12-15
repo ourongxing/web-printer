@@ -1,24 +1,24 @@
 # @web-printer/core
 
-The core of [Web Printer](https://github.com/busiyiworld/web-printer), you can use it to create your own printer with plugins.
+The core of [Web Printer](https://github.com/busiyiworld/web-printer), you can use it to create your own printer with plugins to print website you want.
 
 ## Usage
 
 ```ts
 import { Printer, type Plugin } from "@web-printer/core"
 
-new Printer()
+new Printer({} as PrinterOption)
   .use({
     // used to fetch page title and url
     fetchPagesInfo() {},
     // used to inject style to beautify the page
     injectStyle() {},
     // run before page printing
-    onPageWillPrint() {}
+    onPageWillPrint() {},
     // run after page loaded
     onPageLoaded() {}
   } as Plugin)
-  .print("a new pdf")
+  .print("PDF nams", {} as PrintOption)
 ```
 
 ## License

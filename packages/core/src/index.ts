@@ -1,8 +1,8 @@
 import { chromium } from "playwright"
 import { print } from "./print"
 import type {
-  PrintOption,
-  BrowserContextOptions,
+  PrinterPrintOption,
+  PrinterOption,
   Plugin,
   PageInfoWithoutIndex
 } from "./typings"
@@ -14,8 +14,8 @@ export * from "./evaluate"
 export * from "./fetch"
 
 export class Printer {
-  private contextOptions: BrowserContextOptions
-  constructor(options: BrowserContextOptions = {}) {
+  private contextOptions: PrinterOption
+  constructor(options: PrinterOption = {}) {
     this.contextOptions = options
   }
   async login() {
@@ -34,7 +34,7 @@ export class Printer {
     const { outputDir, userDataDir, threads } = contextOptions
     const { fetchPagesInfo } = plugin
     return {
-      async print(name: string, printOption: PrintOption = {}) {
+      async print(name: string, printOption: PrinterPrintOption = {}) {
         slog(`Fetching Pages Info...`)
         const context = await chromium.launchPersistentContext(
           userDataDir ?? "userData",
@@ -88,7 +88,7 @@ export class Printer {
           outputDir: outputDir ?? "output"
         })
       },
-      async test(printOption: PrintOption = {}) {
+      async test(printOption: PrinterPrintOption = {}) {
         const context = await chromium.launchPersistentContext(
           userDataDir ?? "userData",
           {

@@ -11,7 +11,7 @@ type BaseInfo = {
     | string
   )[]
   /**
-   * when the item is a group and is a link
+   * When the item is a group and is a link
    */
   selfGroup?: boolean
   collapsed?: boolean
@@ -40,15 +40,21 @@ export type PageFilter = (
 ) => boolean
 
 export interface Plugin {
+  /**
+   * Used to fetch a list of page url and title, need return the list.
+   */
   fetchPagesInfo({
     context
   }: {
     context: BrowserContext
   }): MaybePromise<PageInfoWithoutIndex[]>
+  /**
+   * Used to remove distracting elements and make web pages more PDF-friendly.
+   */
   injectStyle?({ url }: { url: string }): MaybePromise<{
     style?: string
     /**
-     * if given, printer will only print the content node
+     * if given, printer will only print the content element.
      */
     contentSelector?: string
     /**
@@ -57,6 +63,9 @@ export interface Plugin {
      */
     titleSelector?: string
   }>
+  /**
+   * Run after page loaded.
+   */
   onPageLoaded?({
     page,
     pageInfo
@@ -64,6 +73,9 @@ export interface Plugin {
     page: Page
     pageInfo: PageInfo
   }): MaybePromise<void>
+  /**
+   * Run before page will be printed.
+   */
   onPageWillPrint?({
     page,
     pageInfo

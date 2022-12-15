@@ -1,4 +1,7 @@
 # @web-printer/zhihu
+> **Warning**
+>
+> need login before printing
 
 [知乎 zhihu.cn](https://zhihu.cn/)
 
@@ -25,7 +28,7 @@ new Printer()
 ```ts
 {
   /**
-   * url of an article list page
+   * Url of an article list page
    * @example
    * - "https://zhuanlan.zhihu.com/mactalk"
    * - "https://www.zhihu.com/collection/19561986"
@@ -33,16 +36,16 @@ new Printer()
    */
   url: string
   /**
-   * when artical list page have much articals, you can set maxPages to limit, especially endless loading.
+   * When artical list page have much articals, you can set maxPages to limit, especially endless loading.
    */
   maxPages?: number
   /**
-   * when artical list page have paginations, you can set threads to speed up fetch articals url.
+   * When artical list page have paginations, you can set threads to speed up fetch articals url.
    * @default 1
    */
   threads?: number
   /**
-   * interval of each scroll
+   * Interval of each scroll
    * @default 500
    * @unit ms
    */

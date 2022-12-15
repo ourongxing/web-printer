@@ -1,11 +1,14 @@
 import type { PageInfo, Plugin } from "@web-printer/core"
-import { delay } from "@web-printer/core"
-import { evaluateWaitForImgLoadLazy, scrollLoading } from "@web-printer/core"
+import {
+  delay,
+  evaluateWaitForImgLoadLazy,
+  scrollLoading
+} from "@web-printer/core"
 import type { BrowserContext } from "playwright"
 
 export default function (options: {
   /**
-   * url of an article list page
+   * Url of an article list page
    * @example
    * - "https://zhuanlan.zhihu.com/mactalk"
    * - "https://www.zhihu.com/collection/19561986"
@@ -13,23 +16,23 @@ export default function (options: {
    */
   url: string
   /**
-   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * When the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
    * @default Infinity
    */
   maxPages?: number
   /**
-   * when the artical list page have paginations, you can set threads to speed up fetch articals url.
+   * When the artical list page have paginations, you can set threads to speed up fetch articals url.
    * @default 1
    */
   threads?: number
   /**
-   * interval of each scroll
+   * Interval of each scroll
    * @default 500
    * @unit ms
    */
   interval?: number
   /**
-   * waiting img and latex lazy loading
+   * Waiting img and latex lazy loading
    * @default 500
    * @unit ms
    */

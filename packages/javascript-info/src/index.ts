@@ -1,6 +1,5 @@
 import type { PageInfo, Plugin } from "@web-printer/core"
 import { evaluateWaitForImgLoad } from "@web-printer/core"
-import { delay } from "@web-printer/core"
 
 export default function (options: {
   /**

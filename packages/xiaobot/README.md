@@ -29,18 +29,18 @@ new Printer()
 ```ts
 {
   /**
-   * url of the newsletter home page that you want to print
+   * Url of the newsletter home page that you want to print
    * @example
    * - "https://xiaobot.net/p/pmthinking2022"
    */
   url: string
   /**
-   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * When the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
    * @default Infinity
    */
   maxPages?: number
   /**
-   * interval of each scroll
+   * Interval of each scroll
    * @default 500
    * @unit ms
    */

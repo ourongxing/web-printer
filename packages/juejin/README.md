@@ -25,7 +25,7 @@ new Printer()
 ```ts
 {
   /**
-   * url of a article list page
+   * Url of a article list page
    * @example
    * - "https://juejin.cn/frontend"
    * - "https://juejin.cn/tag/JavaScript"
@@ -33,12 +33,12 @@ new Printer()
    */
   url: string
   /**
-   * when the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
+   * When the article list page has a lot of articles, you can set maxPages to limit, especially endless loading.
    * @default Infinity
    */
   maxPages?: number
   /**
-   * interval of each scroll
+   * Interval of each scroll
    * @default 500
    * @unit ms
    */

@@ -1,6 +1,6 @@
 import type { BrowserContext } from "playwright"
 import fs from "fs-extra"
-import type { PDFBuffer, PrintOption, PageInfo, Plugin } from "./typings"
+import type { PDFBuffer, PrinterPrintOption, PageInfo, Plugin } from "./typings"
 import { delay, ProgressBar, slog } from "./utils"
 import { mergePDF } from "./pdf"
 import path from "path"
@@ -16,7 +16,7 @@ export async function print(
     onPageLoaded?: Plugin["onPageLoaded"]
     outputDir: string
     threads: number
-    printOption: PrintOption
+    printOption: PrinterPrintOption
   }
 ) {
   const { onPageLoaded, onPageWillPrint, printOption, outputDir, injectStyle } =
