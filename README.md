@@ -87,9 +87,7 @@ code .
 
 After customizing, use `pnpm print` to print. A pretty PDF will appear in `./output`.
 
-## Configurations
-
-### Core
+## Options
 
 The [@web-printer/core](https://github.com/busiyiworld/web-printer/tree/main/packages/core) provide a Printer object, some types and some utilities.
 
@@ -180,7 +178,7 @@ new Printer({} as PrinterOption)
 }
 ```
 
-### Plugins
+## Plugins
 
 Plugins in Web Printer is only used to adapt to different websites.
 
@@ -191,7 +189,7 @@ A plugin have four methods:
 - `onPageLoaded`: Run after page loaded.
 - `onPageWillPrint`: Run before page will be printed.
 
-#### Offical plugins
+### Offical plugins
 
 - Content Site
 
@@ -210,17 +208,17 @@ A plugin have four methods:
   - [@web-printer/vitepress](https://github.com/busiyiworld/web-printer/tree/main/packages/vitepress)
   - [@web-printer/mdbook](https://github.com/busiyiworld/web-printer/tree/main/packages/mdbook)
 
-#### How to write a plugin
+### How to write a plugin
 
 In fact, it is just use [Playwright](https://playwright.dev/docs/library) to inject JS and CSS into the page. You can read the code of offical plugins to learn how to write a plugin. It's pretty simple most of the time.
 
-Let's make some rules
+**Let's make some rules**
 
 - Use a  function to return a plugin.
 - The function parameter is an options object.
 - If the number of pages info to be fetched is large and fetched slow, you need to provide the `maxPages` option, especially endless loading.
 
-##### fetchPagesInfo
+#### fetchPagesInfo
 
 Used to fetch a list of page url and title, need return the list. Usually need to parse sidebar outline. Web Printer could restores the hierarchy and collapsed state of the original outline perfectly.
 
@@ -268,7 +266,7 @@ The pageInfo need returned just like
 ]
 ```
 
-Examples
+**Examples**
 
 - simple outline: [javascript-info/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/javascript-info/src/index.ts#L18-L52)
 - complex outline: [mdbook/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/mdbook/src/index.ts#L17-L93)
@@ -276,7 +274,7 @@ Examples
 
 - pagination: [zhihu/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/zhihu/src/index.ts#L183-L245)
 
-##### injectStyle
+#### injectStyle
 
 Used to remove distracting elements and make web pages more PDF-friendly.
 
@@ -288,7 +286,7 @@ type injectStyle = (params: { url: string }): MaybePromise<{
 }>
 ```
 
-Let's make some rules:
+**Let's make some rules**:
 
 - Hide all elements but content.
 - Make the margin of the content element and it's ancestor elements zero.
@@ -303,7 +301,7 @@ When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set th
 
 The `titleSelector` is used to mark the title element, The default value is `body`. Most sites don't need to provide the `titleSelector`.
 
-##### onPageLoades
+#### onPageLoades
 
 Run after page loaded. Usually used to wait img loaded, especially lazy loaded images.
 
@@ -321,7 +319,7 @@ Web Printer provide two methods to handle image loading:
   type evaluateWaitForImgLoadLazy = ( page: Page, imgSelector = "img", waitingTime = 200 ): Promise<void>
   ```
 
-##### onPageWillPrint
+#### onPageWillPrint
 
 Run before page will be printed.
 
