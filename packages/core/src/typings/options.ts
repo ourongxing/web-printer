@@ -13,11 +13,13 @@ export interface PrinterPrintOption extends PrintOption {
   filter?: PageFilter
   /**
    * Reverse the printing order.
+   *
    * If the outline has different levels, outline may be confused.
    */
   reverse?: boolean
   /**
-   * A local cover pdf path
+   * A local cover pdf path.
+   *
    * Maybe you can use it to marge exist pdf, but can't merge outlines.
    */
   coverPath?: string
