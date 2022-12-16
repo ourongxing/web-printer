@@ -214,7 +214,7 @@ A plugin have four methods:
 
 In fact, it is just use [Playwright](https://playwright.dev/docs/library) to inject JS and CSS into the page. You can read the code of offical plugins to learn how to write a plugin. It's pretty simple most of the time.
 
-**Let's make some rules**
+Let's make some rules
 
 - Use a  function to return a plugin.
 - The function parameter is an options object.
@@ -288,7 +288,7 @@ type injectStyle = (params: { url: string }): MaybePromise<{
 }>
 ```
 
-**Let's make some rules**:
+Let's make some rules:
 
 - Hide all elements but content.
 - Make the margin of the content element and it's ancestor elements zero.
