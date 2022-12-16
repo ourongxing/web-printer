@@ -213,7 +213,7 @@ In fact, it is just use [Playwright](https://playwright.dev/docs/library) to inj
 
 #### fetchPagesInfo
 
-Used to fetch a list of page url and title, need return the list. Usually need to parse sidebar outline. Web Printer could restores the hierarchy and collapsed state of the original outline perfectly.
+Used to fetch a list of page url and title, need return the list. Usually need to parse sidebar outline. Web Printer could restore the hierarchy and collapsed state of the original outline perfectly.
 
 ```typescript
 type fetchPagesInfo = (params: {context: BrowserContext}) => MaybePromise<PageInfoWithoutIndex[]>
