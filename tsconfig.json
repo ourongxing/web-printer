@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "importHelpers": true,
     "lib": [
-      "ESNext"
+      "ESNext",
+      "DOM"
     ],
     "paths": {
       "@web-printer/core": [
@@ -31,6 +32,9 @@
       ],
       "@web-printer/zhubai": [
         "./packages/zhubai/src"
+      ],
+      "@web-printer/zhihu": [
+        "./packages/zhihu/src"
       ],
       "@web-printer/vitepress": [
         "./packages/vitepress/src"

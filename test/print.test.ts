@@ -1,11 +1,13 @@
 import { describe, expect, test } from "vitest"
 import juejing from "@web-printer/juejin"
 import ruanyifeng from "@web-printer/ruanyifeng"
+import xiaobot from "@web-printer/xiaobot"
 import vitepress from "@web-printer/vitepress"
 import javascriptInfo from "@web-printer/javascript-info"
 import mdbook from "@web-printer/mdbook"
 import zhubai from "@web-printer/zhubai"
-import { Plugin, Printer } from "@web-printer/core"
+import zhihui from "@web-printer/zhihu"
+import { Printer } from "@web-printer/core"
 
 describe(
   "print test",
@@ -21,15 +23,27 @@ describe(
           test: true
         })
     })
+    test.skip("print xiaobot", async () => {
+      await new Printer()
+        .use(
+          xiaobot({
+            url: "https://xiaobot.net/p/pmthinking2022"
+          })
+        )
+        .print("产品沉思录 | 2022", {
+          test: true
+        })
+    })
     test.skip("print juejing", async () => {
       await new Printer({ threads: 10 })
         .use(
           juejing({
-            url: "https://juejin.cn/?sort=three_days_hottest"
+            url: "https://juejin.cn/?sort=three_days_hottest",
+            maxPages: 50
           })
         )
-        .print("掘金", {
-          test: true,
+        .print("掘金3日最热", {
+          // test: true,
           continuous: true
         })
     })
@@ -44,19 +58,19 @@ describe(
           })
         )
         .print("Vue 3.2 Documentation", {
-          test: true,
+          // test: true,
           printBackground: true
         })
     })
     test.skip("print vitepress", async () => {
-      await new Printer()
+      await new Printer({ threads: 10 })
         .use(
           vitepress({
             url: "https://vitepress.vuejs.org/guide/getting-started"
           })
         )
         .print("Vitepress", {
-          test: true,
+          // test: true,
           printBackground: true
         })
     })
@@ -64,26 +78,75 @@ describe(
       await new Printer({ threads: 10 })
         .use(
           mdbook({
-            url: "https://hellowac.github.io/mdbook_doc/index.html"
+            url: "https://course.rs/first-try/hello-world.html"
           })
         )
-        .print("rust", {
+        .print("Rust 真经", {
+          // test: true,
+          printBackground: true,
+          continuous: true
+        })
+    })
+    test.skip("print javascript info", async () => {
+      await new Printer({ threads: 10 })
+        .use(
+          javascriptInfo({
+            url: "https://javascript.info/"
+          })
+        )
+        .print("Javascript Info", {
+          // test: true,
+          printBackground: true,
+          continuous: true
+        })
+    })
+    test.skip("print ruanyifeng weekly", async () => {
+      await new Printer({ threads: 10 })
+        .use(
+          ruanyifeng({
+            url: "https://www.ruanyifeng.com/blog/weekly/",
+            removeWeeklyAds: true
+          })
+        )
+        .print("科技爱好者周刊", {
+          // filter: ({ index }) => index < 20,
+          coverPath: "/Users/ourongxing/Downloads/node-images-to-pdf - npm.pdf",
           test: true,
           printBackground: true,
           continuous: true
         })
     })
-    test("print javascript info", async () => {
+    test("print zhihu flow", async () => {
       await new Printer({ threads: 10 })
         .use(
-          javascriptInfo({
-            url: "https://zh.javascript.info/"
+          zhihui({
+            // url: "https://www.zhihu.com/column/c_1183321146451267584",
+            // url: "https://www.zhihu.com/column/collegephysics",
+            url: "https://www.zhihu.com/collection/19561986",
+            // url: "https://www.zhihu.com/collection/339120184",
+            // url: "https://www.zhihu.com/collection/339120184",
+            // url: "https://www.zhihu.com/collection/615801716",
+            maxPages: 10
+            // imgWaiting: 1000
           })
         )
-        .print("Javascript Info", {
-          test: true,
-          printBackground: true,
+        .print("知乎: 值得回头看几遍", {
           continuous: true
+          // reverse: true,
+          // test: true
+        })
+    })
+    test.skip("print zhihu pagination", async () => {
+      await new Printer({ threads: 10 })
+        .use(
+          zhihui({
+            url: "https://www.zhihu.com/collection/822315776",
+            maxPages: 10
+          })
+        )
+        .print("知乎古言 HE", {
+          continuous: true,
+          test: true
         })
     })
   },
