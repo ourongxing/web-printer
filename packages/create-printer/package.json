@@ -1,0 +1,33 @@
+{
+  "name": "create-printer",
+  "version": "0.2.1",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
+  "author": "Ou RongXing<orongxing@gmail.com>",
+  "homepage": "https://github.com/busiyiworld/web-printer/tree/main/packages/create-printer#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/busiyiworld/web-printer.git",
+    "directory": "packages/create-printer"
+  },
+  "files": [
+    "dist",
+    "template"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --clean",
+    "dev": "pnpm build --watch"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/minimist": "^1.2.2",
+    "@types/node": "^18.11.15",
+    "@types/prompts": "^2.4.2"
+  },
+  "dependencies": {
+    "minimist": "^1.2.7",
+    "prompts": "^2.4.2",
+    "fs-extra": "^11.1.0",
+    "kolorist": "^1.6.0"
+  }
+}
