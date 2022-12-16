@@ -1,4 +1,5 @@
 import type { Page } from "playwright"
+import type { MaybePromise } from "./typings"
 import { delay } from "./utils"
 
 export async function scrollLoading(

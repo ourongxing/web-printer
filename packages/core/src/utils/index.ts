@@ -1,4 +1,5 @@
 import { stdout } from "single-line-log"
+import type { MaybePromise } from "../typings"
 
 export * from "./bar"
 

@@ -1,5 +1,7 @@
 import type { BrowserContext, Page } from "playwright"
+import type { MaybePromise } from "./utils"
 export * from "./options"
+export * from "./utils"
 
 type BaseInfo = {
   title: string
