@@ -28,7 +28,6 @@ export class Printer {
     )
     const page = await context.newPage()
     url && (await page.goto(url))
-    await page.pause()
   }
   use(plugin: Plugin) {
     const { contextOptions } = this

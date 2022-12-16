@@ -81,26 +81,17 @@ export async function evaluateScrollToTop(page: Page, scrollStep = 50) {
 }
 
 export async function evaluateWaitForImgLoad(page: Page, imgSelector = "img") {
-  await page.evaluate(
-    async ({ imgSelector }) => {
-      await Promise.all(
-        (
-          Array.from(
-            document.querySelectorAll(imgSelector)
-          ) as HTMLImageElement[]
-        ).map(
-          k =>
-            k.complete ||
-            new Promise(r => {
+  await page.evaluate(`
+    (async () => {
+      await Promise.all(Array.from(document.querySelectorAll("${imgSelector}")).map(
+          k => k.complete || new Promise(r => {
               const img = new Image()
               img.src = k.src
               img.onload = r
             })
-        )
-      )
-    },
-    { imgSelector }
-  )
+        ))
+    })()
+    `)
 }
 
 export async function evaluateWaitForImgLoadLazy(
@@ -108,18 +99,15 @@ export async function evaluateWaitForImgLoadLazy(
   imgSelector = "img",
   waitingTime = 200
 ) {
-  await page.evaluate(
-    async ({ imgSelector, waitingTime }) => {
-      function delay(t: number) {
-        return new Promise(resolve => setTimeout(resolve, t))
-      }
-      for (const img of Array.from(
-        document.querySelectorAll(imgSelector)
-      ) as HTMLImageElement[]) {
-        img.scrollIntoView(true)
-        await delay(waitingTime)
-      }
-    },
-    { imgSelector, waitingTime }
-  )
+  await page.evaluate(`
+      (async () => {
+        function delay(t) {
+          return new Promise(resolve => setTimeout(resolve, t))
+        }
+        for (const img of Array.from(document.querySelectorAll("${imgSelector}"))) {
+          img.scrollIntoView(true)
+          await delay(${waitingTime})
+        }
+      })()
+    `)
 }
