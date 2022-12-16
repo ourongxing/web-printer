@@ -64,7 +64,7 @@ html {
 }
 
 .markdown-body {
-    background-image: "unset"
+    background-image: unset !important;
 }
 `
       return {
