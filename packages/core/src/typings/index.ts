@@ -1,5 +1,5 @@
 import type { BrowserContext, Page } from "playwright"
-export * from "./playwright"
+export * from "./options"
 
 type BaseInfo = {
   title: string
@@ -14,8 +14,10 @@ type BaseInfo = {
    * When the item is a group and is a link
    */
   selfGroup?: boolean
+
   collapsed?: boolean
 }
+
 export type PageInfoWithoutIndex = {
   url: string
 } & BaseInfo
@@ -43,15 +45,13 @@ export interface Plugin {
   /**
    * Used to fetch a list of page url and title, need return the list.
    */
-  fetchPagesInfo({
-    context
-  }: {
+  fetchPagesInfo(params: {
     context: BrowserContext
   }): MaybePromise<PageInfoWithoutIndex[]>
   /**
    * Used to remove distracting elements and make web pages more PDF-friendly.
    */
-  injectStyle?({ url }: { url: string }): MaybePromise<{
+  injectStyle?(params: { url: string }): MaybePromise<{
     style?: string
     /**
      * if given, printer will only print the content element.
@@ -66,20 +66,11 @@ export interface Plugin {
   /**
    * Run after page loaded.
    */
-  onPageLoaded?({
-    page,
-    pageInfo
-  }: {
-    page: Page
-    pageInfo: PageInfo
-  }): MaybePromise<void>
+  onPageLoaded?(params: { page: Page; pageInfo: PageInfo }): MaybePromise<void>
   /**
    * Run before page will be printed.
    */
-  onPageWillPrint?({
-    page,
-    pageInfo
-  }: {
+  onPageWillPrint?(params: {
     page: Page
     pageInfo: PageInfo
   }): MaybePromise<void>

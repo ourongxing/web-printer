@@ -21,7 +21,7 @@ export async function print(
 ) {
   const { onPageLoaded, onPageWillPrint, printOption, outputDir, injectStyle } =
     options
-  const { margin, continuous, injectedStyle, test } = printOption
+  const { margin, continuous, style: globalStyle, test } = printOption
   if (test) {
     name = "test: " + name
     pagesInfo = pagesInfo.slice(0, 2)
@@ -91,7 +91,7 @@ export async function print(
           const css = (
             [
               style,
-              injectedStyle,
+              globalStyle,
               continuous &&
                 `${
                   titleSelector || "body"
@@ -105,7 +105,7 @@ export async function print(
           })
         } else {
           await page.addStyleTag({
-            content: ([injectedStyle].flat().filter(k => k) as string[]).join(
+            content: ([globalStyle].flat().filter(k => k) as string[]).join(
               "\n"
             )
           })

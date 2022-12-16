@@ -6,19 +6,11 @@ The core of [Web Printer](https://github.com/busiyiworld/web-printer), you can u
 
 ```ts
 import { Printer, type Plugin } from "@web-printer/core"
+import type { Plugin, PrinterOption, PrinterPrintOption } from "@web-printer/core"
 
 new Printer({} as PrinterOption)
-  .use({
-    // used to fetch page title and url
-    fetchPagesInfo() {},
-    // used to inject style to beautify the page
-    injectStyle() {},
-    // run before page printing
-    onPageWillPrint() {},
-    // run after page loaded
-    onPageLoaded() {}
-  } as Plugin)
-  .print("PDF nams", {} as PrintOption)
+  .use({} as Plugin)
+  .print("PDF name", {} as PrinterPrintOption)
 ```
 
 ## License
