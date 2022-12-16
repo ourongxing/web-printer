@@ -134,7 +134,7 @@ async function init() {
   const templateDir = path.resolve(
     __dirname,
     "../template",
-    argPlugin || plugin
+    plugin || argPlugin
   )
 
   await fs.copy(templateDir, root)
