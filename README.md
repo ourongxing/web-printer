@@ -212,7 +212,7 @@ A plugin have four methods:
 
 In fact, it is just use [Playwright](https://playwright.dev/docs/library) to inject JS and CSS into the page. You can read the code of offical plugins to learn how to write a plugin. It's pretty simple most of the time.
 
-**Let's make some rules**
+*Let's make some rules*
 
 - Use a  function to return a plugin.
 - The function parameter is an options object.
@@ -266,7 +266,7 @@ The pageInfo need returned just like
 ]
 ```
 
-**Examples**
+*Examples*
 
 - simple outline: [javascript-info/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/javascript-info/src/index.ts#L18-L52)
 - complex outline: [mdbook/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/mdbook/src/index.ts#L17-L93)
@@ -286,14 +286,14 @@ type injectStyle = (params: { url: string }): MaybePromise<{
 }>
 ```
 
-**Let's make some rules**:
+*Let's make some rules*:
 
 - Hide all elements but content.
 - Make the margin of the content element and it's ancestor elements zero.
 
 Therefore, everyone can set the same margin for any website.
 
-Don't worry, It's so easy. You only need to provide a `contentSelector` , support [selector list](https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list). Web Printer can hide all elements but it and make the margin of it and it's ancestor elements zero automatically. You can use
+Don't worry, It's so easy. You only need to provide a `contentSelector` , support [selector list](https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list). Web Printer can hide all elements but it and make the margin of it and it's ancestor elements zero automatically.
 
 But not all websites can do this, sometimes you still need to write CSS yourself, just return the `style` property.
 
