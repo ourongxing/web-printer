@@ -72,20 +72,13 @@ But if you are a novice, follow me, maybe easier.
 First you shoud install [pnpm(with node)](https://pnpm.io/installation), [vscode(support typescript)](https://code.visualstudio.com/).
 
 ```bash
-# create a web-printer project
 pnpm create printer@latest
 
-# enter the project
-cd name_of_project_you_set
-
-# maybe slowly if you're in China
-pnpm i & pnpm pw install chromium
-
-# open project in vscode, try to edit the src/index.ts
-code .
+# or complete in one step
+pnpm create printer@latest web-printer -p vitepress
 ```
 
-After customizing, use `pnpm print` to print. A pretty PDF will appear in `./output`.
+And follow the tips. After customizing, use `pnpm print` to print. A pretty PDF will appear in `./output`.
 
 ## Options
 
