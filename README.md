@@ -268,7 +268,7 @@ The pageInfo need returned just like
 ]
 ```
 
-**Examples**
+Examples
 
 - simple outline: [javascript-info/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/javascript-info/src/index.ts#L18-L52)
 - complex outline: [mdbook/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/mdbook/src/index.ts#L17-L93)
