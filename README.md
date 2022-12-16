@@ -124,7 +124,7 @@ new Printer({} as PrinterOption)
 }
 ```
 
-`PrinterPrintOption` extends Playwright `page.pdf() ` [options]([Page | Playwright](https://playwright.dev/docs/api/class-page#page-pdf)).
+`PrinterPrintOption` extends Playwright `page.pdf() ` [options](https://playwright.dev/docs/api/class-page#page-pdf).
 
 ```ts
 {
