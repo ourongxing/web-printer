@@ -18,7 +18,7 @@ export class Printer {
   constructor(options: PrinterOption = {}) {
     this.contextOptions = options
   }
-  async login() {
+  async login(url?: string) {
     const context = await chromium.launchPersistentContext(
       this.contextOptions.userDataDir ?? "userData",
       {
@@ -27,6 +27,7 @@ export class Printer {
       }
     )
     const page = await context.newPage()
+    url && (await page.goto(url))
     await page.pause()
   }
   use(plugin: Plugin) {
