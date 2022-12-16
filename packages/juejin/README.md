@@ -14,7 +14,8 @@ import juejin from "@web-printer/juejin"
 new Printer()
   .use(
     juejin({
-      url: "https://juejin.cn/?sort=weekly_hottest"
+      url: "https://juejin.cn/?sort=weekly_hottest",
+      maxPages: 10
     })
   )
   .print("掘金一周热门")
