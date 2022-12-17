@@ -13,7 +13,7 @@ A printer that can print multiple web pages as one pretty PDF
 <br/>
 <b>with outlines, without distractions</b>
 <br/>
-<b>and learn in deepth</b>
+<b>and learn in depth</b>
 <br/>
 </p>
 <p align="center">
