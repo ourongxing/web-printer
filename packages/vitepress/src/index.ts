@@ -94,7 +94,8 @@ export default function (options: {
     `
       return {
         style,
-        contentSelector: "main"
+        contentSelector: "main",
+        avoidBreakSelector: ".custom-block"
       }
     }
   }
