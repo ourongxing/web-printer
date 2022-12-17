@@ -33,6 +33,17 @@ export interface PrinterPrintOption extends PrintOption {
    */
   continuous?: boolean
   /**
+   * Replace website link to PDF link, not support hash url
+   * @default true
+   */
+  replaceLink?: boolean
+  /**
+   * Add page numbers to the bottom center of the page.
+   * @default false
+   * @requires PrinterPrintOption.continuous = false
+   */
+  addPageNumber?: boolean
+  /**
    * Margins of each page
    * @default
    * {
@@ -61,6 +72,20 @@ export interface PrinterPrintOption extends PrintOption {
      */
     left?: string | number
   }
+  /**
+   * Paper format. If set, takes priority over `width` or `height` options.
+   * @defaults "A4"
+   */
+  format?:
+    | "A0"
+    | "A1"
+    | "A2"
+    | "A3"
+    | "A4"
+    | "A5"
+    | "Legal"
+    | "Letter"
+    | "Tabloid"
 }
 
 export interface PrinterOption extends BrowserContextOptions {

@@ -1,11 +1,17 @@
 import { outlinePdfFactory } from "@lillallol/outline-pdf"
 import * as pdfLib from "pdf-lib"
-import { PDFDocument } from "pdf-lib"
+import type { PDFRef } from "pdf-lib"
+import { PDFDict, PDFDocument, PDFName, StandardFonts } from "pdf-lib"
 import type { OutlineItem, PDFBuffer } from "./typings"
 import fs from "fs-extra"
+import type { PrinterPrintOption } from "./typings"
 
-export async function mergePDF(pdfList: PDFBuffer[], coverPath?: string) {
+export async function mergePDF(
+  pdfList: PDFBuffer[],
+  printOption: PrinterPrintOption
+) {
   let cover: Uint8Array | undefined = undefined
+  const { coverPath, continuous, addPageNumber } = printOption
   if (coverPath) {
     try {
       cover = await fs.readFile(coverPath)
@@ -13,26 +19,25 @@ export async function mergePDF(pdfList: PDFBuffer[], coverPath?: string) {
       console.log(e)
     }
   }
-  const mergedPdf = cover
+  const mergedPDF = cover
     ? await PDFDocument.load(cover)
     : await PDFDocument.create()
   const outlineItems: OutlineItem[] = []
   for (const pdf of pdfList) {
     outlineItems.push({
       ...pdf,
-      num: mergedPdf.getPageCount() + 1
+      groups: [...new Set(pdf.groups)],
+      num: mergedPDF.getPageCount() + 1
     })
     const doc = await pdfLib.PDFDocument.load(pdf.buffer)
-    const copiedPages = await mergedPdf.copyPages(doc, doc.getPageIndices())
-    copiedPages.forEach(page => mergedPdf.addPage(page))
+    const copiedPages = await mergedPDF.copyPages(doc, doc.getPageIndices())
+    copiedPages.forEach(page => mergedPDF.addPage(page))
   }
 
-  const outlinedPDF = await outlinePdfFactory(pdfLib)({
-    outline: generateOutline(outlineItems),
-    pdf: mergedPdf
-  })
-
-  return await outlinedPDF.save()
+  let rPDF = await new PrinterPDF(mergedPDF).addOutline(outlineItems)
+  if (!continuous && addPageNumber)
+    rPDF = await rPDF.addPageNumbers(outlineItems[0].num - 1)
+  return rPDF.replaceInnerLink(outlineItems).save()
 }
 
 export function generateOutline(outlineItems: OutlineItem[]) {
@@ -78,12 +83,71 @@ export function generateOutline(outlineItems: OutlineItem[]) {
     .items.join("\n")
 }
 
-/** need ghostscript */
-// export async function shrinkPDF(path: string, quality: number) {
-//   execSync(
-//     `bash ${await projectRoot(
-//       "scripts/shrinkpdf.sh"
-//     )} -r ${quality} -o "${path}.tmp" "${path}" >/dev/null 2>&1`
-//   )
-//   execSync(`mv "${path}.tmp" "${path}"`)
-// }
+class PrinterPDF {
+  pdf: PDFDocument
+  constructor(pdf: PDFDocument) {
+    this.pdf = pdf
+  }
+  async addOutline(outlineItems: OutlineItem[]) {
+    return new PrinterPDF(
+      await outlinePdfFactory(pdfLib)({
+        outline: generateOutline(outlineItems),
+        pdf: this.pdf
+      })
+    )
+  }
+  replaceInnerLink(outlineItems: OutlineItem[]) {
+    const { pdf } = this
+    const pages = pdf.getPages()
+    pages.forEach(p => {
+      const annotes = p.node.Annots()
+      annotes?.asArray().forEach(annote => {
+        const dict = pdf.context.lookupMaybe(annote, PDFDict)
+        if (!dict) return
+        const a = dict.get(PDFName.of(`A`))
+        const link = pdf.context.lookupMaybe(a, PDFDict)
+        const url = link?.get(PDFName.of("URI"))?.toString().slice(1, -1)
+        if (url) {
+          const item = outlineItems.find(
+            k =>
+              url.replace(/\/?[#?].+$/, "") === k.url.replace(/\/?[#?].+$/, "")
+          )
+          if (item) {
+            pdf.context.assign(
+              annote as PDFRef,
+              pdf.context.obj({
+                Type: "Annot",
+                Subtype: "Link",
+                Rect: dict.lookup(PDFName.of("Rect")),
+                Border: dict.lookup(PDFName.of("Border")),
+                C: dict.lookup(PDFName.of("C")),
+                Dest: [pages[item.num - 1].ref, "XYZ", null, null, null]
+              })
+            )
+          }
+        }
+      })
+    })
+    return this
+  }
+  async addPageNumbers(startIndex: number) {
+    const { pdf } = this
+    const courierBoldFont = await pdf.embedFont(StandardFonts.Courier)
+    const pageIndices = pdf.getPageIndices()
+    for (const pageIndex of pageIndices) {
+      if (pageIndex >= startIndex) {
+        const page = pdf.getPage(pageIndex)
+        page.drawText(`${pageIndex + 1}`, {
+          x: page.getWidth() / 2,
+          y: 20,
+          font: courierBoldFont,
+          size: 12
+        })
+      }
+    }
+    return this
+  }
+  save() {
+    return this.pdf.save()
+  }
+}
