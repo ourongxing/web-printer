@@ -1,10 +1,10 @@
 {
   "name": "@web-printer/monorepo",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "scripts": {
-    "build": "pnpm --filter=@web-printer/* run build",
+    "build": "pnpm -r run build",
     "test": "vitest",
     "publish": "pnpm -r publish --access public --no-git-checks",
     "lint:fix": "eslint . --fix --ext .ts",

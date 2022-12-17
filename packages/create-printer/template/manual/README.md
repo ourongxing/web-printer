@@ -13,12 +13,12 @@ A printer that can print multiple web pages as one pretty PDF
 <br/>
 <b>with outlines, without distractions</b>
 <br/>
-<b>and learn in deepth</b>
+<b>and learn in depth</b>
 <br/>
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript-blue" alt="language">
-  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.2.3-EE2C50" alt="version"></a>
+  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.2.4-EE2C50" alt="version"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/MIT-yellow" alt="license"></a>
 </p>
 
@@ -66,6 +66,8 @@ new Printer()
   )
   .print("The Modern JavaScript Tutorial")
 ```
+
+And run it by [tsx](https://github.com/esbuild-kit/tsx), in other ways may throw errors. I have no time to fix it now.
 
 But if you are a novice, follow me, maybe easier.
 
@@ -115,7 +117,7 @@ new Printer({} as PrinterOption)
 }
 ```
 
-`PrinterPrintOption` extends Playwright `page.pdf() ` [options](https://playwright.dev/docs/api/class-page#page-pdf).
+`PrinterPrintOption` extends Playwright `page.pdf()` [options](https://playwright.dev/docs/api/class-page#page-pdf).
 
 ```ts
 {
@@ -134,7 +136,7 @@ new Printer({} as PrinterOption)
    */
   reverse?: boolean
   /**
-   * A local cover pdf path
+   * A local cover pdf path.
    * Maybe you can use it to marge exist pdf, but can't merge outlines.
    */
   coverPath?: string
@@ -148,7 +150,25 @@ new Printer({} as PrinterOption)
    */
   continuous?: boolean
   /**
+   * Replace website link to PDF link, not support hash url
+   * @default true
+   */
+  replaceLink?: boolean
+  /**
+   * Add page numbers to the bottom center of the page.
+   * @default false
+   * @requires PrinterPrintOption.continuous = false
+   */
+  addPageNumber?: boolean
+  /**
    * Margins of each page
+   * @default
+   * {
+   *    top: 60,
+   *    right: 55,
+   *    bottom: 60,
+   *    left: 55,
+   * }
    */
   margin?: {
     /**
@@ -159,6 +179,7 @@ new Printer({} as PrinterOption)
      * @default 55
      */
     right?: string | number
+
     /**
      * @default 60
      */
@@ -168,6 +189,11 @@ new Printer({} as PrinterOption)
      */
     left?: string | number
   }
+  /**
+   * Paper format. If set, takes priority over `width` or `height` options.
+   * @defaults "A4"
+   */
+  format?: "A0" | "A1" | "A2" | "A3" | "A4" | "A5" | "Legal" | "Letter" | "Tabloid"
 }
 ```
 
@@ -213,7 +239,7 @@ In fact, it is just use [Playwright](https://playwright.dev/docs/library) to inj
 
 #### fetchPagesInfo
 
-Used to fetch a list of page url and title, need return the list. Usually need to parse sidebar outline. Web Printer could restores the hierarchy and collapsed state of the original outline perfectly.
+Used to fetch a list of page url and title, need return the list. Usually need to parse sidebar outline. Web Printer could restore the hierarchy and collapsed state of the original outline perfectly.
 
 ```typescript
 type fetchPagesInfo = (params: {context: BrowserContext}) => MaybePromise<PageInfoWithoutIndex[]>
@@ -272,10 +298,11 @@ The pageInfo need returned just like
 Used to remove distracting elements and make web pages more PDF-friendly.
 
 ```ts
-type injectStyle = (params: { url: string }): MaybePromise<{
+type injectStyle = (params: { url: string; printOption: PrinterPrintOption }): MaybePromise<{
   style?: string
   contentSelector?: string
   titleSelector?: string
+  avoidBreakSelector?: string
 }>
 ```
 
@@ -294,12 +321,14 @@ When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set th
 
 The `titleSelector` is used to mark the title element, The default value is `body`. Most sites don't need to provide the `titleSelector`.
 
+The `avoidBreakSelector` is used to avoid page breaks in certain elements. The default value is `pre,blockquote,tbody tr`
+
 #### onPageLoades
 
 Run after page loaded. Usually used to wait img loaded, especially lazy loaded images.
 
 ```ts
-type onPageLoaded = (params: { page: Page; pageInfo: PageInfo }): MaybePromise<void>
+type onPageLoaded = (params: { page: Page; pageInfo: PageInfo; printOption: PrinterPrintOption }): MaybePromise<void>
 ```
 
 Web Printer provide two methods to handle image loading:
@@ -317,7 +346,7 @@ Web Printer provide two methods to handle image loading:
 Run before page will be printed.
 
  ```ts
- type onPageWillPrint = (params: { page: Page; pageInfo: PageInfo }): MaybePromise<void>
+ type onPageWillPrint = (params: { page: Page; pageInfo: PageInfo; printOption: PrinterPrintOption }): MaybePromise<void>
  ```
 
 ## Shrink PDF
