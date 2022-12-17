@@ -67,6 +67,8 @@ new Printer()
   .print("The Modern JavaScript Tutorial")
 ```
 
+And run it by [tsx](https://github.com/esbuild-kit/tsx), in other ways may throw errors. I have no time to fix it now.
+
 But if you are a novice, follow me, maybe easier.
 
 First you shoud install [pnpm(with node)](https://pnpm.io/installation), [vscode(support typescript)](https://code.visualstudio.com/).
