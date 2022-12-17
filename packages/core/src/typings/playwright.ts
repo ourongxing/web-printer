@@ -61,12 +61,14 @@ export interface PrintOption {
   }
   /**
    * Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which means print all pages.
+   * @deprecated useless in web-printr
    */
   pageRanges?: string
 
   /**
    * The file path to save the PDF to. If `path` is a relative path, then it is resolved relative to the current working
    * directory. If no path is provided, the PDF won't be saved to the disk.
+   * @deprecated useless in web-printr
    */
   path?: string
 

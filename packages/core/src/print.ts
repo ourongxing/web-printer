@@ -1,10 +1,10 @@
 import type { BrowserContext } from "playwright"
 import fs from "fs-extra"
 import type { PDFBuffer, PrinterPrintOption, PageInfo, Plugin } from "./typings"
-import { delay, ProgressBar, slog } from "./utils"
+import { ProgressBar, slog } from "./utils"
 import { mergePDF } from "./pdf"
 import path from "path"
-import { evaluateShowOnly, evaluateWaitForImgLoad } from "./evaluate"
+import { evaluateShowOnly } from "./evaluate"
 
 export async function print(
   name: string,
@@ -81,13 +81,20 @@ export async function print(
             waitUntil: "networkidle"
           })
         }
-        onPageLoaded && (await onPageLoaded({ page, pageInfo }))
+        onPageLoaded && (await onPageLoaded({ page, pageInfo, printOption }))
         if (injectStyle) {
-          const { style, titleSelector, contentSelector } = await injectStyle({
-            url
-          })
+          const { style, titleSelector, contentSelector, avoidBreakSelector } =
+            await injectStyle({
+              url,
+              printOption
+            })
           contentSelector && (await evaluateShowOnly(page, contentSelector))
-          const top = typeof margin?.top === "number" ? margin.top : marginY
+          const top =
+            typeof margin?.top === "number"
+              ? margin.top
+              : margin?.top && margin.top.endsWith("px")
+              ? margin.top.replace("px", "")
+              : marginY
           const css = (
             [
               style,
@@ -95,7 +102,14 @@ export async function print(
               continuous &&
                 `${
                   titleSelector || "body"
-                } { margin-top: ${top}px !important; }`
+                } { margin-top: ${top}px !important; }`,
+              !continuous &&
+                `pre,blockquote,tbody tr { page-break-inside: avoid; }`,
+              !continuous &&
+                avoidBreakSelector &&
+                `
+              ${avoidBreakSelector} { page-break-inside: avoid !important;}
+              `
             ]
               .flat()
               .filter(k => k) as string[]
@@ -110,10 +124,16 @@ export async function print(
             )
           })
         }
-        onPageWillPrint && (await onPageWillPrint({ page, pageInfo }))
+        onPageWillPrint &&
+          (await onPageWillPrint({ page, pageInfo, printOption }))
         pdfs.push({
           ...pageInfo,
-          buffer: await page.pdf(printOption)
+          buffer: await page.pdf({
+            format: "A4",
+            ...printOption,
+            pageRanges: undefined,
+            path: undefined
+          })
         })
         completed.unshift({
           title,
@@ -137,7 +157,7 @@ export async function print(
   console.clear()
   if (pdfs.length) {
     slog("Generating PDF...")
-    await fs.writeFile(outPath, await mergePDF(pdfs, printOption?.coverPath))
+    await fs.writeFile(outPath, await mergePDF(pdfs, printOption))
     slog(`Generated ${outPath}`)
   } else {
     slog("No pdf generated")
