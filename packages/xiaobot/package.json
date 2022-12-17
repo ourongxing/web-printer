@@ -1,6 +1,7 @@
 {
   "name": "@web-printer/xiaobot",
   "version": "0.2.4",
+  "license": "MIT",
   "author": "Ou RongXing<orongxing@gmail.com>",
   "homepage": "https://github.com/busiyiworld/web-printer/tree/main/packages/xiaobot#readme",
   "repository": {

@@ -1,6 +1,7 @@
 {
   "name": "@web-printer/zhihu",
   "version": "0.2.4",
+  "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

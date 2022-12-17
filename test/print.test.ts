@@ -62,16 +62,22 @@ describe(
           printBackground: true
         })
     })
-    test.skip("print vitepress", async () => {
+    test("print vitepress", async () => {
       await new Printer({ threads: 10 })
         .use(
           vitepress({
-            url: "https://vitepress.vuejs.org/guide/getting-started"
+            // url: {
+            //   Guide: "https://cn.vitejs.dev/guide/",
+            //   Config: "https://cn.vitejs.dev/config/"
+            // }
+            url: "https://ohmymn.marginnote.cn/guide/"
           })
         )
-        .print("Vitepress", {
+        .print("OhMyMN", {
           // test: true,
-          printBackground: true
+          printBackground: true,
+          addPageNumber: true
+          // continuous: true
         })
     })
     test.skip("print mdbook", async () => {
@@ -116,7 +122,7 @@ describe(
           continuous: true
         })
     })
-    test("print zhihu flow", async () => {
+    test.skip("print zhihu flow", async () => {
       await new Printer({ threads: 10 })
         .use(
           zhihui({

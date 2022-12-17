@@ -1,6 +1,7 @@
 {
   "name": "create-printer",
   "version": "0.2.4",
+  "license": "MIT",
   "main": "dist/index.js",
   "bin": "dist/index.js",
   "author": "Ou RongXing<orongxing@gmail.com>",
