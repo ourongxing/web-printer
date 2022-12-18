@@ -11,7 +11,7 @@ export async function mergePDF(
   printOption: PrinterPrintOption
 ) {
   let cover: Uint8Array | undefined = undefined
-  const { coverPath, continuous, addPageNumber } = printOption
+  const { coverPath, continuous, addPageNumber, replaceLink } = printOption
   if (coverPath) {
     try {
       cover = await fs.readFile(coverPath)
@@ -31,13 +31,16 @@ export async function mergePDF(
     })
     const doc = await pdfLib.PDFDocument.load(pdf.buffer)
     const copiedPages = await mergedPDF.copyPages(doc, doc.getPageIndices())
-    copiedPages.forEach(page => mergedPDF.addPage(page))
+    copiedPages.forEach(page => {
+      if (page.ref.sizeInBytes() < 300) mergedPDF.addPage(page)
+    })
   }
 
   let rPDF = await new PrinterPDF(mergedPDF).addOutline(outlineItems)
   if (!continuous && addPageNumber)
     rPDF = await rPDF.addPageNumbers(outlineItems[0].num - 1)
-  return rPDF.replaceInnerLink(outlineItems).save()
+  if (replaceLink) rPDF = rPDF.replaceInnerLink(outlineItems)
+  return rPDF.save()
 }
 
 export function generateOutline(outlineItems: OutlineItem[]) {
@@ -87,6 +90,8 @@ class PrinterPDF {
   pdf: PDFDocument
   constructor(pdf: PDFDocument) {
     this.pdf = pdf
+    pdf.setCreator("")
+    pdf.setProducer("Web Printer: https://github.com/busiyiworld/web-printer")
   }
   async addOutline(outlineItems: OutlineItem[]) {
     return new PrinterPDF(
@@ -99,34 +104,112 @@ class PrinterPDF {
   replaceInnerLink(outlineItems: OutlineItem[]) {
     const { pdf } = this
     const pages = pdf.getPages()
-    pages.forEach(p => {
-      const annotes = p.node.Annots()
-      annotes?.asArray().forEach(annote => {
+    const outline = outlineItems
+      .map(k => ({
+        url: k.url,
+        startPageIndex: k.num - 1
+      }))
+      .reverse()
+      .reduce(
+        (acc, { url, startPageIndex }) => {
+          acc.items.push({
+            pagesIndex: Array.from(
+              { length: acc.lastIndex - startPageIndex },
+              (_, k) => startPageIndex + k
+            ),
+            url: url
+          })
+          acc.lastIndex = startPageIndex
+          return acc
+        },
+        {
+          items: [],
+          lastIndex: pages.length
+        } as {
+          items: { pagesIndex: number[]; url: string }[]
+          /**
+           * @default length
+           */
+          lastIndex: number
+        }
+      )
+      .items.reverse()
+
+    const hashTable: {
+      value: string
+      coordinate: number[]
+      pageIndex: number
+    }[] = []
+    const linkTable: {
+      url: string
+      hash?: string
+      pagesIndex: number[]
+      ref: PDFRef
+      refDict: PDFDict
+    }[] = []
+
+    pages.forEach((p, i) => {
+      const annotes = p.node.Annots()?.asArray()
+      annotes?.forEach(annote => {
         const dict = pdf.context.lookupMaybe(annote, PDFDict)
         if (!dict) return
         const a = dict.get(PDFName.of(`A`))
         const link = pdf.context.lookupMaybe(a, PDFDict)
         const url = link?.get(PDFName.of("URI"))?.toString().slice(1, -1)
         if (url) {
-          const item = outlineItems.find(
-            k =>
-              url.replace(/\/?[#?].+$/, "") === k.url.replace(/\/?[#?].+$/, "")
-          )
-          if (item) {
-            pdf.context.assign(
-              annote as PDFRef,
-              pdf.context.obj({
-                Type: "Annot",
-                Subtype: "Link",
-                Rect: dict.lookup(PDFName.of("Rect")),
-                Border: dict.lookup(PDFName.of("Border")),
-                C: dict.lookup(PDFName.of("C")),
-                Dest: [pages[item.num - 1].ref, "XYZ", null, null, null]
+          if (url.includes("https://web.printer/")) {
+            const ret = dict
+              .get(PDFName.of("Rect"))
+              ?.toString()
+              .slice(2, -2)
+              .split(" ")
+              ?.map(k => Number(k))
+            if (ret) {
+              const [x, y] = ret
+              hashTable.push({
+                value: url.replace("https://web.printer/", ""),
+                pageIndex: i,
+                coordinate: [x, y + 30, 1]
               })
+            }
+          } else {
+            const item = outline.find(
+              k =>
+                url.replace(/\/?[#?].+$/, "") ===
+                k.url.replace(/\/?[#?].+$/, "")
             )
+            if (item) {
+              const hash = url.replace(/^.+#(.+)$/, "$1")
+              linkTable.push({
+                hash: hash === url ? undefined : hash,
+                ref: annote as PDFRef,
+                refDict: dict,
+                ...item
+              })
+            }
           }
         }
       })
+    })
+
+    linkTable.forEach(({ hash, ref, refDict, pagesIndex }) => {
+      const obj = {
+        Type: "Annot",
+        Subtype: "Link",
+        Rect: refDict.lookup(PDFName.of("Rect")),
+        Border: refDict.lookup(PDFName.of("Border")),
+        C: refDict.lookup(PDFName.of("C")),
+        Dest: [pages[pagesIndex[0]].ref, "XYZ", null, null, null] as any[]
+      }
+      if (hash) {
+        const ret = hashTable.find(
+          k => pagesIndex.includes(k.pageIndex) && hash === k.value
+        )
+        if (ret) {
+          obj.Dest = [pages[ret.pageIndex].ref, "XYZ", ...ret.coordinate]
+        }
+      }
+      pdf.context.assign(ref, pdf.context.obj(obj))
     })
     return this
   }

@@ -83,11 +83,16 @@ export async function print(
         }
         onPageLoaded && (await onPageLoaded({ page, pageInfo, printOption }))
         if (injectStyle) {
-          const { style, titleSelector, contentSelector, avoidBreakSelector } =
-            await injectStyle({
-              url,
-              printOption
-            })
+          const {
+            style,
+            titleSelector,
+            contentSelector,
+            avoidBreakSelector,
+            hashIDSelector
+          } = await injectStyle({
+            url,
+            printOption
+          })
           contentSelector && (await evaluateShowOnly(page, contentSelector))
           const top =
             typeof margin?.top === "number"
@@ -114,6 +119,24 @@ export async function print(
               .flat()
               .filter(k => k) as string[]
           ).join("\n")
+          printOption.replaceLink &&
+            hashIDSelector &&
+            (await page.evaluate(`
+            (()=>{
+              const nodes = Array.from(
+                document.querySelectorAll("${hashIDSelector}")
+              )
+              nodes.forEach(k => {
+                const hashNode = document.createElement("a")
+                hashNode.text = "'"
+                if (k.id) {
+                  hashNode.href = "https://web.printer/" + k.id
+                  k.appendChild(hashNode)
+                  hashNode.style.opacity = "0.01"
+                }
+              })
+            })()
+            `))
           await page.addStyleTag({
             content: css
           })
