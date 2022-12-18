@@ -65,8 +65,9 @@ export interface Plugin {
      */
     contentSelector?: string
     /**
-     * when option.continuous is true, will set margin top for this title.
-     * @default "body" but sometimes setting margin top for the body may cause problems.
+     * set top margin for it only.
+     * @requires PrinterPrintOption.continuous = true
+     * @default the first selector of contentSelector || "body"
      */
     titleSelector?: string
     /**
@@ -75,6 +76,12 @@ export interface Plugin {
      * @requires PrinterPrintOption.continuous = false
      */
     avoidBreakSelector?: string
+    /**
+     * Used for hash locating. If given, Printer could replace the hash of url to PDF position.
+     * @example "h2, h3" These elements generally have IDs for locating.
+     * @requires PrinterPrintOption.replaceLink = true
+     */
+    hashIDSelector?: string
   }>
   /**
    * Run after page loaded.

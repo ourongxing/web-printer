@@ -31,9 +31,7 @@ export async function mergePDF(
     })
     const doc = await pdfLib.PDFDocument.load(pdf.buffer)
     const copiedPages = await mergedPDF.copyPages(doc, doc.getPageIndices())
-    copiedPages.forEach(page => {
-      if (page.ref.sizeInBytes() < 300) mergedPDF.addPage(page)
-    })
+    copiedPages.forEach(page => mergedPDF.addPage(page))
   }
 
   let rPDF = await new PrinterPDF(mergedPDF).addOutline(outlineItems)

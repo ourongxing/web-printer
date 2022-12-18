@@ -33,7 +33,7 @@ export interface PrinterPrintOption extends PrintOption {
    */
   continuous?: boolean
   /**
-   * Replace website link to PDF link, not support hash url
+   * Replace website link to PDF link.
    * @default true
    */
   replaceLink?: boolean

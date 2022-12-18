@@ -106,7 +106,9 @@ export async function print(
               globalStyle,
               continuous &&
                 `${
-                  titleSelector || "body"
+                  titleSelector ||
+                  contentSelector?.split(/\s*,\s*/)[0] ||
+                  "body"
                 } { margin-top: ${top}px !important; }`,
               !continuous &&
                 `pre,blockquote,tbody tr { page-break-inside: avoid; }`,
