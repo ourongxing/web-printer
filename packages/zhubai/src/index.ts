@@ -69,7 +69,8 @@ div[class*=PostPage_post]{
 }
 `
       return {
-        style
+        style,
+        titleSelector: "h1[class*=PostPage_title]"
       }
     }
   }

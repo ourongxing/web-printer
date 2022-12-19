@@ -107,7 +107,8 @@ const ret = [...document.querySelectorAll("#alpha .module-content h3,#alpha .mod
 }
 `
       return {
-        style
+        style,
+        titleSelector: "article"
         // may cause ad block warning
         // contentSelector: "article,.wwads-cn"
       }
