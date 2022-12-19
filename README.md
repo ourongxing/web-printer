@@ -33,6 +33,7 @@ Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just lik
 
 - Fully customizable, it's just a nodejs library.
 - Universality, supports any websites by plugins.
+- Amazing, replace website inner links to PDF inner links, supports hash positioning.
 - Auto generate outlines of PDF, supports different level and collapsed status.
 - Easy to remove distracting elements. No distractions, only pure knowledge.
 
@@ -201,26 +202,23 @@ new Printer({} as PrinterOption)
 
 Plugins in Web Printer is only used to adapt to different websites.
 
-A plugin have four methods:
+A plugin have five methods:
 
 - `fetchPagesInfo`: Used to fetch a list of page url and title, need return the list.
 - `injectStyle`: Used to remove distracting elements and make web pages more PDF-friendly.
 - `onPageLoaded`: Run after page loaded.
 - `onPageWillPrint`: Run before page will be printed.
+- `otherParams`: Used to place other useful params.
 
 ### Offical plugins
 
 - Content Site
-
   - [@web-printer/javascript-info](https://github.com/busiyiworld/web-printer/tree/main/packages/javascript-info)
-
   - [@web-printer/juejin](https://github.com/busiyiworld/web-printer/tree/main/packages/juejin)
-
   - [@web-printer/xiaobot](https://github.com/busiyiworld/web-printer/tree/main/packages/xiaobot)
-
   - [@web-printer/zhihu](https://github.com/busiyiworld/web-printer/tree/main/packages/zhihu)
-
   - [@web-printer/zhubai](https://github.com/busiyiworld/web-printer/tree/main/packages/zhubai)
+  - [@web-printer/wikipedia](https://github.com/busiyiworld/web-printer/tree/main/packages/wikipedia)
 - Amazing Blog
   - [@web-printer/ruanyifeng](https://github.com/busiyiworld/web-printer/tree/main/packages/ruanyifeng)
 - Documentation Site Generator
@@ -303,13 +301,14 @@ type injectStyle = (params: { url: string; printOption: PrinterPrintOption }): M
   contentSelector?: string
   titleSelector?: string
   avoidBreakSelector?: string
+  hashIDSelector?: string
 }>
 ```
 
 *Let's make some rules*:
 
 - Hide all elements but content.
-- Make the margin of the content element and it's ancestor elements zero.
+- Set the margin of the content element and it's ancestor elements to zero.
 
 Therefore, everyone can set the same margin for any website.
 
@@ -319,10 +318,9 @@ But not all websites can do this, sometimes you still need to write CSS yourself
 
 When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set the top and bottom margins of all pages except the first page of each artical to zero.
 
-The `titleSelector` is used to mark the title element, The default value is `body`. Most sites don't need to provide the `titleSelector`.
+The `titleSelector` is used to mark the title element, and set top margin for it only. The default value is same as `contentSelector` if `contentSelector` is not empty. And If `contentSelector` has `,`, Printer will use the first selector. If `titleSelector` and `contentSelector` are both empty, the default value will be `body`, but sometimes setting margin top for the body may result in extra white space.
 
 The `avoidBreakSelector` is used to avoid page breaks in certain elements. The default value is `pre,blockquote,tbody tr`
-
 #### onPageLoades
 
 Run after page loaded. Usually used to wait img loaded, especially lazy loaded images.
@@ -348,6 +346,19 @@ Run before page will be printed.
  ```ts
  type onPageWillPrint = (params: { page: Page; pageInfo: PageInfo; printOption: PrinterPrintOption }): MaybePromise<void>
  ```
+
+### otherParams
+
+Used to place other useful params.
+
+```ts
+ type otherParams = (params: { page: Page; pageInfo: PageInfo; printOption: PrinterPrintOption }): MaybePromise<{
+  hashIDSelector: string
+ }>
+```
+
+In some sites, such as Wikipedia or some knowledge base, like to use a hash id to jump to the specified element, is the use of this element's id. If you give the `hashIDSelector` and `PrinterPrintOption.replaceLink` is `true`, Printer could replace the hash of url to PDF position. The default value is `h2[id],h3[id],h4[id],h5[id]`.
+
 
 ## Shrink PDF
 

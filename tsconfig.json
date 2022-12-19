@@ -42,6 +42,9 @@
       "@web-printer/mdbook": [
         "./packages/mdbook/src"
       ],
+      "@web-printer/wikipedia": [
+        "./packages/wikipedia/src"
+      ],
       "@web-printer/javascript-info": [
         "./packages/javascript-info/src"
       ]
