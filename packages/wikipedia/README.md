@@ -43,7 +43,7 @@ new Printer()
   urls: string | string[]
   /**
    * Waiting img and latex lazy loading
-   * @default 300
+   * @default 200
    * @unit ms
    */
   imgWaiting?: number

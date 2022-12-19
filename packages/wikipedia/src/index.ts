@@ -1,8 +1,6 @@
 import type { Plugin } from "@web-printer/core"
-import {
-  evaluateScrollToBottom,
-  evaluateWaitForImgLoadLazy
-} from "@web-printer/core"
+import { evaluateWaitForImgLoadLazy } from "@web-printer/core"
+import { evaluateScrollToBottom } from "@web-printer/core"
 import style from "./style"
 
 export default function (options: {
@@ -19,12 +17,12 @@ export default function (options: {
   urls: string | string[]
   /**
    * Waiting img and latex lazy loading
-   * @default 300
+   * @default 200
    * @unit ms
    */
   imgWaiting?: number
 }): Plugin {
-  const { urls: _, imgWaiting = 300 } = options
+  const { urls: _, imgWaiting = 200 } = options
   if (!_ && !_.length) throw new Error("At least one url is required")
   const urls = typeof _ === "string" ? [_] : _
   return {
@@ -43,7 +41,7 @@ export default function (options: {
       }))
     },
     async onPageLoaded({ page }) {
-      await evaluateScrollToBottom(page, 200)
+      await evaluateScrollToBottom(page, 300)
       await evaluateWaitForImgLoadLazy(page, "#bodyContent img", imgWaiting)
       await page.evaluate(`
         Array.from(document.querySelectorAll(".collapsible-heading:not(.open-block)")).forEach(k=>k.click());

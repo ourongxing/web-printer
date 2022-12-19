@@ -12,9 +12,11 @@ export default `
     margin: 0;
 }
 
-.mw-footer {
+.mw-footer,
+.mw-editsection{
     display: none
 }
+
 
 
 .mw-cite-backlink {
