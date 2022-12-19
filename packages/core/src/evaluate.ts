@@ -104,9 +104,14 @@ export async function evaluateWaitForImgLoadLazy(
         function delay(t) {
           return new Promise(resolve => setTimeout(resolve, t))
         }
-        for (const img of Array.from(document.querySelectorAll("${imgSelector}"))) {
+        const imgs = Array.from(document.querySelectorAll("${imgSelector}"))
+        for (const img of imgs) {
           img.scrollIntoView(true)
-          await delay(${waitingTime})
+          if((img?.width ?? 10) * (img?.height ?? 10) > 1000) {
+            await delay(${waitingTime})
+          } else {
+            await delay(100)
+          }
         }
       })()
     `)
