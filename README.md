@@ -152,7 +152,7 @@ new Printer({} as PrinterOption)
   continuous?: boolean
   /**
    * Replace website link to PDF link
-   * @default true
+   * @default false
    */
   replaceLink?: boolean
   /**
