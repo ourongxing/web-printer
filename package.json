@@ -1,7 +1,7 @@
 {
   "name": "@web-printer/monorepo",
   "type": "module",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "license": "MIT",
   "private": true,
   "scripts": {

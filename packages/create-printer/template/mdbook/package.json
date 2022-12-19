@@ -4,8 +4,8 @@
     "pw": "playwright install chromium"
   },
   "devDependencies": {
-    "@web-printer/core": "^0.2.4",
-    "@web-printer/mdbook": "^0.2.4",
+    "@web-printer/core": "^0.2.5",
+    "@web-printer/mdbook": "^0.2.5",
     "playwright": "^1.28.1",
     "tsx": "^3.12.1",
     "typescript": "^4.9.4"
