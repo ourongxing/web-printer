@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest"
+import { describe, test } from "vitest"
 import juejing from "@web-printer/juejin"
 import ruanyifeng from "@web-printer/ruanyifeng"
 import xiaobot from "@web-printer/xiaobot"
@@ -7,6 +7,7 @@ import javascriptInfo from "@web-printer/javascript-info"
 import mdbook from "@web-printer/mdbook"
 import zhubai from "@web-printer/zhubai"
 import zhihui from "@web-printer/zhihu"
+import wikipedia from "@web-printer/wikipedia"
 import { Printer } from "@web-printer/core"
 
 describe(
@@ -62,7 +63,7 @@ describe(
           printBackground: true
         })
     })
-    test("print vitepress", async () => {
+    test.skip("print vitepress", async () => {
       await new Printer({ threads: 10 })
         .use(
           vitepress({
@@ -73,11 +74,14 @@ describe(
             url: "https://ohmymn.marginnote.cn/guide/"
           })
         )
-        .print("OhMyMN", {
+        .print("OhMyMN v4.1.1 文档（PDF内跳转）", {
           // test: true,
           printBackground: true,
-          addPageNumber: true
-          // continuous: true
+          replaceLink: true,
+          coverPath:
+            "/Users/ourongxing/Downloads/OhMyMN _ MarginNote 插件开发框架.pdf",
+          // addPageNumber: true
+          continuous: true
         })
     })
     test.skip("print mdbook", async () => {
@@ -151,8 +155,25 @@ describe(
           })
         )
         .print("知乎古言 HE", {
-          continuous: true,
-          test: true
+          continuous: true
+        })
+    })
+    test("print wikipedia", async () => {
+      // await new Printer().login(
+      //   "https://zh.m.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E8%B6%B3%E5%8D%94%E4%B8%96%E7%95%8C%E7%9B%83"
+      // )
+      await new Printer({ threads: 20, headless: false })
+        .use(
+          wikipedia({
+            urls: [
+              "https://zh.m.wikipedia.org/zh-cn/2022%E5%B9%B4%E5%9C%8B%E9%9A%9B%E8%B6%B3%E5%8D%94%E4%B8%96%E7%95%8C%E7%9B%83",
+              "https://zh.m.wikipedia.org/wiki/%E8%8B%B1%E6%A0%BC%E8%98%AD%E8%B6%B3%E7%90%83%E4%BB%A3%E8%A1%A8%E9%9A%8A"
+            ]
+          })
+        )
+        .print("维基百科-2022 世界杯", {
+          printBackground: true,
+          replaceLink: true
         })
     })
   },

@@ -6,6 +6,7 @@ import mdbook from "@web-printer/mdbook"
 import zhubai from "@web-printer/zhubai"
 import zhihui from "@web-printer/zhihu"
 import javascriptInfo from "@web-printer/javascript-info"
+import wikipedia from "@web-printer/wikipedia"
 import { Printer } from "@web-printer/core"
 
 describe(
@@ -150,6 +151,24 @@ describe(
             url: "https://zhuanlan.zhihu.com/TheFutureofhumanity"
             // url: "https://www.zhihu.com/collection/615801716",
             // maxPages: 40
+          })
+        )
+        .test()
+      expect(ret).toBeDefined()
+      const { pagesInfo } = ret!
+      expect(pagesInfo.length).greaterThanOrEqual(1)
+      console.log(pagesInfo)
+      console.log(pagesInfo.length)
+      pagesInfo.forEach(pageInfo => {
+        expect(pageInfo).toHaveProperty("title")
+        expect(pageInfo).toHaveProperty("url")
+      })
+    })
+    test.skip("wikipedia", async () => {
+      const ret = await new Printer({ headless: false })
+        .use(
+          wikipedia({
+            url: "https://zh.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E8%B6%B3%E5%8D%94%E4%B8%96%E7%95%8C%E7%9B%83"
           })
         )
         .test()
