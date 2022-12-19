@@ -1,0 +1,25 @@
+{
+  "name": "@web-printer/wikipedia",
+  "version": "0.2.4",
+  "license": "MIT",
+  "author": "Ou RongXing<orongxing@gmail.com>",
+  "homepage": "https://github.com/busiyiworld/web-printer/tree/main/packages/wikipedia#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/busiyiworld/web-printer.git",
+    "directory": "packages/wikipedia"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean",
+    "dev": "pnpm build --watch"
+  },
+  "dependencies": {
+    "@web-printer/core": "workspace:*"
+  }
+}
