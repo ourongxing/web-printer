@@ -148,46 +148,58 @@ class PrinterPDF {
 
     pages.forEach((p, i) => {
       const annotes = p.node.Annots()?.asArray()
-      annotes?.forEach(annote => {
-        const dict = pdf.context.lookupMaybe(annote, PDFDict)
-        if (!dict) return
-        const a = dict.get(PDFName.of(`A`))
-        const link = pdf.context.lookupMaybe(a, PDFDict)
-        const url = link?.get(PDFName.of("URI"))?.toString().slice(1, -1)
-        if (url) {
-          if (url.includes("https://web.printer/")) {
-            const ret = dict
-              .get(PDFName.of("Rect"))
-              ?.toString()
-              .slice(2, -2)
-              .split(" ")
-              ?.map(k => Number(k))
-            if (ret) {
-              const [x, y] = ret
-              hashTable.push({
-                value: url.replace("https://web.printer/", ""),
-                pageIndex: i,
-                coordinate: [x, y + 30, 1]
-              })
-            }
-          } else {
-            const item = outline.find(
-              k =>
-                url.replace(/\/?[#?].+$/, "") ===
-                k.url.replace(/\/?[#?].+$/, "")
-            )
-            if (item) {
-              const hash = url.replace(/^.+#(.+)$/, "$1")
-              linkTable.push({
-                hash: hash === url ? undefined : hash,
-                ref: annote as PDFRef,
-                refDict: dict,
-                ...item
-              })
+      if (annotes?.length) {
+        for (const annote of annotes) {
+          const dict = pdf.context.lookupMaybe(annote, PDFDict)
+          if (!dict) continue
+          const a = dict.get(PDFName.of(`A`))
+          const link = pdf.context.lookupMaybe(a, PDFDict)
+          const url = link?.get(PDFName.of("URI"))?.toString().slice(1, -1)
+          if (url) {
+            if (url.includes("https://web.printer/")) {
+              const xy = dict
+                .get(PDFName.of("Rect"))
+                ?.toString()
+                .slice(2, -2)
+                .split(" ")
+                .map(k => Number(k))
+              if (xy) {
+                hashTable.push({
+                  value: url.replace("https://web.printer/", ""),
+                  pageIndex: i,
+                  coordinate: [xy[0], xy[1] + 30, 1]
+                })
+                pdf.context.assign(annote as PDFRef, pdf.context.obj({}))
+              }
+            } else if (url.includes("https://self.web.printer/")) {
+              const item = outline.find(k => k.pagesIndex.includes(i))
+              item &&
+                linkTable.push({
+                  hash: url.replace("https://self.web.printer/", ""),
+                  ref: annote as PDFRef,
+                  refDict: dict,
+                  ...item
+                })
+              continue
+            } else {
+              const item = outline.find(
+                k =>
+                  url.replace(/\/?[#?].+$/, "") ===
+                  k.url.replace(/\/?[#?].+$/, "")
+              )
+              if (item) {
+                const hash = url.replace(/^.+#(.+)$/, "$1")
+                linkTable.push({
+                  hash: hash === url ? undefined : hash,
+                  ref: annote as PDFRef,
+                  refDict: dict,
+                  ...item
+                })
+              }
             }
           }
         }
-      })
+      }
     })
 
     linkTable.forEach(({ hash, ref, refDict, pagesIndex }) => {
