@@ -18,7 +18,7 @@ A printer that can print multiple web pages as one pretty PDF
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript-blue" alt="language">
-  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.2.5-EE2C50" alt="version"></a>
+  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.3.0-EE2C50" alt="version"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/MIT-yellow" alt="license"></a>
 </p>
 
@@ -47,8 +47,10 @@ If you are not a novice, do what you want to do, just like install a npm package
 
 ```bash
 pnpm i playwright @web-printer/core
-pnpm exec playwright install chromium
-# plugin you need
+# If you have installed Chrome, you can skip it.
+# Web Printer use chrome default. Other supported browsers can be viewed in PrinterOption.channel.
+pnpm exec playwright install chrome
+# install plugin you need
 pnpm i @web-printer/javascript-info
 ```
 
@@ -56,19 +58,24 @@ Then create a `.ts` file, input
 
 ```ts
 import { Printer } from "@web-printer/core"
-// import plugin you install
-import javascriptInfo from "@web-printer/javascript-info"
+// import plugin you have installed
+import vitepress from "@web-printer/vitepress"
 
 new Printer()
   .use(
-    javascriptInfo({
-      url: "https://javascript.info/"
+    vitepress({
+      url: {
+        Guide: "https://vuejs.org/guide/introduction.html",
+        API: "https://vuejs.org/api/application.html"
+      }
     })
   )
-  .print("The Modern JavaScript Tutorial")
+  .print("Vue 3.2 Documentation")
 ```
 
 And run it by [tsx](https://github.com/esbuild-kit/tsx), in other ways may throw errors. I have no time to fix it now.
+
+---
 
 But if you are a novice, follow me, maybe easier.
 
@@ -77,8 +84,8 @@ First you shoud install [pnpm(with node)](https://pnpm.io/installation), [vscode
 ```bash
 pnpm create printer@latest
 
-# or complete in one step
-pnpm create printer@latest web-printer -p vitepress
+# or complete in one step. https://github.com/busiyiworld/web-printer/tree/main/packages/create-printer
+pnpm create printer@latest web-printer -p vitepress -c chrome
 ```
 
 And follow the tips. After customizing, use `pnpm print` to print. A pretty PDF will appear in `./output`.
@@ -100,8 +107,13 @@ new Printer({} as PrinterOption)
 
 ```ts
 {
+  /**
+   * Chromium distribution channel. Choose you have installed.
+   * @default "chrome"
+   * */
+  channel?: "chromium" | "chrome" | "chrome-beta" | "chrome-dev" | "chrome-canary" | "msedge" | "msedge-beta" | "msedge-dev" | "msedge-canary"
    /**
-   * Dir of userdata of Chromium
+   * Dir of userdata of Chrome. It is not recommended to use your system userData of Chrome.
    * @default "./userData"
    */
   userDataDir?: string

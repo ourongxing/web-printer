@@ -3,8 +3,8 @@
     "print": "tsx src/index.ts"
   },
   "devDependencies": {
-    "@web-printer/core": "^0.2.5",
-    "@web-printer/xiaobot": "^0.2.5",
+    "@web-printer/core": "^0.3.0",
+    "@web-printer/xiaobot": "^0.3.0",
     "playwright": "^1.28.1",
     "tsx": "^3.12.1",
     "typescript": "^4.9.4"
