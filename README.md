@@ -368,7 +368,7 @@ Used to place other useful params.
  }>
 ```
 
-In some sites, such as Wikipedia or some knowledge base, like to use a hash id to jump to the specified element, is the use of this element's id. If you give the `hashIDSelector` and `PrinterPrintOption.replaceLink` is `true`, Printer could replace the hash of url to PDF position. The default value is `h2[id],h3[id],h4[id],h5[id]`.
+In some sites, such as Wikipedia, like to use a hash id to jump to the specified element. If you give the `hashIDSelector` and `PrinterPrintOption.replaceLink` is `true`, Printer could replace the hash of url to PDF position. The default value is `h2[id],h3[id],h4[id],h5[id]`.
 
 
 ## Shrink PDF
