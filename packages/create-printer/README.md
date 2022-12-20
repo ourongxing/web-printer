@@ -1,14 +1,36 @@
 # create-printer
 
-a easy way to create printer.
+a easy way to create [printer](https://github.com/busiyiworld/web-printer).
 
 ## Usage
 ```bash
 pnpm create printer@latest
 
 # or complete in one step
-pnpm create printer@latest web-printer -p vitepress
+pnpm create printer@latest web-printer -t vitepress -c chrome
 ```
+
+`-p` means plugin, you can select from:
+- vitepress
+- mdbook
+- juejin
+- zhihu
+- javascript-info
+- xiaobot
+- zhubai
+- ruanyifeng
+- wikipedia
+
+`-c` means Chromium channel, or version, you can select from:
+- chromium
+- chrome
+- chrome-beta
+- chrome-dev
+- chrome-canary
+- msedge
+- msedge-beta
+- msedge-dev
+- msedge-canary
 
 ## License
 

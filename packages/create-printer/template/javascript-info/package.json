@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "print": "tsx src/index.ts",
-    "pw": "playwright install chromium"
+    "print": "tsx src/index.ts"
   },
   "devDependencies": {
     "@web-printer/core": "^0.2.5",

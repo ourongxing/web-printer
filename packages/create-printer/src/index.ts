@@ -4,11 +4,11 @@ import fs from "fs-extra"
 import path from "path"
 import minimist from "minimist"
 import prompts from "prompts"
-import { red, reset } from "kolorist"
+import { green, red, reset } from "kolorist"
 
 type ColorFunc = (str: string | number) => string
 
-type PluginOption = {
+type Option = {
   name: string
   display: string
   color?: ColorFunc
@@ -19,7 +19,7 @@ const argv = minimist<{
   template?: string
 }>(process.argv.slice(2), { string: ["_"] })
 
-const plugins: PluginOption[] = [
+const plugins: Option[] = [
   {
     name: "vitepress",
     display: "Vitepress"
@@ -53,8 +53,51 @@ const plugins: PluginOption[] = [
     display: "阮一峰的网络日志"
   },
   {
+    name: "wikipedia",
+    display: "Wikipedia"
+  },
+  {
     name: "manual",
     display: "Manual"
+  }
+]
+
+const channels: Option[] = [
+  {
+    name: "chromium",
+    display: "Chromium"
+  },
+  {
+    name: "chrome",
+    display: "Chrome"
+  },
+  {
+    name: "chrome-beta",
+    display: "Chrome Beta"
+  },
+  {
+    name: "chrome-dev",
+    display: "Chrome Dev"
+  },
+  {
+    name: "chrome-canary",
+    display: "Chrome Canary"
+  },
+  {
+    name: "msedge",
+    display: "Microsoft Edge"
+  },
+  {
+    name: "msedge-beta",
+    display: "Microsoft Edge Beta"
+  },
+  {
+    name: "msedge-dev",
+    display: "Microsoft Edge Dev"
+  },
+  {
+    name: "msedge-canary",
+    display: "Microsoft Edge Canary"
   }
 ]
 
@@ -62,9 +105,12 @@ const defaultTargetDir = "web-printer"
 async function init() {
   const argTargetDir = argv._[0]
   const argPlugin = argv.plugin || argv.p
+  const argChannel = argv.channel || argv.c
   let targetDir = argTargetDir || defaultTargetDir
-
-  let result: prompts.Answers<"projectName" | "overwrite" | "plugin">
+  let targetChannelName = ""
+  let result: prompts.Answers<
+    "projectName" | "overwrite" | "plugin" | "channel" | "haveInstalled"
+  >
 
   try {
     result = await prompts(
@@ -103,7 +149,7 @@ async function init() {
               ? null
               : "select",
           name: "plugin",
-          message: reset("Select a plugin template:"),
+          message: reset("Select a priner template:"),
           initial: 0,
           choices: plugins.map(k => {
             return {
@@ -113,6 +159,36 @@ async function init() {
               value: k.name
             }
           })
+        },
+        {
+          type:
+            argChannel && channels.find(k => k.name === argChannel)
+              ? null
+              : "select",
+          name: "channel",
+          message: reset(
+            "Select a Chromium channel you have installed or want to install:"
+          ),
+          initial: 0,
+          choices: channels.map(k => {
+            return {
+              title: k.color
+                ? k.color(k.display || k.name)
+                : reset(k.display || k.name),
+              value: k.name
+            }
+          }),
+          onState: state => {
+            targetChannelName = channels.find(
+              k => k.name === state.value
+            )!.display
+          }
+        },
+        {
+          type: () => (targetChannelName ? "confirm" : null),
+          name: "haveInstalled",
+          message: () => reset(`Do you have installed ${targetChannelName} ?`),
+          initial: true
         }
       ],
       {
@@ -125,7 +201,7 @@ async function init() {
     console.log(cancelled.message)
     return
   }
-  const { plugin, overwrite } = result
+  const { plugin, overwrite, channel, haveInstalled } = result
   const root = path.join(cwd, targetDir)
   if (overwrite) {
     await fs.remove(targetDir)
@@ -138,10 +214,20 @@ async function init() {
   )
 
   await fs.copy(templateDir, root)
+  const indexFilePath = path.resolve(root, "src/index.ts")
+  await fs.writeFile(
+    indexFilePath,
+    (await fs.readFile(indexFilePath))
+      .toString("utf8")
+      .replace(/channel: "chrome"/g, `channel: "${channel || argChannel}"`)
+  )
   console.log()
   console.log("Done. Now Run:")
   console.log()
-  console.log(red(`cd ${targetDir} && pnpm i && pnpm pw && code .`))
+  if (channel && !haveInstalled)
+    console.log(green(`> pnpm dlx playwright install ${channel}`))
+  console.log(red(`> cd ${targetDir} && pnpm i && code .`))
+  console.log()
 }
 
 function isEmpty(path: string) {

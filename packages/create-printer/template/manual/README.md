@@ -32,7 +32,8 @@ A printer that can print multiple web pages as one pretty PDF
 Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just like printing in Chrome, but print multiple web pages as one pretty pdf automatically.
 
 - Fully customizable, it's just a nodejs library.
-- Universality, supports any websites by plugins.
+- Universal, supports any websites by plugins.
+- Amazing, can replace website inner links to PDF inner links, supports hash positioning.
 - Auto generate outlines of PDF, supports different level and collapsed status.
 - Easy to remove distracting elements. No distractions, only pure knowledge.
 
@@ -46,8 +47,10 @@ If you are not a novice, do what you want to do, just like install a npm package
 
 ```bash
 pnpm i playwright @web-printer/core
-pnpm exec playwright install chromium
-# plugin you need
+# If you have installed Chrome, you can skip it.
+# Web Printer use chrome default. Other supported browsers can be viewed in PrinterOption.channel.
+pnpm exec playwright install chrome
+# install plugin you need
 pnpm i @web-printer/javascript-info
 ```
 
@@ -55,19 +58,24 @@ Then create a `.ts` file, input
 
 ```ts
 import { Printer } from "@web-printer/core"
-// import plugin you install
-import javascriptInfo from "@web-printer/javascript-info"
+// import plugin you have installed
+import vitepress from "@web-printer/vitepress"
 
 new Printer()
   .use(
-    javascriptInfo({
-      url: "https://javascript.info/"
+    vitepress({
+      url: {
+        Guide: "https://vuejs.org/guide/introduction.html",
+        API: "https://vuejs.org/api/application.html"
+      }
     })
   )
-  .print("The Modern JavaScript Tutorial")
+  .print("Vue 3.2 Documentation")
 ```
 
 And run it by [tsx](https://github.com/esbuild-kit/tsx), in other ways may throw errors. I have no time to fix it now.
+
+---
 
 But if you are a novice, follow me, maybe easier.
 
@@ -76,8 +84,8 @@ First you shoud install [pnpm(with node)](https://pnpm.io/installation), [vscode
 ```bash
 pnpm create printer@latest
 
-# or complete in one step
-pnpm create printer@latest web-printer -p vitepress
+# or complete in one step. https://github.com/busiyiworld/web-printer/tree/main/packages/create-printer
+pnpm create printer@latest web-printer -p vitepress -c chrome
 ```
 
 And follow the tips. After customizing, use `pnpm print` to print. A pretty PDF will appear in `./output`.
@@ -99,8 +107,13 @@ new Printer({} as PrinterOption)
 
 ```ts
 {
+  /**
+   * Chromium distribution channel. Choose you have installed.
+   * @default "chrome"
+   * */
+  channel?: "chromium" | "chrome" | "chrome-beta" | "chrome-dev" | "chrome-canary" | "msedge" | "msedge-beta" | "msedge-dev" | "msedge-canary"
    /**
-   * Dir of userdata of Chromium
+   * Dir of userdata of Chrome. It is not recommended to use your system userData of Chrome.
    * @default "./userData"
    */
   userDataDir?: string
@@ -150,8 +163,8 @@ new Printer({} as PrinterOption)
    */
   continuous?: boolean
   /**
-   * Replace website link to PDF link, not support hash url
-   * @default true
+   * Replace website link to PDF link
+   * @default false
    */
   replaceLink?: boolean
   /**
@@ -201,26 +214,23 @@ new Printer({} as PrinterOption)
 
 Plugins in Web Printer is only used to adapt to different websites.
 
-A plugin have four methods:
+A plugin have five methods:
 
 - `fetchPagesInfo`: Used to fetch a list of page url and title, need return the list.
 - `injectStyle`: Used to remove distracting elements and make web pages more PDF-friendly.
 - `onPageLoaded`: Run after page loaded.
 - `onPageWillPrint`: Run before page will be printed.
+- `otherParams`: Used to place other useful params.
 
 ### Offical plugins
 
 - Content Site
-
   - [@web-printer/javascript-info](https://github.com/busiyiworld/web-printer/tree/main/packages/javascript-info)
-
   - [@web-printer/juejin](https://github.com/busiyiworld/web-printer/tree/main/packages/juejin)
-
   - [@web-printer/xiaobot](https://github.com/busiyiworld/web-printer/tree/main/packages/xiaobot)
-
   - [@web-printer/zhihu](https://github.com/busiyiworld/web-printer/tree/main/packages/zhihu)
-
   - [@web-printer/zhubai](https://github.com/busiyiworld/web-printer/tree/main/packages/zhubai)
+  - [@web-printer/wikipedia](https://github.com/busiyiworld/web-printer/tree/main/packages/wikipedia)
 - Amazing Blog
   - [@web-printer/ruanyifeng](https://github.com/busiyiworld/web-printer/tree/main/packages/ruanyifeng)
 - Documentation Site Generator
@@ -309,7 +319,7 @@ type injectStyle = (params: { url: string; printOption: PrinterPrintOption }): M
 *Let's make some rules*:
 
 - Hide all elements but content.
-- Make the margin of the content element and it's ancestor elements zero.
+- Set the margin of the content element and it's ancestor elements to zero.
 
 Therefore, everyone can set the same margin for any website.
 
@@ -319,10 +329,9 @@ But not all websites can do this, sometimes you still need to write CSS yourself
 
 When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set the top and bottom margins of all pages except the first page of each artical to zero.
 
-The `titleSelector` is used to mark the title element, The default value is `body`. Most sites don't need to provide the `titleSelector`.
+The `titleSelector` is used to mark the title element, and set top margin for it only. The default value is same as `contentSelector` if `contentSelector` is not empty. And If `contentSelector` has `,`, Printer will use the first selector. If `titleSelector` and `contentSelector` are both empty, the default value will be `body`, but sometimes setting margin top for the body may result in extra white space.
 
 The `avoidBreakSelector` is used to avoid page breaks in certain elements. The default value is `pre,blockquote,tbody tr`
-
 #### onPageLoades
 
 Run after page loaded. Usually used to wait img loaded, especially lazy loaded images.
@@ -348,6 +357,19 @@ Run before page will be printed.
  ```ts
  type onPageWillPrint = (params: { page: Page; pageInfo: PageInfo; printOption: PrinterPrintOption }): MaybePromise<void>
  ```
+
+### otherParams
+
+Used to place other useful params.
+
+```ts
+ type otherParams = (params: { page: Page; pageInfo: PageInfo; printOption: PrinterPrintOption }): MaybePromise<{
+  hashIDSelector: string
+ }>
+```
+
+In some sites, such as Wikipedia or some knowledge base, like to use a hash id to jump to the specified element, is the use of this element's id. If you give the `hashIDSelector` and `PrinterPrintOption.replaceLink` is `true`, Printer could replace the hash of url to PDF position. The default value is `h2[id],h3[id],h4[id],h5[id]`.
+
 
 ## Shrink PDF
 

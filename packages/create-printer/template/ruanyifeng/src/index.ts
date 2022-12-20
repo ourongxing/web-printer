@@ -2,7 +2,8 @@ import { Printer } from "@web-printer/core"
 import ruanyifeng from "@web-printer/ruanyifeng"
 
 new Printer({
-  threads: 5
+  threads: 5,
+  channel: "chrome"
 })
   .use(
     ruanyifeng({

@@ -2,7 +2,8 @@ import { Printer } from "@web-printer/core"
 import juejin from "@web-printer/juejin"
 
 new Printer({
-  threads: 5
+  threads: 5,
+  channel: "chrome"
 })
   .use(
     juejin({

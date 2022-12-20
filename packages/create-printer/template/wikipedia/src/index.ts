@@ -1,7 +1,10 @@
 import { Printer } from "@web-printer/core"
 import wikipedia from "@web-printer/wikipedia"
 
-new Printer()
+new Printer({
+  threads: 2,
+  channel: "chrome"
+})
   .use(
     wikipedia({
       urls: [
