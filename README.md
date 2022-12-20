@@ -47,11 +47,11 @@ If you are not a novice, do what you want to do, just like install a npm package
 
 ```bash
 pnpm i playwright @web-printer/core
+# Web Printer use Chrome by default. Other supported browsers can be viewed in PrinterOption.channel.
 # If you have installed Chrome, you can skip it.
-# Web Printer use chrome default. Other supported browsers can be viewed in PrinterOption.channel.
 pnpm exec playwright install chrome
 # install plugin you need
-pnpm i @web-printer/javascript-info
+pnpm i @web-printer/vitepress
 ```
 
 Then create a `.ts` file, input
@@ -327,12 +327,12 @@ Don't worry, It's so easy. You only need to provide a `contentSelector` , suppor
 
 But not all websites can do this, sometimes you still need to write CSS yourself, just return the `style` property.
 
-When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set the top and bottom margins of all pages except the first page of each artical to zero.
+When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set the top and bottom margins of all pages to zero.
 
 The `titleSelector` is used to mark the title element, and set top margin for it only. The default value is same as `contentSelector` if `contentSelector` is not empty. And If `contentSelector` has `,`, Printer will use the first selector. If `titleSelector` and `contentSelector` are both empty, the default value will be `body`, but sometimes setting margin top for the body may result in extra white space.
 
-The `avoidBreakSelector` is used to avoid page breaks in certain elements. The default value is `pre,blockquote,tbody tr`
-#### onPageLoades
+The `avoidBreakSelector` is used to avoid page breaks in some elements. The default value is `pre,blockquote,tbody tr`
+#### onPageLoaded
 
 Run after page loaded. Usually used to wait img loaded, especially lazy loaded images.
 
