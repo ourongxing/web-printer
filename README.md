@@ -301,7 +301,6 @@ type injectStyle = (params: { url: string; printOption: PrinterPrintOption }): M
   contentSelector?: string
   titleSelector?: string
   avoidBreakSelector?: string
-  hashIDSelector?: string
 }>
 ```
 
