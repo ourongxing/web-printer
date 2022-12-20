@@ -32,8 +32,8 @@ A printer that can print multiple web pages as one pretty PDF
 Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just like printing in Chrome, but print multiple web pages as one pretty pdf automatically.
 
 - Fully customizable, it's just a nodejs library.
-- Universality, supports any websites by plugins.
-- Amazing, replace website inner links to PDF inner links, supports hash positioning.
+- Universal, supports any websites by plugins.
+- Amazing, can replace website inner links to PDF inner links, supports hash positioning.
 - Auto generate outlines of PDF, supports different level and collapsed status.
 - Easy to remove distracting elements. No distractions, only pure knowledge.
 
