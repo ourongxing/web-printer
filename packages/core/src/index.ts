@@ -22,6 +22,7 @@ export class Printer {
     const context = await chromium.launchPersistentContext(
       this.contextOptions.userDataDir ?? "userData",
       {
+        channel: "chrome",
         ...this.contextOptions,
         headless: false
       }
@@ -40,6 +41,7 @@ export class Printer {
         const context = await chromium.launchPersistentContext(
           userDataDir ?? "userData",
           {
+            channel: "chrome",
             colorScheme: "light",
             ...contextOptions
           }
@@ -93,6 +95,7 @@ export class Printer {
         const context = await chromium.launchPersistentContext(
           userDataDir ?? "userData",
           {
+            channel: "chrome",
             ...contextOptions
           }
         )

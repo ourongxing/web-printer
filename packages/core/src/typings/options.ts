@@ -90,7 +90,21 @@ export interface PrinterPrintOption extends PrintOption {
 
 export interface PrinterOption extends BrowserContextOptions {
   /**
-   * Dir of userdata of Chromium
+   * Chromium distribution channel. Choose you have installed.
+   * @default "chrome"
+   * */
+  channel?:
+    | "chromium"
+    | "chrome"
+    | "chrome-beta"
+    | "chrome-dev"
+    | "chrome-canary"
+    | "msedge"
+    | "msedge-beta"
+    | "msedge-dev"
+    | "msedge-canary"
+  /**
+   * Dir of userdata of Browser. It is not recommended to use your system userData of Browser.
    * @default "./userData"
    */
   userDataDir?: string
