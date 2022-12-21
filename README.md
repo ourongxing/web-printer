@@ -61,6 +61,10 @@ import { Printer } from "@web-printer/core"
 // import plugin you have installed
 import vitepress from "@web-printer/vitepress"
 
+
+// Will open a browser to login if you need.
+// new Printer().login(url)
+
 new Printer()
   .use(
     vitepress({
@@ -97,6 +101,9 @@ The [@web-printer/core](https://github.com/busiyiworld/web-printer/tree/main/pac
 ```ts
 import { Printer, type Plugin } from "@web-printer/core"
 import type { Plugin, PrinterOption, PrinterPrintOption } from "@web-printer/core"
+
+// Will open a browser to login if you need.
+// new Printer().login(url)
 
 new Printer({} as PrinterOption)
   .use({} as Plugin)
