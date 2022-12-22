@@ -27,6 +27,10 @@ A printer that can print multiple web pages as one pretty PDF
 <span>💡 Try to study in <a href="https://apps.apple.com/tw/app/marginnote-3/id1348317163?platform=ipad">MarginNote</a> !</span>
 </p>
 
+> **Warning**
+>
+> Respect the copyright please! Do not share non-public content on the network, especially paid content!
+
 ## Features
 
 Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just like printing in Chrome, but print multiple web pages as one pretty pdf automatically.

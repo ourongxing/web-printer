@@ -89,6 +89,9 @@ class PrinterPDF {
   constructor(pdf: PDFDocument) {
     this.pdf = pdf
     pdf.setCreator("")
+    pdf.setCreator(
+      "Respect the copyright please! Do not share non-public content on the network, especially paid content!"
+    )
     pdf.setProducer("Web Printer: https://github.com/busiyiworld/web-printer")
   }
   async addOutline(outlineItems: OutlineItem[]) {
