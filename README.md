@@ -29,7 +29,7 @@ A printer that can print multiple web pages as one pretty PDF
 
 > **Warning**
 >
-> Respect the copyright please! Do not share non-public content on the network, especially paid content!
+> Respect the copyright please! Do not share non-public content on the Internet, especially paid content!
 
 ## Features
 

@@ -90,7 +90,7 @@ class PrinterPDF {
     this.pdf = pdf
     pdf.setCreator("")
     pdf.setCreator(
-      "Respect the copyright please! Do not share non-public content on the network, especially paid content!"
+      "Respect the copyright please! Do not share non-public content on the Internet, especially paid content!"
     )
     pdf.setProducer("Web Printer: https://github.com/busiyiworld/web-printer")
   }
