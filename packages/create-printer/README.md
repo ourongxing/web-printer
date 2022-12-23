@@ -7,7 +7,7 @@ a easy way to create [printer](https://github.com/busiyiworld/web-printer).
 pnpm create printer@latest
 
 # or complete in one step
-pnpm create printer@latest web-printer -t vitepress -c chrome
+pnpm create printer@latest web-printer -p vitepress -c chrome
 ```
 
 `-p` means plugin, you can select from:

@@ -27,6 +27,10 @@ A printer that can print multiple web pages as one pretty PDF
 <span>💡 Try to study in <a href="https://apps.apple.com/tw/app/marginnote-3/id1348317163?platform=ipad">MarginNote</a> !</span>
 </p>
 
+> **Warning**
+>
+> Respect the copyright please! Do not share non-public content on the Internet, especially paid content!
+
 ## Features
 
 Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just like printing in Chrome, but print multiple web pages as one pretty pdf automatically.
@@ -47,11 +51,11 @@ If you are not a novice, do what you want to do, just like install a npm package
 
 ```bash
 pnpm i playwright @web-printer/core
+# Web Printer use Chrome by default. Other supported browsers can be viewed in PrinterOption.channel.
 # If you have installed Chrome, you can skip it.
-# Web Printer use chrome default. Other supported browsers can be viewed in PrinterOption.channel.
 pnpm exec playwright install chrome
 # install plugin you need
-pnpm i @web-printer/javascript-info
+pnpm i @web-printer/vitepress
 ```
 
 Then create a `.ts` file, input
@@ -60,6 +64,10 @@ Then create a `.ts` file, input
 import { Printer } from "@web-printer/core"
 // import plugin you have installed
 import vitepress from "@web-printer/vitepress"
+
+
+// Will open a browser to login if you need.
+// new Printer().login(url)
 
 new Printer()
   .use(
@@ -97,6 +105,9 @@ The [@web-printer/core](https://github.com/busiyiworld/web-printer/tree/main/pac
 ```ts
 import { Printer, type Plugin } from "@web-printer/core"
 import type { Plugin, PrinterOption, PrinterPrintOption } from "@web-printer/core"
+
+// Will open a browser to login if you need.
+// new Printer().login(url)
 
 new Printer({} as PrinterOption)
   .use({} as Plugin)
@@ -327,12 +338,12 @@ Don't worry, It's so easy. You only need to provide a `contentSelector` , suppor
 
 But not all websites can do this, sometimes you still need to write CSS yourself, just return the `style` property.
 
-When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set the top and bottom margins of all pages except the first page of each artical to zero.
+When you set `PrinterPrintOption.continuous` to `true`.  Web Printer will set the top and bottom margins of all pages to zero.
 
 The `titleSelector` is used to mark the title element, and set top margin for it only. The default value is same as `contentSelector` if `contentSelector` is not empty. And If `contentSelector` has `,`, Printer will use the first selector. If `titleSelector` and `contentSelector` are both empty, the default value will be `body`, but sometimes setting margin top for the body may result in extra white space.
 
-The `avoidBreakSelector` is used to avoid page breaks in certain elements. The default value is `pre,blockquote,tbody tr`
-#### onPageLoades
+The `avoidBreakSelector` is used to avoid page breaks in some elements. The default value is `pre,blockquote,tbody tr`
+#### onPageLoaded
 
 Run after page loaded. Usually used to wait img loaded, especially lazy loaded images.
 
@@ -368,7 +379,7 @@ Used to place other useful params.
  }>
 ```
 
-In some sites, such as Wikipedia or some knowledge base, like to use a hash id to jump to the specified element, is the use of this element's id. If you give the `hashIDSelector` and `PrinterPrintOption.replaceLink` is `true`, Printer could replace the hash of url to PDF position. The default value is `h2[id],h3[id],h4[id],h5[id]`.
+In some sites, such as Wikipedia, like to use a hash id to jump to the specified element. If you give the `hashIDSelector` and `PrinterPrintOption.replaceLink` is `true`, Printer could replace the hash of url to PDF position. The default value is `h2[id],h3[id],h4[id],h5[id]`.
 
 
 ## Shrink PDF
