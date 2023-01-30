@@ -30,7 +30,6 @@ A printer that can print multiple web pages as one pretty PDF
 > **Warning**
 >
 > Respect the copyright please! Do not share non-public content on the Internet, especially paid content!
-
 ## Features
 
 Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just like printing in Chrome, but print multiple web pages as one pretty pdf automatically.
@@ -45,7 +44,7 @@ Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just lik
 
 > **Warning**
 >
-> Web Printer just a nodejs library instead of an application. If you are a novice of Nodejs/TypeScript/JavaScript, Web Printer may be difficult for you to use. Welcome to contribute an application to easy use if you are free.
+> Web Printer is just a nodejs library instead of an application. If you are a novice of Nodejs/TypeScript/JavaScript, Web Printer may be difficult for you to use. I'm going to develop an app for everyone to use, please follow@paperbackapp.
 
 If you are not a novice, do what you want to do, just like install a npm package.
 
