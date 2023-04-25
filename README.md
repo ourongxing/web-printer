@@ -44,7 +44,7 @@ Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just lik
 
 > **Warning**
 >
-> Web Printer is just a nodejs library instead of an application. If you are a novice of Nodejs/TypeScript/JavaScript, Web Printer may be difficult for you to use. I'm going to develop an app for everyone to use, please follow@paperbackapp.
+> Web Printer is just a nodejs library instead of an application. If you are a novice of Nodejs/TypeScript/JavaScript, Web Printer may be difficult for you to use. I'm going to develop an app for everyone to use, please follow [@paperbackapp](https://github.com/paperbackapp).
 
 If you are not a novice, do what you want to do, just like install a npm package.
 
