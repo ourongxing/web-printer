@@ -2,6 +2,14 @@ export * from "./options"
 export * from "./utils"
 export * from "./plugin"
 
+export type SubOutlineItem = {
+  title: string
+  depth: number
+  id: string
+  num?: number
+  coordinate?: [number, number, number]
+}
+
 type BaseInfo = {
   title: string
   groups?: (
@@ -15,8 +23,8 @@ type BaseInfo = {
    * When the item is a group and is a link
    */
   selfGroup?: boolean
-
   collapsed?: boolean
+  outline?: SubOutlineItem[]
 }
 
 export type PageInfoWithoutIndex = {

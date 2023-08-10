@@ -1,4 +1,5 @@
 import type { Page } from "playwright"
+import type { SubOutlineItem } from "./typings"
 
 export async function evaluateShowOnly(page: Page, selector: string) {
   await page.evaluate(`
@@ -115,4 +116,30 @@ export async function evaluateWaitForImgLoadLazy(
         }
       })()
     `)
+}
+
+export async function fetchVariousTitles(
+  page: Page,
+  contentSelector: string
+): Promise<SubOutlineItem[]> {
+  return await page.evaluate(`
+          (()=>{
+            const titleSelectors = ["h2", "h3", "h4", "h5", "h6"]
+            return Array.from(
+                document.querySelector("${contentSelector}").querySelectorAll(titleSelectors.join(","))
+              ).reduce((acc, cur) => {
+                const title = cur.innerText.split(/\\s*\\n+/)[0].replace(/^\\s*#\\s*/, "")
+                const index = titleSelectors.indexOf(cur.nodeName.toLowerCase())
+                if (title&&index !== -1) {
+                  if(!cur.id) cur.id = crypto.randomUUID()
+                  acc.push({
+                    title,
+                    depth: index,
+                    id: encodeURIComponent(cur.id)
+                  })
+                }
+                return acc
+              }, [])
+          })()
+`)
 }

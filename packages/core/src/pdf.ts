@@ -1,7 +1,7 @@
-import { outlinePdfFactory } from "@lillallol/outline-pdf"
-import * as pdfLib from "pdf-lib"
-import type { PDFRef } from "pdf-lib"
-import { PDFDict, PDFDocument, PDFName, StandardFonts } from "pdf-lib"
+import * as pdfLib from "@cantoo/pdf-lib"
+import { type OutlineItemOrigin, setOutline } from "./outline"
+import type { PDFRef } from "@cantoo/pdf-lib"
+import { PDFDict, PDFDocument, PDFName, StandardFonts } from "@cantoo/pdf-lib"
 import type { OutlineItem, PDFBuffer } from "./typings"
 import fs from "fs-extra"
 import type { PrinterPrintOption } from "./typings"
@@ -34,73 +34,96 @@ export async function mergePDF(
     copiedPages.forEach(page => mergedPDF.addPage(page))
   }
 
-  let rPDF = await new PrinterPDF(mergedPDF).addOutline(outlineItems)
-  if (!continuous && addPageNumber)
-    rPDF = await rPDF.addPageNumbers(outlineItems[0].num - 1)
-  if (replaceLink) rPDF = rPDF.replaceInnerLink(outlineItems)
-  return rPDF.save()
+  try {
+    let rPDF = new PrinterPDF(mergedPDF)
+    if (!continuous && addPageNumber)
+      rPDF = await rPDF.addPageNumbers(outlineItems[0].num - 1)
+    if (replaceLink) rPDF = rPDF.replaceInnerLink(outlineItems)
+    return rPDF.addOutline(outlineItems).save()
+  } catch (e) {
+    console.log(e)
+    return mergedPDF.save()
+  }
 }
 
 export function generateOutline(outlineItems: OutlineItem[]) {
-  return outlineItems
-    .reduce(
-      (acc, k) => {
-        if (k.groups?.length) {
-          k.groups.forEach((group, index) => {
-            const name = typeof group === "string" ? group : group.name
-            const collapsed =
-              typeof group === "string" ? false : group.collapsed
-            if (acc.groups[index] !== name) {
-              acc.items.push(
-                `${collapsed ? "-" : ""}${k.num}|${"----------".slice(
-                  0,
-                  index
-                )}|${name}`
-              )
-            }
-          })
+  const outline = outlineItems.reduce(
+    (acc, k) => {
+      if (k.groups?.length) {
+        k.groups.forEach((group, index) => {
+          const name = typeof group === "string" ? group : group.name
+          const collapsed = typeof group === "string" ? false : group.collapsed
+          if (acc.groups[index] !== name) {
+            acc.items.push({
+              pageNumber: k.num,
+              depth: index,
+              collapsed: !!collapsed,
+              title: name
+            })
+          }
+        })
+      }
+      acc.groups =
+        k.groups?.map(k => (typeof k === "string" ? k : k.name)) ?? []
+      if (k.selfGroup) {
+        const item = {
+          pageNumber: k.num,
+          depth: k.groups?.length ?? 0,
+          collapsed: !!k.collapsed,
+          title: k.title
         }
-        acc.groups =
-          k.groups?.map(k => (typeof k === "string" ? k : k.name)) ?? []
-        if (k.selfGroup) {
-          acc.groups.push(k.title)
+        acc.items.push(item)
+      } else {
+        const item = {
+          pageNumber: k.num,
+          depth: k.groups?.length ?? 0,
+          collapsed: false,
+          title: k.title
+        }
+        if (k.outline?.length) {
+          item.collapsed = true
+          const index = [...new Set(k.outline.map(k => k.depth))].sort(
+            (m, n) => m - n
+          )
           acc.items.push(
-            `${k.collapsed ? "-" : ""}${k.num}|${"----------".slice(
-              0,
-              k.groups?.length ?? 0
-            )}|${k.title}`
+            item,
+            ...k.outline.reduce((acc, k) => {
+              const i = index.indexOf(k.depth)
+              if (i <= 1 && k.coordinate) {
+                acc.push({
+                  ...k,
+                  depth: i + item.depth + 1,
+                  pageNumber: k.num!,
+                  collapsed: false
+                })
+              }
+              return acc
+            }, [] as OutlineItemOrigin[])
           )
         } else {
-          acc.items.push(
-            `${k.num}|${"----------".slice(0, k.groups?.length ?? 0)}|${
-              k.title
-            }`
-          )
+          acc.items.push(item)
         }
-        return acc
-      },
-      { items: [] as string[], groups: [] as string[] }
-    )
-    .items.join("\n")
+      }
+      return acc
+    },
+    { items: [] as OutlineItemOrigin[], groups: [] as string[] }
+  ).items
+  console.log(JSON.stringify(outline, null, 2))
+  return outline
 }
 
 class PrinterPDF {
   pdf: PDFDocument
   constructor(pdf: PDFDocument) {
     this.pdf = pdf
-    pdf.setCreator("")
     pdf.setCreator(
       "Respect the copyright please! Do not share non-public content on the Internet, especially paid content!"
     )
-    pdf.setProducer("Web Printer: https://github.com/busiyiworld/web-printer")
+    pdf.setProducer("Web Printer: https://github.com/ourongxing/web-printer")
   }
-  async addOutline(outlineItems: OutlineItem[]) {
-    return new PrinterPDF(
-      await outlinePdfFactory(pdfLib)({
-        outline: generateOutline(outlineItems),
-        pdf: this.pdf
-      })
-    )
+  addOutline(outlineItems: OutlineItem[]) {
+    setOutline(this.pdf, generateOutline(outlineItems))
+    return this
   }
   replaceInnerLink(outlineItems: OutlineItem[]) {
     const { pdf } = this
@@ -135,10 +158,9 @@ class PrinterPDF {
         }
       )
       .items.reverse()
-
     const hashTable: {
       value: string
-      coordinate: number[]
+      coordinate: [number, number, number]
       pageIndex: number
     }[] = []
     const linkTable: {
@@ -159,7 +181,7 @@ class PrinterPDF {
           const link = pdf.context.lookupMaybe(a, PDFDict)
           const url = link?.get(PDFName.of("URI"))?.toString().slice(1, -1)
           if (url) {
-            if (url.includes("https://web.printer/")) {
+            if (url.includes("printer://")) {
               const xy = dict
                 .get(PDFName.of("Rect"))
                 ?.toString()
@@ -168,22 +190,22 @@ class PrinterPDF {
                 .map(k => Number(k))
               if (xy) {
                 hashTable.push({
-                  value: url.replace("https://web.printer/", ""),
+                  value: url.replace("printer://hash/", ""),
                   pageIndex: i,
                   coordinate: [xy[0], xy[1] + 30, 1]
                 })
                 pdf.context.assign(annote as PDFRef, pdf.context.obj({}))
               }
-            } else if (url.includes("https://self.web.printer/")) {
+            } else if (url.includes("printer://self.hash/")) {
               const item = outline.find(k => k.pagesIndex.includes(i))
-              item &&
+              if (item) {
                 linkTable.push({
-                  hash: url.replace("https://self.web.printer/", ""),
+                  hash: url.replace("printer://self.hash/", ""),
                   ref: annote as PDFRef,
                   refDict: dict,
                   ...item
                 })
-              continue
+              }
             } else {
               const item = outline.find(
                 k =>
@@ -223,6 +245,23 @@ class PrinterPDF {
         }
       }
       pdf.context.assign(ref, pdf.context.obj(obj))
+    })
+
+    outlineItems.forEach(k => {
+      const pagesIndex = outline.find(i => i.url === k.url)?.pagesIndex
+      if (pagesIndex) {
+        pagesIndex.forEach(i => {
+          for (const m of hashTable) {
+            if (m.pageIndex === i) {
+              const a = k.outline?.find(ii => ii.id === m.value)
+              if (a) {
+                a.coordinate = m.coordinate
+                a.num = i + 1
+              }
+            }
+          }
+        })
+      }
     })
     return this
   }

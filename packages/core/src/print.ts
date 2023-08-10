@@ -4,7 +4,7 @@ import type { PDFBuffer, PrinterPrintOption, PageInfo, Plugin } from "./typings"
 import { ProgressBar, slog } from "./utils"
 import { mergePDF } from "./pdf"
 import path from "path"
-import { evaluateShowOnly } from "./evaluate"
+import { evaluateShowOnly, fetchVariousTitles } from "./evaluate"
 
 export async function print(
   name: string,
@@ -28,7 +28,13 @@ export async function print(
     injectStyle,
     otherParams
   } = options
-  const { margin, continuous, style: globalStyle, test } = printOption
+  const {
+    margin,
+    continuous,
+    style: globalStyle,
+    test,
+    subTitleOutline
+  } = printOption
   if (test) {
     name = "test: " + name
     pagesInfo = pagesInfo.slice(0, 2)
@@ -89,13 +95,18 @@ export async function print(
           })
         }
         onPageLoaded && (await onPageLoaded({ page, pageInfo, printOption }))
+        let _contentSelector = "body"
         if (injectStyle) {
           const { style, titleSelector, contentSelector, avoidBreakSelector } =
             await injectStyle({
               url,
               printOption
             })
-          contentSelector && (await evaluateShowOnly(page, contentSelector))
+          if (contentSelector) {
+            _contentSelector = contentSelector
+            await evaluateShowOnly(page, contentSelector)
+          }
+
           const top =
             typeof margin?.top === "number"
               ? margin.top
@@ -134,41 +145,46 @@ export async function print(
           })
         }
 
+        if (subTitleOutline) {
+          pageInfo.outline = (
+            await fetchVariousTitles(page, _contentSelector)
+          ).filter(k => k.depth < subTitleOutline)
+        }
+
+        let _hashIDSelector = "h1[id],h2[id],h3[id],h4[id],h5[id]"
         if (otherParams) {
-          const { hashIDSelector = "h1[id],h2[id],h3[id],h4[id],h5[id]" } =
-            await otherParams({
-              page,
-              pageInfo,
-              printOption
-            })
-          if (printOption.replaceLink) {
-            await page.evaluate(`
+          const { hashIDSelector } = await otherParams({
+            page,
+            pageInfo,
+            printOption
+          })
+          if (hashIDSelector) _hashIDSelector = hashIDSelector
+        }
+
+        if (printOption.replaceLink) {
+          await page.evaluate(`
           (()=>{
             const nodes = Array.from(
-              document.querySelectorAll("${hashIDSelector}")
+              document.querySelectorAll("${_hashIDSelector}")
             )
             nodes.forEach(k => {
               const hashNode = document.createElement("a")
-              hashNode.text = "'"
+              hashNode.text = "1"
               if (k.id) {
-                hashNode.href = "https://web.printer/" + k.id
+                hashNode.href = "printer://hash/" + encodeURIComponent(k.id)
                 k.prepend(hashNode)
                 hashNode.style.opacity = "0.01"
+                hashNode.style.marginLeft= "-0.25em"
+              }
+            })
+            Array.from(document.querySelectorAll("a")).forEach(k=>{
+              if(k.hash && k.host === window.location.host && k.pathname === window.location.pathname) {
+                k.href = "printer://self.hash/" + k.hash.slice(1)
               }
             })
           })()
           `)
-
-            await page.evaluate(`
-            Array.from(document.querySelectorAll("a")).forEach(k=>{
-              if(k.hash && k.href.startsWith(window.location.href)) {
-                k.href = "https://self.web.printer/" + k.hash.slice(1)
-              }
-            })
-        `)
-          }
         }
-
         onPageWillPrint &&
           (await onPageWillPrint({ page, pageInfo, printOption }))
 

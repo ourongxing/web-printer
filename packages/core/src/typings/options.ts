@@ -3,6 +3,11 @@ import type { PageFilter } from "."
 
 export interface PrinterPrintOption extends PrintOption {
   /**
+   * Used for outline. If given, Printer could fetch titles and set it as part of outline.
+   * @default 0 means not set sub titles as outline.
+   */
+  subTitleOutline?: number
+  /**
    * Make a test print, only print two pages and name will be appended "test: "
    * @default false
    */
