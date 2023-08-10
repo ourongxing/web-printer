@@ -6,7 +6,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "author": "Ou RongXing<orongxing@gmail.com>",
-  "homepage": "https://github.com/busiyiworld/web-printer/tree/main/packages/mdbook#readme",
+  "homepage": "https://github.com/ourongxing/web-printer/tree/main/packages/mdbook#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/busiyiworld/web-printer.git",

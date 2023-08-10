@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "bin": "dist/index.js",
   "author": "Ou RongXing<orongxing@gmail.com>",
-  "homepage": "https://github.com/busiyiworld/web-printer/tree/main/packages/create-printer#readme",
+  "homepage": "https://github.com/ourongxing/web-printer/tree/main/packages/create-printer#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/busiyiworld/web-printer.git",

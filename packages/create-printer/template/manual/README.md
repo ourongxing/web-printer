@@ -92,7 +92,7 @@ First you shoud install [pnpm(with node)](https://pnpm.io/installation), [vscode
 ```bash
 pnpm create printer@latest
 
-# or complete in one step. https://github.com/busiyiworld/web-printer/tree/main/packages/create-printer
+# or complete in one step. https://github.com/ourongxing/web-printer/tree/main/packages/create-printer
 pnpm create printer@latest web-printer -p vitepress -c chrome
 ```
 
@@ -100,7 +100,7 @@ And follow the tips. After customizing, use `pnpm print` to print. A pretty PDF 
 
 ## Options
 
-The [@web-printer/core](https://github.com/busiyiworld/web-printer/tree/main/packages/core) provide a Printer object, some types and some utilities.
+The [@web-printer/core](https://github.com/ourongxing/web-printer/tree/main/packages/core) provide a Printer object, some types and some utilities.
 
 ```ts
 import { Printer, type Plugin } from "@web-printer/core"
@@ -236,17 +236,17 @@ A plugin have five methods:
 ### Offical plugins
 
 - Content Site
-  - [@web-printer/javascript-info](https://github.com/busiyiworld/web-printer/tree/main/packages/javascript-info)
-  - [@web-printer/juejin](https://github.com/busiyiworld/web-printer/tree/main/packages/juejin)
-  - [@web-printer/xiaobot](https://github.com/busiyiworld/web-printer/tree/main/packages/xiaobot)
-  - [@web-printer/zhihu](https://github.com/busiyiworld/web-printer/tree/main/packages/zhihu)
-  - [@web-printer/zhubai](https://github.com/busiyiworld/web-printer/tree/main/packages/zhubai)
-  - [@web-printer/wikipedia](https://github.com/busiyiworld/web-printer/tree/main/packages/wikipedia)
+  - [@web-printer/javascript-info](https://github.com/ourongxing/web-printer/tree/main/packages/javascript-info)
+  - [@web-printer/juejin](https://github.com/ourongxing/web-printer/tree/main/packages/juejin)
+  - [@web-printer/xiaobot](https://github.com/ourongxing/web-printer/tree/main/packages/xiaobot)
+  - [@web-printer/zhihu](https://github.com/ourongxing/web-printer/tree/main/packages/zhihu)
+  - [@web-printer/zhubai](https://github.com/ourongxing/web-printer/tree/main/packages/zhubai)
+  - [@web-printer/wikipedia](https://github.com/ourongxing/web-printer/tree/main/packages/wikipedia)
 - Amazing Blog
-  - [@web-printer/ruanyifeng](https://github.com/busiyiworld/web-printer/tree/main/packages/ruanyifeng)
+  - [@web-printer/ruanyifeng](https://github.com/ourongxing/web-printer/tree/main/packages/ruanyifeng)
 - Documentation Site Generator
-  - [@web-printer/vitepress](https://github.com/busiyiworld/web-printer/tree/main/packages/vitepress)
-  - [@web-printer/mdbook](https://github.com/busiyiworld/web-printer/tree/main/packages/mdbook)
+  - [@web-printer/vitepress](https://github.com/ourongxing/web-printer/tree/main/packages/vitepress)
+  - [@web-printer/mdbook](https://github.com/ourongxing/web-printer/tree/main/packages/mdbook)
 
 ### How to write a plugin
 
@@ -308,11 +308,11 @@ The pageInfo need returned just like
 
 *Examples*
 
-- simple outline: [javascript-info/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/javascript-info/src/index.ts#L18-L52)
-- complex outline: [mdbook/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/mdbook/src/index.ts#L17-L93)
-- scroll loading: [juejin/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/juejin/src/index.ts#L31-L54)
+- simple outline: [javascript-info/src/index.ts](https://github.com/ourongxing/web-printer/blob/main/packages/javascript-info/src/index.ts#L18-L52)
+- complex outline: [mdbook/src/index.ts](https://github.com/ourongxing/web-printer/blob/main/packages/mdbook/src/index.ts#L17-L93)
+- scroll loading: [juejin/src/index.ts](https://github.com/ourongxing/web-printer/blob/main/packages/juejin/src/index.ts#L31-L54)
 
-- pagination: [zhihu/src/index.ts](https://github.com/busiyiworld/web-printer/blob/main/packages/zhihu/src/index.ts#L183-L245)
+- pagination: [zhihu/src/index.ts](https://github.com/ourongxing/web-printer/blob/main/packages/zhihu/src/index.ts#L183-L245)
 
 #### injectStyle
 
