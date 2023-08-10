@@ -63,7 +63,7 @@ describe(
           printBackground: true
         })
     })
-    test.skip("print vitepress", async () => {
+    test("print vitepress", async () => {
       await new Printer({ threads: 10 })
         .use(
           vitepress({
@@ -71,17 +71,23 @@ describe(
             //   Guide: "https://cn.vitejs.dev/guide/",
             //   Config: "https://cn.vitejs.dev/config/"
             // }
-            url: "https://ohmymn.marginnote.cn/guide/"
+            url: {
+              使用指南: "https://ohmymn.marginnote.cn/guide/",
+              API: "https://ohmymn.marginnote.cn/api/",
+              开发: "https://ohmymn.marginnote.cn/dev/"
+            }
           })
         )
-        .print("OhMyMN v4.1.1 文档（PDF内跳转）", {
+        .print("OhMyMN v4.1.1 文档", {
           // test: true,
+          // filter: ({ index }) => index < 5,
           printBackground: true,
           replaceLink: true,
-          coverPath:
-            "/Users/ourongxing/Downloads/OhMyMN _ MarginNote 插件开发框架.pdf",
-          // addPageNumber: true
-          continuous: true
+          // coverPath:
+          //   "/Users/ourongxing/Downloads/OhMyMN _ MarginNote 插件开发框架.pdf",
+          addPageNumber: true,
+          subTitleOutline: 1
+          // continuous: true
         })
     })
     test.skip("print mdbook", async () => {
@@ -158,7 +164,7 @@ describe(
           continuous: true
         })
     })
-    test("print wikipedia", async () => {
+    test.skip("print wikipedia", async () => {
       // await new Printer().login(
       //   "https://zh.m.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E8%B6%B3%E5%8D%94%E4%B8%96%E7%95%8C%E7%9B%83"
       // )

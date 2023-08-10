@@ -18,13 +18,8 @@ A printer that can print multiple web pages as one pretty PDF
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript-blue" alt="language">
-  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.3.0-EE2C50" alt="version"></a>
+  <a href="https://www.npmjs.com/package/@web-printer/core"><img src="https://img.shields.io/badge/v0.4.0-EE2C50" alt="version"></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/MIT-yellow" alt="license"></a>
-</p>
-
-
-<p align="center">
-<span>💡 Try to study in <a href="https://apps.apple.com/tw/app/marginnote-3/id1348317163?platform=ipad">MarginNote</a> !</span>
 </p>
 
 > **Warning**
@@ -144,6 +139,11 @@ new Printer({} as PrinterOption)
 
 ```ts
 {
+  /**
+   * Used for outline. If given, Printer could fetch titles and set it as part of outline.
+   * @default 0 means not set sub titles as outline.
+   */
+  subTitleOutline?: number
   /**
    * Make a test print, only print two pages and name will be appended "test: "
    * @default false

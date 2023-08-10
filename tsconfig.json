@@ -10,52 +10,22 @@
     "downlevelIteration": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"],
     "paths": {
-      "@web-printer/core": [
-        "./packages/core/src"
-      ],
-      "@web-printer/juejin": [
-        "./packages/juejin/src"
-      ],
-      "@web-printer/ruanyifeng": [
-        "./packages/ruanyifeng/src"
-      ],
-      "@web-printer/xiaobot": [
-        "./packages/xiaobot/src"
-      ],
-      "@web-printer/zhubai": [
-        "./packages/zhubai/src"
-      ],
-      "@web-printer/zhihu": [
-        "./packages/zhihu/src"
-      ],
-      "@web-printer/vitepress": [
-        "./packages/vitepress/src"
-      ],
-      "@web-printer/mdbook": [
-        "./packages/mdbook/src"
-      ],
-      "@web-printer/wikipedia": [
-        "./packages/wikipedia/src"
-      ],
-      "@web-printer/javascript-info": [
-        "./packages/javascript-info/src"
-      ]
+      "@web-printer/core": ["./packages/core/src"],
+      "@web-printer/juejin": ["./packages/juejin/src"],
+      "@web-printer/ruanyifeng": ["./packages/ruanyifeng/src"],
+      "@web-printer/xiaobot": ["./packages/xiaobot/src"],
+      "@web-printer/zhubai": ["./packages/zhubai/src"],
+      "@web-printer/zhihu": ["./packages/zhihu/src"],
+      "@web-printer/vitepress": ["./packages/vitepress/src"],
+      "@web-printer/mdbook": ["./packages/mdbook/src"],
+      "@web-printer/wikipedia": ["./packages/wikipedia/src"],
+      "@web-printer/javascript-info": ["./packages/javascript-info/src"]
     }
   },
-  "include": [
-    "**/src/**/*.ts",
-    "./test/**/*.ts"
-  ],
-  "exclude": [
-    "**/dist/**",
-    "**/node_modules/**"
-  ]
+  "include": ["**/src/**/*.ts", "./test/**/*.ts"],
+  "exclude": ["**/dist/**", "**/node_modules/**"]
 }

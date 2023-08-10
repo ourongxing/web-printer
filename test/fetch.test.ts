@@ -52,16 +52,19 @@ describe(
       const ret = await new Printer()
         .use(
           vitepress({
-            url: "https://cn.vitest.dev/guide/"
+            url: "https://ohmymn.marginnote.cn/guide/"
           })
         )
         .test()
       expect(ret).toBeDefined()
       const { pagesInfo } = ret!
       expect(pagesInfo.length).greaterThanOrEqual(1)
-      pagesInfo.forEach(pageInfo => {
-        expect(pageInfo).toHaveProperty("title")
-        expect(pageInfo).toHaveProperty("url")
+      pagesInfo.forEach((pageInfo, i) => {
+        console.log(pagesInfo)
+        expect(pageInfo?.title).toBeTruthy()
+        if (!pageInfo.url && pagesInfo[i + 1]) {
+          expect(pagesInfo[i + 1].groups?.includes(pageInfo.title)).toBeTruthy()
+        } else expect(pageInfo?.url).toBeTruthy()
       })
     })
     test.skip("mdbook", async () => {
