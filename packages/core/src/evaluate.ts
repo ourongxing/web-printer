@@ -2,9 +2,49 @@ import type { Page } from "playwright"
 import type { SubOutlineItem } from "./typings"
 
 export async function evaluateShowOnly(page: Page, selector: string) {
+  page.addStyleTag({
+    content: `
+              .web-printer-hidden {
+                  display: none!important;
+              }
+
+              .web-printer-no-margin {
+                  margin: 0!important;
+                  padding: 0!important;
+              }
+
+              .web-printer-title {
+                  margin-top: 0!important;
+                  line-height: 1em;
+              }
+
+              .web-printer-avoid-break-inside {
+                  page-break-inside: avoid!important;
+              }
+
+              .web-printer-full-width {
+                  width: 100vw!important;
+                  min-width: 100vw!important;
+                  max-width: 100vw!important;
+              }
+
+              .web-printer-wrap-code {
+                  white-space: pre-wrap!important;
+              }
+
+              .web-printer-white-bg {
+                  background-color: white!important;
+              }
+
+              .web-printer-article-link:link,.web-printer-article-link:visited,.web-printer-article-link:hover,.web-printer-article-link:active {
+                  text-decoration: none;
+                  color:inherit;
+              }
+    `
+  })
   await page.evaluate(`
   (()=>{
-    function showOnly(selector){
+    function showOnly(selector,hidden=true){
       function getAncestorNodes(node, ancestor = []) {
         if (node.parentNode) {
           if (node.parentNode.nodeName !== "BODY") {
@@ -18,28 +58,21 @@ export async function evaluateShowOnly(page: Page, selector: string) {
       const nodes = [...document.querySelectorAll(selector)]
       if (!nodes.length) return
 
-      const constantNodes = nodes.reduce((acc, node) => {
-        const descendantNodes = [...node.querySelectorAll("*")]
+      nodes.forEach(node => {
         const ancestorNodes = getAncestorNodes(node)
-
-        ;[...ancestorNodes, node].forEach(k => {
-          k.style.setProperty("margin-right", "0", "important")
-          k.style.setProperty("margin-left", "0", "important")
-          k.style.setProperty("margin-top", "0")
-          k.style.setProperty("margin-bottom", "0")
-          k.style.setProperty("padding", "0", "important")
+        node.classList.add("web-printer-no-margin","web-printer-full-width","web-printer-white-bg","web-printer-target");
+        [document.body, ...ancestorNodes].forEach(k => {
+          k.classList.add("web-printer-no-margin","web-printer-full-width","web-printer-white-bg","web-printer-parent")
         })
-        acc.push(...descendantNodes, ...ancestorNodes, node)
-        return acc
-      }, [])
+      })
 
-
-      for (const k of Array.from(document.body.querySelectorAll("*:not(style,script,meta)"))){
-        if (!constantNodes.some(m => m === k)) {
-          k.style.setProperty("display", "none", "important")
-        }
-      }
+      document.querySelectorAll(".web-printer-parent>*:not(.web-printer-parent,.web-printer-target,style,script,meta,link)").forEach(k=>{
+        if(hidden){
+           k.classList.add("web-printer-hidden")
+        } else k.remove()
+      })
     }
+
     showOnly("${selector}")
   })()
   `)

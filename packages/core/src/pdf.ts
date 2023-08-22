@@ -108,7 +108,6 @@ export function generateOutline(outlineItems: OutlineItem[]) {
     },
     { items: [] as OutlineItemOrigin[], groups: [] as string[] }
   ).items
-  console.log(JSON.stringify(outline, null, 2))
   return outline
 }
 
@@ -181,7 +180,7 @@ class PrinterPDF {
           const link = pdf.context.lookupMaybe(a, PDFDict)
           const url = link?.get(PDFName.of("URI"))?.toString().slice(1, -1)
           if (url) {
-            if (url.includes("printer://")) {
+            if (url.includes("printer://hash")) {
               const xy = dict
                 .get(PDFName.of("Rect"))
                 ?.toString()
@@ -227,6 +226,7 @@ class PrinterPDF {
       }
     })
 
+    console.log(hashTable)
     linkTable.forEach(({ hash, ref, refDict, pagesIndex }) => {
       const obj = {
         Type: "Annot",
