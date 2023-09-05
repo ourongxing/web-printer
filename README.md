@@ -27,21 +27,21 @@ A printer that can print multiple web pages as one pretty PDF
 > Respect the copyright please! Do not share non-public content on the Internet, especially paid content!
 ## Features
 
-Use [Playwright](https://github.com/microsoft/playwright) to print PDF, just like printing in Chrome, but print multiple web pages as one pretty pdf automatically.
+[Playwright](https://github.com/microsoft/playwright) is used to print PDFs, similar to printing in Chrome, but with the added ability to print multiple web pages into one seamless PDF automatically.
 
-- Fully customizable, it's just a nodejs library.
-- Universal, supports any websites by plugins.
-- Amazing, can replace website inner links to PDF inner links, supports hash positioning.
-- Auto generate outlines of PDF, supports different level and collapsed status.
-- Easy to remove distracting elements. No distractions, only pure knowledge.
+- Fully customizable as it is a Node.js library.
+- Universal compatibility with any website through plugins.
+- Unique feature to replace internal website links with internal PDF links, supporting hash positioning.
+- Automatically generates PDF outlines, with support for different levels and collapsed statuses.
+- Easy to remove distracting elements, leaving only pure knowledge.
 
 ## Installation
 
 > **Warning**
 >
-> Web Printer is just a nodejs library instead of an application. If you are a novice of Nodejs/TypeScript/JavaScript, Web Printer may be difficult for you to use. I'm going to develop an app for everyone to use, please follow [@pbkapp](https://github.com/pbkapp), just wait sun rise.
+> Web Printer is a Node.js library, not an application. If you're new to Node.js/TypeScript/JavaScript, Web Printer might be challenging to use. An app is currently being developed for general use. Please follow [@pbkapp](https://github.com/pbkapp) for updates.
 
-If you are not a novice, do what you want to do, just like install a npm package.
+If you're not a beginner, feel free to proceed as you would with any npm package installation.
 
 ```bash
 pnpm i playwright @web-printer/core
